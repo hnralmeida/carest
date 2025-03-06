@@ -1,4 +1,4 @@
-package org.model;
+package com.les.carest.model;
 
 @Entity
 public class Permissao {
