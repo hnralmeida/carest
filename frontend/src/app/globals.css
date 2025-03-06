@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+:root {
+  --primary-color: #4b4bff;
+  --secondary-color: #104e43;
+  --neutral-color: #628484;
+  --black--color: #080402;
+  --white-color: #f5f5f5;
+  --bg-color: #dde2e1;
+  --on-primary-color: #f5f5f5;
+  --sucess-color: #179a26;
+  --error-color: #a80000;
+  --warning-color: #fff836;
+  --disable-color: #f1f1f1;
+  --fonte-principal: 'Roboto', sans-serif;
+}
+
+.body-bg {
+  background-color: var(--bg-color);
+}
+
+.login-bg {
+    background-image: url('../../public/images/bg.svg');
+    background-size: cover; /* ou "contain" dependendo do efeito desejado */
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: var(--bg-color);
+}
+  
+
+.white-box {
+  background-color: var(--white-color);
+  color: var(--black--color);
+}
+
+.button-class {
+    background-color: var(--primary-color);
+    color: var(--on-primary-color);
+    border-radius: 16px;
+    padding: 8px;
+    width: 180px;
+    height: 64px;
+    margin: 0;
+}
+
+.button-class:hover {
+    background-color: var(--secondary-color);
+    cursor: pointer;
+    transform: scale(1.05);
+}
