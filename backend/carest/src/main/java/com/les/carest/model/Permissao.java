@@ -1,6 +1,19 @@
 package com.les.carest.model;
 
+import com.probuild.backend.domain.interfaces.Pronomes;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.Date;
+import java.util.UUID;
+
 @Entity
+@Table(name = "permissao")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+
 public class Permissao {
     @ManyToOne
     private Usuario usuario_id;
@@ -10,68 +23,4 @@ public class Permissao {
     private boolean read;
     private boolean update;
     private boolean delete;
-
-    public Permissao(Usuario usuario_id, Tela tela_id, boolean create, boolean read, boolean update, boolean delete) {
-        this.usuario_id = usuario_id;
-        this.tela_id = tela_id;
-        this.create = create;
-        this.read = read;
-        this.update = update;
-        this.delete = delete;
-    }
-
-    public Permissao(boolean read, boolean create, boolean update, boolean delete) {
-        this.read = read;
-        this.create = create;
-        this.update = update;
-        this.delete = delete;
-    }
-
-    public Usuario getUsuario_id() {
-        return usuario_id;
-    }
-
-    public void setUsuario_id(Usuario usuario_id) {
-        this.usuario_id = usuario_id;
-    }
-
-    public Tela getTela_id() {
-        return tela_id;
-    }
-
-    public void setTela_id(Tela tela_id) {
-        this.tela_id = tela_id;
-    }
-
-    public boolean isCreate() {
-        return create;
-    }
-
-    public void setCreate(boolean create) {
-        this.create = create;
-    }
-
-    public boolean isRead() {
-        return read;
-    }
-
-    public void setRead(boolean read) {
-        this.read = read;
-    }
-
-    public boolean isUpdate() {
-        return update;
-    }
-
-    public void setUpdate(boolean update) {
-        this.update = update;
-    }
-
-    public boolean isDelete() {
-        return delete;
-    }
-
-    public void setDelete(boolean delete) {
-        this.delete = delete;
-    }
 }

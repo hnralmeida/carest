@@ -8,10 +8,15 @@ import java.util.UUID;
 
 
 @Entity
+@Table(name = "compra_fornecedor")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class CompraFornecedor {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private int id;
+    private UUID id;
     @ManyToOne
     private Fornecedor fornecedor_id;
     private double valor;

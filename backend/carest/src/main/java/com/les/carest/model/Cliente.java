@@ -10,10 +10,16 @@ import lombok.*;
 import java.util.UUID;
 
 @Entity
+@Table(name = "cliente")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private int id;
+    private UUID id;
     private String nome;
     private Date nascimento;
     private String telefone;

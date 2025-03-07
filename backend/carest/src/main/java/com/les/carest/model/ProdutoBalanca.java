@@ -10,7 +10,11 @@ import java.util.UUID;
     
 
 @Entity
-@DiscriminatorValue("PRODUTO BALANÇA") // Define o valor no campo "tipo"
+@Table(name = "produto_balanca")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProdutoBalanca extends Produto {
 
     @Temporal(TemporalType.TIMESTAMPBalanca(S))
