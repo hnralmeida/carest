@@ -11,7 +11,7 @@ import org.springframework.validation.annotation.Validated;
 @Tag(name = "TelaService", description = "Acesso aos métodos da Tela")
 public class TelaService extends _GenericService<Tela, TelaRepository> {
 
-    protected TelaRepository(TelaRepository TelaRepository) {
+    protected void TelaRepository(TelaRepository TelaRepository) {
         super(TelaRepository);
     }
 }
