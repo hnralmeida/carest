@@ -2,6 +2,7 @@ package com.les.carest.controller;
 
 import com.les.carest.exception.GenericOperation;
 import com.les.carest.service._GenericServiceTypes;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,7 @@ public abstract class GenericController<TipoEntidade> {
 
     @PostMapping
     @GenericOperation(description = "Criar um registro")
-    public ResponseEntity<TipoEntidade> criar(@RequestBody TipoEntidade entity) {
+    public ResponseEntity<TipoEntidade> criar(@Valid @RequestBody TipoEntidade entity) {
         return ResponseEntity.status(HttpStatus.CREATED).body(genericService.criar(entity));
     }
 

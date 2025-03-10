@@ -1,6 +1,6 @@
-package main.java.com.les.carest.controller;
+package com.les.carest.controller;
 
-import com.les.carest.domain.ProdutoBalanca;
+import com.les.carest.model.ProdutoBalanca;
 import com.les.carest.service.ProdutoBalancaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Validated
 @RestController
-//tirar duvida do mapping //@RequestMapping("/cliente")
-public class ProdutoBalancaController extends GenericController {
+@RequestMapping("/produtoBalanca")
+public class ProdutoBalancaController extends GenericController<ProdutoBalanca> {
     public ProdutoBalancaController(ProdutoBalancaService produtoBalancaService) {
         super(produtoBalancaService);
     }

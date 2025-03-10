@@ -1,6 +1,5 @@
 package com.les.carest.model;
 
-import com.probuild.backend.domain.interfaces.Pronomes;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,7 +17,8 @@ public class ControleCliente {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @ManyToOne
-    private Cliente cliente_id;
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente;
     private Date entrada;
     private Date saida;
 

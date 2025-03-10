@@ -16,8 +16,11 @@ public class Recarga {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
     @ManyToOne
-    private Cliente cliente_id;
+    @JoinColumn(name = "imagem_id")
+    private Cliente cliente;
+
     private Date data;
     private double valor;
 

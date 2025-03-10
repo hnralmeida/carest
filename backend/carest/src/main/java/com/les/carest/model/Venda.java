@@ -16,10 +16,15 @@ public class Venda {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
     @ManyToOne
-    private Produto produto_id;
+    @JoinColumn(name = "produto_id")
+    private Produto produto;
+
     @ManyToOne
-    private Cliente cliente_id;
+    @JoinColumn(name = "cliente_id")
+    private Cliente cliente;
+
     private Date dataVenda;
     private int valor;
 }

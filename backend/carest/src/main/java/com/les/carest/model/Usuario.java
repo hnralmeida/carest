@@ -14,7 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Usuario {
-     @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String nome;
@@ -22,6 +22,4 @@ public class Usuario {
     private String email;
     private String senha;
     private long codigo;
-    @OneToMany(mappedBy = "usuario")
-    private List<Permissao> permissoes;
 }

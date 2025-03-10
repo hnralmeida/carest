@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -19,7 +20,5 @@ public class Produto {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     protected String nome;
-    protected   double valor;
-    @OneToMany(mappedBy = "produto")
-    private List<Venda> vendas;
+    protected double valor;
 }

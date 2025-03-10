@@ -18,6 +18,4 @@ public class Tela {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String nome;
-    @OneToMany(mappedBy = "tela")
-    private List<Permissao> permissoes;
 }

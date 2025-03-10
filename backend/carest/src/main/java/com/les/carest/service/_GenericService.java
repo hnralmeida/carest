@@ -1,7 +1,7 @@
 package com.les.carest.service;
 
-import com.probuild.backend.exception.RegistroNotFoundException;
-import com.probuild.backend.exception.RegistroNotUpdated;
+import com.les.carest.exception.RegistroNotFoundException;
+import com.les.carest.exception.RegistroNotUpdated;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
