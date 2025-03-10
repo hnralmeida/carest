@@ -13,7 +13,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Inheritance(strategy = InheritanceType.JOINED)
-@DiscriminatorColumn(name="tipo")
 public class Produto {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

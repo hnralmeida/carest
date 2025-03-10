@@ -17,7 +17,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ProdutoBalanca extends Produto {
 
-    @Temporal(TemporalType.TIMESTAMPBalanca(S))
     private Date data;
 
 }

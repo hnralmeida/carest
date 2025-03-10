@@ -20,5 +20,4 @@ public class Recarga {
     private Cliente cliente_id;
     private Date data;
     private double valor;
-
 }

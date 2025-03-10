@@ -28,11 +28,4 @@ public class Cliente {
     private double saldo;
     private boolean em_uso;
     private Date dividaData;
-    @OneToMany(mappedBy = "cliente")
-    private List<Recarga> recargas;
-    @OneToMany(mappedBy = "cliente")
-    private List<ControleCliente> controles;
-    @OneToMany(mappedBy = "cliente")
-    private List<Venda> vendas;
-
 }

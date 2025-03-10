@@ -21,5 +21,4 @@ public class ControleCliente {
     private Cliente cliente_id;
     private Date entrada;
     private Date saida;
-
 }
