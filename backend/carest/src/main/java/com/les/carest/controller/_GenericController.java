@@ -15,11 +15,11 @@ import java.util.UUID;
 @Validated
 @RestController
 @RequestMapping("/api")
-public abstract class GenericController<TipoEntidade> {
+public abstract class _GenericController<TipoEntidade> {
 
     private final _GenericServiceTypes<TipoEntidade> genericService;
 
-    protected GenericController(_GenericServiceTypes<TipoEntidade> genericService) {
+    protected _GenericController(_GenericServiceTypes<TipoEntidade> genericService) {
         this.genericService = genericService;
     }
 

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface ClienteRepository  extends JpaRepository <Cliente , UUID>{
+public interface ClienteRepository extends JpaRepository <Cliente , UUID>{
     //    @Query("SELECT * FROM cliente u WHERE u.id=:id")
     //    Cliente findByIdTeste(@Param("id") Long id);
 

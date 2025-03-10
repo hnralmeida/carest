@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Validated
 @RestController
 @RequestMapping("/produto")
-public class ProdutoController extends GenericController<Produto> {
+public class ProdutoController extends _GenericController<Produto> {
     public ProdutoController(ProdutoService produtoService) {
         super(produtoService);
     }

@@ -59,8 +59,6 @@ public abstract class _GenericService<TipoEntidade, RepositorioGenerics extends 
         }
     }
 
-
-
     @Override
     public TipoEntidade atualizar(UUID id, TipoEntidade entityAtualizada) {
         try {
