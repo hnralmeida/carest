@@ -4,7 +4,6 @@ import jakarta.persistence.Entity;
 
 import java.util.Date;
 import java.util.List;
-import com.probuild.backend.domain.interfaces.Pronomes;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.UUID;
@@ -15,7 +14,6 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

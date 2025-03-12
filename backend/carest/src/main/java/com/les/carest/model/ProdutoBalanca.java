@@ -2,8 +2,6 @@ package com.les.carest.model;
 
 import jakarta.persistence.*;
 import java.util.Date;
-
-import com.probuild.backend.domain.interfaces.Pronomes;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.UUID;

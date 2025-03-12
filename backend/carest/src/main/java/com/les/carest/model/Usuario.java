@@ -22,6 +22,4 @@ public class Usuario {
     private String email;
     private String senha;
     private long codigo;
-    @OneToMany(mappedBy = "usuario")
-    private List<Permissao> permissoes;
 }

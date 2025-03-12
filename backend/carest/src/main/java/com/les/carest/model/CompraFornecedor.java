@@ -1,7 +1,6 @@
 package com.les.carest.model;
 
 import java.util.Date;
-import com.probuild.backend.domain.interfaces.Pronomes;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.UUID;
@@ -17,8 +16,11 @@ public class CompraFornecedor {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
     @ManyToOne
-    private Fornecedor fornecedor_id;
+    @JoinColumn(name = "fornecedor_id")
+    private Fornecedor fornecedor;
+
     private double valor;
     private Date vencimento;
     private String descricao;

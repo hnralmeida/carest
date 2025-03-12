@@ -1,10 +1,7 @@
 package com.les.carest.model;
 
-import com.probuild.backend.domain.interfaces.Pronomes;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -13,12 +10,19 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class Permissao {
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
     @ManyToOne
-    private Usuario usuario_id;
+    @JoinColumn(name = "usuario_id")
+    private Usuario usuario;
+
     @ManyToOne
-    private Tela tela_id;
+    @JoinColumn(name = "tela_id")
+    private Tela tela;
+
     private boolean create;
     private boolean read;
     private boolean update;
