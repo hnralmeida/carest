@@ -11,7 +11,7 @@ import org.springframework.validation.annotation.Validated;
 @Tag(name = "ProdutoBalancaService", description = "Acesso aos métodos de Produto Balanca")
 public class ProdutoBalancaService extends _GenericService<ProdutoBalanca, ProdutoBalancaRepository> {
 
-    protected ProdutoBalancaService(ProdutoBalancaRepository ProdutoBalancaRepository) {
-        super(ProdutoBalancaRepository);
+    protected ProdutoBalancaService(ProdutoBalancaRepository repositoryGenerics) {
+        super(repositoryGenerics);
     }
 }

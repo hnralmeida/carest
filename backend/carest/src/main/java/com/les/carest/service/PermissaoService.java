@@ -11,8 +11,8 @@ import org.springframework.validation.annotation.Validated;
 @Tag(name = "PermissaoService", description = "Acesso aos métodos de Permissao")
 public class PermissaoService extends _GenericService<Permissao, PermissaoRepository> {
 
-    protected PermissaoService(PermissaoRepository PermissaoRepository) {
-        super(PermissaoRepository);
+    protected PermissaoService(PermissaoRepository repositoryGenerics) {
+        super(repositoryGenerics);
     }
 
 

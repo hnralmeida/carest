@@ -38,6 +38,7 @@ public abstract class _GenericController<TipoEntidade> {
     @PostMapping
     @GenericOperation(description = "Criar um registro")
     public ResponseEntity<TipoEntidade> criar(@Valid @RequestBody TipoEntidade entity) {
+
         return ResponseEntity.status(HttpStatus.CREATED).body(genericService.criar(entity));
     }
 
