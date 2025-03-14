@@ -1,36 +1,46 @@
+// import { axiosClient } from "@/services/axiosClient";
 import { axiosClient } from "@/services/axiosClient";
-import NextAuth from "next-auth";
+import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-const handler = NextAuth({
+const nextAuthOption: AuthOptions = {
   pages: {
     signIn: "/login",
+    signOut: "/",
   },
   providers: [
     CredentialsProvider({
-      name: "Credentials",
+      name: "credentials",
       credentials: {
-        email: { label: "email", type: "text", placeholder: "jsmith" },
-        password: { label: "password", type: "password" },
+        email: { label: "email", type: "text", placeholder: "email@email.com" },
+        senha: { label: "senha", type: "password" },
       },
       async authorize(credentials) {
-        if (!credentials||credentials?.email==="") return null;
-        const response = await axiosClient.post("/auth/login", credentials);
-        if (response.status === 401) {
-          throw new Error("Credenciais inválidas");
+        console.log("CREDENCIAIS", credentials);
+        if (!credentials?.email || !credentials?.senha) {
+          throw new Error("Dados de Login necessários");
         }
-        if (response.status === 404) {
-          throw new Error("Usuário não encontrado");
+        console.log("CREDENCIAIS", credentials);
+        try {
+          const response = await axiosClient.post("/auth/login", {
+            email: credentials.email,
+            senha: credentials.senha,
+          });
+          const user = response.data;
+          if (!user) {
+            throw new Error("Usuário não encontrado");
+          }
+          console.log("USUÁRIO AAAAAAAAAAAAAAAA", user);
+          return user;
+        } catch (error: unknown) {
+          console.log(error);
+          throw new Error("Usuario ou senha Incorreto");
         }
-        if (response.status === 500) {
-          throw new Error("Erro interno no servidor");
-        }
-        if (response.status <= 200) {
-          return response.data;
-        }
-        return null;},
+      },
     }),
   ],
-});
+};
+
+const handler = NextAuth(nextAuthOption);
 
 export { handler as GET, handler as POST };

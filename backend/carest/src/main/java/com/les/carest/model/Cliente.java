@@ -15,6 +15,7 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String nome;
+    private String codigo;
     private Date nascimento;
     private String telefone;
     private String email;
@@ -23,20 +24,12 @@ public class Cliente {
     private boolean em_uso;
     private Date dividaData;
 
-    public Cliente(UUID id, String nome, Date nascimento, String telefone, String email, double limite, double saldo, boolean em_uso, Date dividaData) {
+    public Cliente(){}
+
+    public Cliente(UUID id, String nome, String codigo, Date nascimento, String telefone, String email, double limite, double saldo, boolean em_uso, Date dividaData) {
         this.id = id;
         this.nome = nome;
-        this.nascimento = nascimento;
-        this.telefone = telefone;
-        this.email = email;
-        this.limite = limite;
-        this.saldo = saldo;
-        this.em_uso = em_uso;
-        this.dividaData = dividaData;
-    }
-
-    public Cliente(String nome, Date nascimento, String telefone, String email, double limite, double saldo, boolean em_uso, Date dividaData) {
-        this.nome = nome;
+        this.codigo = codigo;
         this.nascimento = nascimento;
         this.telefone = telefone;
         this.email = email;
@@ -60,6 +53,14 @@ public class Cliente {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     public Date getNascimento() {

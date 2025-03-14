@@ -83,7 +83,7 @@ export function DataTable<TData, TValue>({
                       )}
                 </TableHead>
               ))}
-              <TableHead className="w-32" />
+              <TableHead className="w-96" />
             </TableRow>
           ))}
         </TableHeader>

@@ -32,7 +32,7 @@ public class LoginController{
     public ResponseEntity<?> login(@Valid @RequestBody LoginDTO loginDTO) {
         // Busca o usuário pelo email
         Optional<Usuario> usuarioOptional = Optional.ofNullable(usuarioRepository.findByEmail(loginDTO.getEmail()));//.orElse(->new Exception)
-
+        System.out.println(loginDTO);
         // Verifica se o usuário existe
         if (usuarioOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não encontrado");

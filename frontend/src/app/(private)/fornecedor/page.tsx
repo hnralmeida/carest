@@ -9,7 +9,9 @@ import { axiosClient } from "@/services/axiosClient";
 
 async function getData(): Promise<Fornecedor[]> {
   const response = await axiosClient.get("/fornecedor");
-  return response.data;
+  return response.data.sort((a: Fornecedor, b: Fornecedor) =>
+    a.nome.localeCompare(b.nome)
+  );
 }
 
 const page = async () => {
