@@ -17,9 +17,9 @@ public class Usuario {
     private String telefone;
     private String email;
     private String senha;
-    private long codigo;
+    private String codigo;
 
-    public Usuario(int id, String nome, String telefone, String email, String senha, long codigo) {
+    public Usuario(UUID id, String nome, String telefone, String email, String senha, String codigo) {
         this.id = id;
         this.nome = nome;
         this.telefone = telefone;
@@ -28,7 +28,7 @@ public class Usuario {
         this.codigo = codigo;
     }
 
-    public Usuario(String nome, String telefone, String email, String senha, long codigo) {
+    public Usuario(String nome, String telefone, String email, String senha, String codigo) {
         this.nome = nome;
         this.telefone = telefone;
         this.email = email;
@@ -36,11 +36,15 @@ public class Usuario {
         this.codigo = codigo;
     }
 
-    public int getId() {
+    // Construtor padrão (necessário para desserialização)
+    public Usuario() {
+    }
+
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -76,11 +80,11 @@ public class Usuario {
         this.senha = senha;
     }
 
-    public long getCodigo() {
+    public String getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(long codigo) {
+    public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
 }

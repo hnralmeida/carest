@@ -11,10 +11,7 @@ import java.util.UUID;
 public class ProdutoSerial extends Produto {
 
     private int codigo;
-
-    public ProdutoSerial() {
-    }
-
+    
     public ProdutoSerial(String nome, double valor, int codigo) {
         super(nome, valor);
         this.codigo = codigo;

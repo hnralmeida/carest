@@ -1,7 +1,7 @@
 package com.les.carest.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import jakarta.validation.constraints.NotBlank;
 import java.util.UUID;
 
 @Entity
@@ -12,22 +12,16 @@ public class Fornecedor {
     private UUID id;
 
     @Column(name = "nome")
+    @NotBlank(message = "O nome do fornecedor é obrigatório")
     private String nome;
 
-    public Fornecedor(int id, String nome) {
-        this.id = id;
-        this.nome = nome;
-    }
+    public Fornecedor() {}
 
-    public Fornecedor(String nome) {
-        this.nome = nome;
-    }
-
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -36,6 +30,6 @@ public class Fornecedor {
     }
 
     public void setNome(String nome) {
-        this.nome = nome;
+        this.nome= nome;
     }
 }

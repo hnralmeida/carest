@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.util.UUID;
 
-
 @Entity
 @Table(name = "compra_fornecedor")
 public class CompraFornecedor {
@@ -21,7 +20,7 @@ public class CompraFornecedor {
     private Date vencimento;
     private String descricao;
 
-    public CompraFornecedor(int id, Fornecedor fornecedor, double valor, Date vencimento, String descricao) {
+    public CompraFornecedor(UUID id, Fornecedor fornecedor, double valor, Date vencimento, String descricao) {
         this.id = id;
         this.fornecedor = fornecedor;
         this.valor = valor;
@@ -36,11 +35,11 @@ public class CompraFornecedor {
         this.descricao = descricao;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

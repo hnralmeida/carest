@@ -15,7 +15,7 @@ public class Tela {
     private UUID id;
     private String nome;
 
-    public Tela(int id, String nome) {
+    public Tela(UUID id, String nome) {
         this.id = id;
         this.nome = nome;
     }
@@ -24,11 +24,11 @@ public class Tela {
         this.nome = nome;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

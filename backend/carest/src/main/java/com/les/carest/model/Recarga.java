@@ -20,7 +20,7 @@ public class Recarga {
     private Date data;
     private double valor;
 
-    public Recarga(int id, Date data, Cliente cliente, double valor) {
+    public Recarga(UUID id, Date data, Cliente cliente, double valor) {
         this.id = id;
         this.data = data;
         this.cliente = cliente;
@@ -33,11 +33,11 @@ public class Recarga {
         this.valor = valor;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

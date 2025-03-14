@@ -17,7 +17,7 @@ public class Produto {
     protected String nome;
     protected double valor;
 
-     public Produto(int id, String nome, double valor) {
+    public Produto(UUID id, String nome, double valor) {
         this.id = id;
         this.nome = nome;
         this.valor = valor;
@@ -28,11 +28,11 @@ public class Produto {
         this.valor = valor;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

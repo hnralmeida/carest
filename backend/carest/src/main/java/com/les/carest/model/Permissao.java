@@ -24,7 +24,7 @@ public class Permissao {
     private boolean update;
     private boolean delete;
 
-     public Permissao(Usuario usuario, Tela tela, boolean create, boolean read, boolean update, boolean delete) {
+    public Permissao(Usuario usuario, Tela tela, boolean create, boolean read, boolean update, boolean delete) {
         this.usuario = usuario;
         this.tela = tela;
         this.create = create;

@@ -15,5 +15,5 @@ public class UsuarioController extends _GenericController<Usuario> {
     public UsuarioController(UsuarioService usuarioService) {
         super(usuarioService);
     }
-
+    
 }
