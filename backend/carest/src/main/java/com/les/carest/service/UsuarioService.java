@@ -11,7 +11,7 @@ import org.springframework.validation.annotation.Validated;
 @Tag(name = "UsuarioService", description = "Acesso aos métodos do Usuario")
 public class UsuarioService extends _GenericService<Usuario, UsuarioRepository> {
 
-    protected UsuarioService(UsuarioRepository repositoryGenerics) {
-        super(repositoryGenerics);
+    protected UsuarioService(UsuarioRepository UsuarioRepository) {
+        super(UsuarioRepository);
     }
 }

@@ -11,7 +11,7 @@ import org.springframework.validation.annotation.Validated;
 @Tag(name = "VendaService", description = "Acesso aos métodos da Venda")
 public class VendaService extends _GenericService<Venda, VendaRepository> {
 
-    protected VendaService(VendaRepository repositoryGenerics) {
-        super(repositoryGenerics);
+    protected VendaService(VendaRepository VendaRepository) {
+        super(VendaRepository);
     }
 }

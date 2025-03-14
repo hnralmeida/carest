@@ -6,8 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
+
 @Repository
-public interface FornecedorRepository extends JpaRepository<Fornecedor, UUID>{
+public interface FornecedorRepository extends JpaRepository<Fornecedor, UUID >{
     //    @Query("SELECT * FROM fornecedor u WHERE u.id=:id")
     //    Fornecedor findByIdTeste(@Param("id") Long id);
 

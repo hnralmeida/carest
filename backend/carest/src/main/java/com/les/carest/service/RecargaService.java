@@ -11,8 +11,8 @@ import org.springframework.validation.annotation.Validated;
 @Tag(name = "RecargaService", description = "Acesso aos métodos da Recarga")
 public class RecargaService extends _GenericService<Recarga, RecargaRepository> {
 
-    protected RecargaService(RecargaRepository repositoryGenerics) {
-        super(repositoryGenerics);
+    protected RecargaService(RecargaRepository RecargaRepository) {
+        super(RecargaRepository);
     }
 
 }

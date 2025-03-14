@@ -11,8 +11,8 @@ import org.springframework.validation.annotation.Validated;
 @Tag(name = "ClienteService", description = "Acesso aos métodos de Cliente")
 public class ClienteService extends _GenericService<Cliente, ClienteRepository> {
 
-    protected ClienteService(ClienteRepository repositoryGenerics) {
-        super(repositoryGenerics);
+    protected ClienteService(ClienteRepository ClienteRepository) {
+        super(ClienteRepository);
     }
 
 
