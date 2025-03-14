@@ -52,10 +52,6 @@ public abstract class _GenericController<TipoEntidade> {
     @GenericOperation(description = "Excluir um registro")
     public ResponseEntity<String> excluir(@PathVariable UUID id) {
         genericService.excluir(id);
-        if (genericService.buscarPorId(id) == null) {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body("Excluído");
-        }else{
-            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).body("Registro não pôde ser excluído");
-        }
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body("Excluído");
     }
 }

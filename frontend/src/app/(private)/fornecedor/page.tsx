@@ -4,18 +4,18 @@ import {
   Fornecedor,
 } from "../../../components/fornecedorComponents/columns";
 import { DataTable } from "../../../components/fornecedorComponents/DataTable";
-import AddFornecedor from "@/components/fornecedorComponents/addButton";
+import AddFornecedor from "@/components/fornecedorComponents/addFornecedor";
+import { axiosClient } from "@/services/axiosClient";
 
 async function getData(): Promise<Fornecedor[]> {
-  return new Array(50).fill(null).map(() => ({
-    id: Math.random().toString(36).substring(7),
-    descricao: "fornecedor-" + Math.random().toString(36).substring(7),
-  }));
+  const response = await axiosClient.get("/fornecedor");
+  return response.data;
 }
 
 const page = async () => {
-  const data = await getData();
 
+  const data = await getData();
+  
   return (
     <div className="container rounded-md border mx-auto my-16 py-4 px-4 content-bg">
       <div className="flex justify-between items-center w-full mb-4">

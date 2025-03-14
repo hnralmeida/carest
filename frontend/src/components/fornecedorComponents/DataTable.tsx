@@ -19,8 +19,10 @@ import {
 } from "@/components/ui/table";
 
 import { Trash2 } from "lucide-react";
-import { Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import EditFornecedor from "./editFornecedor";
+import { axiosClient } from "@/services/axiosClient";
+import { Fornecedor } from "./columns";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -38,8 +40,28 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
   });
 
-  function onEdit(id: string) {
-    console.log(id);
+  function onDelete(id: string) {
+    const confirmDelete = window.confirm(
+      "Tem certeza que deseja excluir este fornecedor?"
+    );
+
+    if (confirmDelete) {
+      try {
+        axiosClient
+          .delete(`/fornecedor/${id}`)
+          .then(() => {
+            alert("Fornecedor excluído com sucesso!");
+            window.location.reload(); // Atualiza a lista após excluir
+          })
+          .catch((error) => {
+            console.error("Erro ao excluir:", error);
+            alert("Falha ao excluir o fornecedor.");
+          });
+      } catch (error) {
+        console.error("Erro na requisição:", error);
+        alert("Erro ao conectar com o servidor.");
+      }
+    }
   }
 
   return (
@@ -49,7 +71,10 @@ export function DataTable<TData, TValue>({
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id} className="flex w-full">
               {headerGroup.headers.map((column) => (
-                <TableHead key={column.id} className="flex w-full text-[var(--white-color)] justify-center items-center">
+                <TableHead
+                  key={column.id}
+                  className="flex w-full text-[var(--white-color)] justify-center items-center"
+                >
                   {column.isPlaceholder
                     ? null
                     : flexRender(
@@ -58,7 +83,7 @@ export function DataTable<TData, TValue>({
                       )}
                 </TableHead>
               ))}
-              <TableHead className=" w-32"/>
+              <TableHead className="w-32" />
             </TableRow>
           ))}
         </TableHeader>
@@ -71,24 +96,23 @@ export function DataTable<TData, TValue>({
                 className="flex w-full "
               >
                 {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="flex w-full  justify-center">
+                  <TableCell
+                    key={cell.id}
+                    className="flex w-full  justify-center"
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
                 <TableCell className="flex w-32 gap-2">
+                  <EditFornecedor
+                    id={row.original.id}
+                    nome={row.original.nome}
+                  />
                   <Button
                     className="button-table"
                     variant="outline"
                     size="icon"
-                    onClick={() => onEdit(row.id)}
-                  >
-                    <Pencil size={24} />
-                  </Button>
-                  <Button
-                    className="button-table"
-                    variant="outline"
-                    size="icon"
-                    onClick={() => onEdit(row.id)}
+                    onClick={() => onDelete(row.original.id)}
                   >
                     <Trash2 size={24} />
                   </Button>

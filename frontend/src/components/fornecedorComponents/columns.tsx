@@ -4,12 +4,12 @@ import { ColumnDef } from "@tanstack/react-table";
 
 export type Fornecedor = {
     id: string;
-    descricao: string;
+    nome: string;
 }
 
 export const columns: ColumnDef<Fornecedor>[] = [
 {
-        accessorKey: 'descricao',
+        accessorKey: 'nome',
         header: 'Descrição',
     }
 ]
