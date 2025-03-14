@@ -30,7 +30,7 @@ public class LoginController{
     @PostMapping("/login")
     @GenericOperation(description = "Endpoint para autenticação de usuário")
     public ResponseEntity<?> login(@Valid @RequestBody LoginDTO loginDTO) {
-        // Busca o usuário pelo nome
+        // Busca o usuário pelo email
         Optional<Usuario> usuarioOptional = Optional.ofNullable(usuarioRepository.findByEmail(loginDTO.getEmail()));//.orElse(->new Exception)
 
         // Verifica se o usuário existe
@@ -44,6 +44,6 @@ public class LoginController{
         }
 
         // Retorna uma resposta de sucesso
-        return ResponseEntity.ok("Login bem-sucedido");
+        return ResponseEntity.ok(usuarioOptional.get());
     }
 }

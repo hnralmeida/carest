@@ -8,10 +8,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "venda")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Venda {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -27,4 +23,59 @@ public class Venda {
 
     private Date dataVenda;
     private int valor;
+
+    public Venda(UUID id, Produto produto, Cliente cliente, Date dataVenda, int valor) {
+        this.id = id;
+        this.produto = produto;
+        this.cliente = cliente;
+        this.dataVenda = dataVenda;
+        this.valor = valor;
+    }
+
+    public Venda(Produto produto, Cliente cliente, Date dataVenda, int valor) {
+        this.produto = produto;
+        this.cliente = cliente;
+        this.dataVenda = dataVenda;
+        this.valor = valor;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public Produto getProduto() {
+        return produto;
+    }
+
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public Date getDataVenda() {
+        return dataVenda;
+    }
+
+    public void setDataVenda(Date dataVenda) {
+        this.dataVenda = dataVenda;
+    }
+
+    public int getValor() {
+        return valor;
+    }
+
+    public void setValor(int valor) {
+        this.valor = valor;
+    }
 }

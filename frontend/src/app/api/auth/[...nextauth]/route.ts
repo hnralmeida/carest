@@ -1,3 +1,4 @@
+import { axiosClient } from "@/services/axiosClient";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -14,8 +15,20 @@ const handler = NextAuth({
       },
       async authorize(credentials) {
         if (!credentials||credentials?.email==="") return null;
-        return { id: "1", name: "John Doe", email: credentials.email };
-      },
+        const response = await axiosClient.post("/auth/login", credentials);
+        if (response.status === 401) {
+          throw new Error("Credenciais inválidas");
+        }
+        if (response.status === 404) {
+          throw new Error("Usuário não encontrado");
+        }
+        if (response.status === 500) {
+          throw new Error("Erro interno no servidor");
+        }
+        if (response.status <= 200) {
+          return response.data;
+        }
+        return null;},
     }),
   ],
 });
