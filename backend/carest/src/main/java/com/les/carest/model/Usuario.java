@@ -1,47 +1,46 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
 package com.les.carest.model;
 
-import java.util.List;
-import jakarta.persistence.*;
-import lombok.*;
-
-import java.util.Date;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.UUID;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
-@Table(name = "usuario")
-public class Usuario {
+@Table(
+    name = "usuario"
+)
+public class Usuario implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(
+        strategy = GenerationType.UUID
+    )
     private UUID id;
     private String nome;
-    private String telefone;
     private String email;
     private String senha;
-    private String codigo;
 
-    public Usuario(UUID id, String nome, String telefone, String email, String senha, String codigo) {
-        this.id = id;
-        this.nome = nome;
-        this.telefone = telefone;
-        this.email = email;
-        this.senha = senha;
-        this.codigo = codigo;
-    }
-
-    public Usuario(String nome, String telefone, String email, String senha, String codigo) {
-        this.nome = nome;
-        this.telefone = telefone;
-        this.email = email;
-        this.senha = senha;
-        this.codigo = codigo;
-    }
-
-    // Construtor padrão (necessário para desserialização)
     public Usuario() {
     }
 
+    public Usuario(String nome, String email, String senha) {
+        this.nome = nome;
+        this.email = email;
+        this.senha = senha;
+    }
+
     public UUID getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(UUID id) {
@@ -49,23 +48,15 @@ public class Usuario {
     }
 
     public String getNome() {
-        return nome;
+        return this.nome;
     }
 
     public void setNome(String nome) {
         this.nome = nome;
     }
 
-    public String getTelefone() {
-        return telefone;
-    }
-
-    public void setTelefone(String telefone) {
-        this.telefone = telefone;
-    }
-
     public String getEmail() {
-        return email;
+        return this.email;
     }
 
     public void setEmail(String email) {
@@ -73,18 +64,38 @@ public class Usuario {
     }
 
     public String getSenha() {
-        return senha;
+        return this.senha;
     }
 
     public void setSenha(String senha) {
         this.senha = senha;
     }
 
-    public String getCodigo() {
-        return codigo;
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.emptyList();
     }
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
+    public String getPassword() {
+        return this.senha;
+    }
+
+    public String getUsername() {
+        return this.email;
+    }
+
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    public boolean isEnabled() {
+        return true;
     }
 }
