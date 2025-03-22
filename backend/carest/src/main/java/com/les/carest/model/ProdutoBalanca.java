@@ -9,12 +9,24 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "produto_balanca")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class ProdutoBalanca extends Produto {
 
     private Date data;
+
+    public ProdutoBalanca() {
+    }
+
+    public Produtotring nome, double valor, Date data) {
+        super(nome, valor);
+        this.data = data;
+    }
+
+    public Date getData() {
+        return data;
+    }
+
+    public void setData(Date data) {
+        this.data = data;
+    }
 
 }

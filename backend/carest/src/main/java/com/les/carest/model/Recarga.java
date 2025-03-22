@@ -8,10 +8,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "recarga")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Recarga {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -23,5 +19,50 @@ public class Recarga {
 
     private Date data;
     private double valor;
+
+    public Recarga(int id, Date data, Cliente cliente, double valor) {
+        this.id = id;
+        this.data = data;
+        this.cliente = cliente;
+        this.valor = valor;
+    }
+
+    public Recarga(Cliente cliente, Date data, double valor) {
+        this.cliente = cliente;
+        this.data = data;
+        this.valor = valor;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public Date getData() {
+        return data;
+    }
+
+    public void setData(Date data) {
+        this.data = data;
+    }
+
+    public double getValor() {
+        return valor;
+    }
+
+    public void setValor(double valor) {
+        this.valor = valor;
+    }
 
 }
