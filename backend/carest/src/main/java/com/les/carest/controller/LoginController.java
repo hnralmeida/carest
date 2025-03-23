@@ -6,10 +6,6 @@ import com.les.carest.exception.GenericOperation;
 import com.les.carest.model.Usuario;
 import com.les.carest.repository.UsuarioRepository;
 import com.les.carest.service.UsuarioService;
-import com.les.carest.service._GenericServiceTypes;
-
-import com.les.carest.service.UsuarioService;
-
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

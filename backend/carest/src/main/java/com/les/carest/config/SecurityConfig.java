@@ -27,7 +27,10 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/usuario").permitAll() // Libera o endpoint /usuario
+                        .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/api").anonymous()
                         .anyRequest().permitAll() // Exige autenticação para todos os outros endpoints
+
                 )
                 .httpBasic(); // Habilita autenticação básica (usuário e senha)
         return http.build();
