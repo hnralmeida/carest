@@ -20,6 +20,8 @@ public class LoginDTO {
     public void setSenha(String senha) {
         this.senha = senha;
     }
+
+/*
 <<<<<<< HEAD
 =======
 
@@ -28,4 +30,5 @@ public class LoginDTO {
         return this.email + "  " + this.senha;
     }
 >>>>>>> refs/remotes/origin/main
+ */
 }
