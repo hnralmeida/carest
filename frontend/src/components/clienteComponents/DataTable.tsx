@@ -72,7 +72,7 @@ export function DataTable<TData, TValue>({
               {headerGroup.headers.map((column) => (
                 <TableHead
                   key={column.id}
-                  className="flex w-full text-[var(--white-color)] justify-center items-center"
+                  className="flex flex-1 text-[var(--white-color)] justify-center items-center"
                 >
                   {column.isPlaceholder
                     ? null
@@ -82,7 +82,7 @@ export function DataTable<TData, TValue>({
                       )}
                 </TableHead>
               ))}
-              <TableHead className="w-96" />
+              <TableHead className="w-[96px]" />
             </TableRow>
           ))}
         </TableHeader>

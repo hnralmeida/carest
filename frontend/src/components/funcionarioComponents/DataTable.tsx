@@ -20,9 +20,8 @@ import {
 
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import EditFornecedor from "./editFornecedor";
 import { axiosClient } from "@/services/axiosClient";
-import { Fornecedor } from "./columns";
+import EditFuncionario from "./editFuncionario";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -42,20 +41,20 @@ export function DataTable<TData, TValue>({
 
   function onDelete(id: string) {
     const confirmDelete = window.confirm(
-      "Tem certeza que deseja excluir este fornecedor?"
+      "Tem certeza que deseja excluir este funcionario?"
     );
 
     if (confirmDelete) {
       try {
         axiosClient
-          .delete(`/fornecedor/${id}`)
+          .delete(`/funcionario/${id}`)
           .then(() => {
-            alert("Fornecedor excluído com sucesso!");
+            alert("Funcionário excluído com sucesso!");
             window.location.reload(); // Atualiza a lista após excluir
           })
           .catch((error) => {
             console.error("Erro ao excluir:", error);
-            alert("Falha ao excluir o fornecedor.");
+            alert("Falha ao excluir o funcionario.");
           });
       } catch (error) {
         console.error("Erro na requisição:", error);
@@ -104,9 +103,10 @@ export function DataTable<TData, TValue>({
                   </TableCell>
                 ))}
                 <TableCell className="flex w-32 gap-2">
-                  <EditFornecedor
+                  <EditFuncionario
                     id={row.original.id}
                     nome={row.original.nome}
+                    email={row.original.email}
                   />
                   <Button
                     className="button-table"
