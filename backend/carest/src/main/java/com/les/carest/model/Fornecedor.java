@@ -14,7 +14,7 @@ public class Fornecedor {
     @Column(name = "nome")
     private String nome;
 
-    public Fornecedor(int id, String nome) {
+    public Fornecedor(UUID id, String nome) {
         this.id = id;
         this.nome = nome;
     }
@@ -23,11 +23,11 @@ public class Fornecedor {
         this.nome = nome;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

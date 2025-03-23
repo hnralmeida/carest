@@ -24,7 +24,7 @@ public class Venda {
     private Date dataVenda;
     private int valor;
 
-     public Venda(int id, Produto produto, Cliente cliente, Date dataVenda, int valor) {
+     public Venda(UUID id, Produto produto, Cliente cliente, Date dataVenda, int valor) {
         this.id = id;
         this.produto = produto;
         this.cliente = cliente;
@@ -39,11 +39,11 @@ public class Venda {
         this.valor = valor;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

@@ -2,10 +2,7 @@ package com.les.carest.model;
 
 import jakarta.persistence.*;
 import java.util.Date;
-import jakarta.persistence.*;
-import lombok.*;
-import java.util.UUID;
-    
+
 
 @Entity
 @Table(name = "produto_balanca")
@@ -14,9 +11,10 @@ public class ProdutoBalanca extends Produto {
     private Date data;
 
     public ProdutoBalanca() {
+        super();
     }
 
-    public Produtotring nome, double valor, Date data) {
+    public ProdutoBalanca(String nome, double valor, Date data) {
         super(nome, valor);
         this.data = data;
     }

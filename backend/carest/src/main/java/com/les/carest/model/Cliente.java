@@ -23,7 +23,7 @@ public class Cliente {
     private boolean em_uso;
     private Date dividaData;
 
-     public Cliente(int id, String nome, Date nascimento, String telefone, String email, double limite, double saldo, boolean em_uso, Date dividaData) {
+     public Cliente(UUID id, String nome, Date nascimento, String telefone, String email, double limite, double saldo, boolean em_uso, Date dividaData) {
         this.id = id;
         this.nome = nome;
         this.nascimento = nascimento;
@@ -46,11 +46,11 @@ public class Cliente {
         this.dividaData = dividaData;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

@@ -18,7 +18,7 @@ public class ControleCliente {
     private Date entrada;
     private Date saida;
 
-    public ControleCliente(int id, Cliente cliente, Date entrada, Date saida) {
+    public ControleCliente(UUID id, Cliente cliente, Date entrada, Date saida) {
         this.id = id;
         this.cliente = cliente;
         this.entrada = entrada;
@@ -31,11 +31,11 @@ public class ControleCliente {
         this.saida = saida;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 

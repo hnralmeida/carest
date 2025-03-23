@@ -19,7 +19,7 @@ public class Usuario {
     private String senha;
     private long codigo;
 
-    public Usuario(int id, String nome, String telefone, String email, String senha, long codigo) {
+    public Usuario(UUID id, String nome, String telefone, String email, String senha, long codigo) {
         this.id = id;
         this.nome = nome;
         this.telefone = telefone;
@@ -36,11 +36,11 @@ public class Usuario {
         this.codigo = codigo;
     }
 
-    public int getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
