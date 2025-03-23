@@ -1,17 +1,26 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
 package com.les.carest.repository;
 
 import com.les.carest.model.Usuario;
+import java.util.Optional;
+import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.UUID;
-
 @Repository
+<<<<<<< HEAD
 public interface UsuarioRepository extends JpaRepository <Usuario, UUID> {
 
     //@Query("SELECT * FROM usuario u WHERE u.id=:id")
     Usuario findByEmail(String email);
 
+=======
+public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
+    Optional<Usuario> findByEmail(String email);
+>>>>>>> refs/remotes/origin/main
 }
+    

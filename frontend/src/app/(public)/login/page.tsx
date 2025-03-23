@@ -1,6 +1,7 @@
 import Image from "next/image";
 import logo from "../../../../public/images/logo.png";
 import group_login from "../../../../public/images/group_login.svg";
+import LoginForm from "@/components/loginForm";
 
 export default function Login() {
   return (
@@ -28,38 +29,7 @@ export default function Login() {
             height={128}
             placeholder="empty"
           />
-          <form className="flex flex-col items-center justify-center mt-4 w-full max-w-ls px-16">
-            <div className="mb-4 w-full max-w-ls">
-              <label className="block text-sm font-bold mb-2" htmlFor="email">
-                Email
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-[var(--neutral-color)] leading-tight focus:outline-none focus:shadow-outline hover:scale-105 transition-transform duration-200 ease-in-out"
-                id="email"
-                type="email"
-                placeholder="Email"
-              />
-            </div>
-            <div className="mb-4 w-full max-w-ls">
-              <label
-                className="block text-sm font-bold mb-2"
-                htmlFor="password"
-              >
-                Password
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline hover:scale-105 transition-transform duration-200 ease-in-out"
-                id="password"
-                type="password"
-                placeholder="******************"
-              />
-            </div>
-            <div className="flex items-center justify-between">
-              <button className="button-class" type="button">
-                Sign In
-              </button>
-            </div>
-          </form>
+          <LoginForm />
           {/* <a
             className="inline-block align-baseline font-bold text-sm hover:text-[var(--primary-color)] hover:scale-105 transition-transform duration-200 ease-in-out mt-4"
             href="#"
