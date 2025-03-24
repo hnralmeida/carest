@@ -33,6 +33,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/usuario").permitAll() // Libera o endpoint /usuario
+                        .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/api").anonymous()
                         .anyRequest().permitAll() // Exige autenticação para todos os outros endpoints
                 );
         return http.build();

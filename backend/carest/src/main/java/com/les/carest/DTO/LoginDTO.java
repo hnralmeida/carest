@@ -20,12 +20,5 @@ public class LoginDTO {
     public void setSenha(String senha) {
         this.senha = senha;
     }
-<<<<<<< HEAD
-=======
 
-    @Override
-    public String toString() {
-        return this.email + "  " + this.senha;
-    }
->>>>>>> refs/remotes/origin/main
 }

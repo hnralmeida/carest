@@ -16,10 +16,12 @@ public class UsuarioController extends _GenericController<Usuario> {
         super(usuarioService);
         this.usuarioService = usuarioService;
     }
-<<<<<<< HEAD
+}
+/*<<<<<<< HEAD
 
     
 }
 =======
 }
 >>>>>>> refs/remotes/origin/main
+*/

@@ -47,7 +47,7 @@ public class UsuarioService extends _GenericService<Usuario, UsuarioRepository> 
     }
 
     public boolean validarSenha(String email, String senha) {
-        Optional<Usuario> optionalUsuario = ((UsuarioRepository)this.repositoryGenerics).findByEmail(email);
+        Optional<Usuario> optionalUsuario = Optional.ofNullable(((UsuarioRepository) this.repositoryGenerics).findByEmail(email));
         Usuario usuario = (Usuario)optionalUsuario.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         return this.passwordEncoder.matches(senha, usuario.getSenha());
     }

@@ -12,15 +12,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-<<<<<<< HEAD
+
 public interface UsuarioRepository extends JpaRepository <Usuario, UUID> {
 
     //@Query("SELECT * FROM usuario u WHERE u.id=:id")
     Usuario findByEmail(String email);
 
-=======
-public interface UsuarioRepository extends JpaRepository<Usuario, UUID> {
-    Optional<Usuario> findByEmail(String email);
->>>>>>> refs/remotes/origin/main
 }
     
