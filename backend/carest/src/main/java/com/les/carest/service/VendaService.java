@@ -14,4 +14,5 @@ public class VendaService extends _GenericService<Venda, VendaRepository> {
     protected VendaService(VendaRepository VendaRepository) {
         super(VendaRepository);
     }
+
 }

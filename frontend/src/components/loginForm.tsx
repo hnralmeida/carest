@@ -1,9 +1,10 @@
-'use client'
+"use client";
 
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast, Toaster } from "sonner";
 
 interface IUser {
   email: string;
@@ -16,26 +17,43 @@ export default function LoginForm() {
     senha: "",
   });
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const searchParams = useSearchParams();
-
   const error = searchParams.get("error");
-
   const router = useRouter();
 
   async function login(e: React.SyntheticEvent) {
+    setIsLoading(true);
     e.preventDefault();
-    
-    console.log(data)
+
     const res = await signIn("credentials", {
       ...data,
       redirect: false,
     });
+    
+    if(res?.status==401){
+      toast("Problema com a conexão", {
+        description: res.error,
+        action: {
+          label: "Tente Novamente",
+          onClick: () => console.log("Undo"),
+        },
+      }); 
+    }
 
     if (res?.error) {
-      alert("Oooops...");
+      toast("Oooops...", {
+        description: res.error,
+        action: {
+          label: "Tente Novamente",
+          onClick: () => console.log("Undo"),
+        },
+      }); // Toast
     } else {
       router.push("/");
     }
+    setIsLoading(false);
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,10 +98,11 @@ export default function LoginForm() {
         />
       </div>
       <div className="flex items-center justify-between">
-        <button className="button-class" type="submit">
-          Sign In
+        <button className="button-class" type="submit" disabled={isLoading}>
+          Entrar
         </button>
       </div>
+      <Toaster richColors position="top-center"/>
       {error == "CredentialsSignin" && (
         <p className="text-red-400">Email ou senha inválida</p>
       )}

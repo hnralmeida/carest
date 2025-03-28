@@ -1,23 +1,25 @@
-import React from "react";
-import {
-  columns,
-  Funcionario,
-} from "../../../components/funcionarioComponents/columns";
-import { axiosClient } from "@/services/axiosClient";
+"use client";
+
+import React, { useEffect } from "react";
+import { columns } from "../../../components/funcionarioComponents/columns";
 import AddFuncionario from "@/components/funcionarioComponents/addFuncionario";
 import { DataTable } from "@/components/funcionarioComponents/DataTable";
+import { useFuncionarioHook } from "@/hooks/useFuncionario";
 
-async function getData(): Promise<Funcionario[]> {
-  const response = await axiosClient.get("/usuario");
-  return response.data.sort((a: Funcionario, b: Funcionario) =>
-    a.nome.localeCompare(b.nome)
-  );
-}
+// async function getData(): Promise<Funcionario[]> {
+//   const response = await axiosClient.get("/usuario");
+//   return response.data.sort((a: Funcionario, b: Funcionario) =>
+//     a.nome.localeCompare(b.nome)
+//   );
+// }
 
-const page = async () => {
+function Page() {
+  const { funcionarios, listarFuncionarios } = useFuncionarioHook();
 
-  const data = await getData();
-  
+  useEffect(() => {
+    listarFuncionarios();
+  }, []);
+
   return (
     <div className="container rounded-md border mx-auto my-16 py-4 px-4 content-bg">
       <div className="flex justify-between items-center w-full mb-4">
@@ -26,9 +28,13 @@ const page = async () => {
           <AddFuncionario />
         </div>
       </div>
-      <DataTable columns={columns} data={data} />
+      {funcionarios ? (
+        <DataTable columns={columns} data={funcionarios} />
+      ) : (
+        <p>Carregando...</p>
+      )}
     </div>
   );
-};
+}
 
-export default page;
+export default Page;

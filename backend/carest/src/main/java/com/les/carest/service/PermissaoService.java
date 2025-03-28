@@ -1,19 +1,75 @@
 package com.les.carest.service;
 
 import com.les.carest.model.Permissao;
+import com.les.carest.model.Tela;
+import com.les.carest.model.Usuario;
 import com.les.carest.repository.PermissaoRepository;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.les.carest.repository.TelaRepository;
+import com.les.carest.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.transaction.annotation.Transactional;
 
-@Validated
+import java.util.List;
+import java.util.UUID;
+
 @Service
-@Tag(name = "PermissaoService", description = "Acesso aos métodos de Permissao")
 public class PermissaoService extends _GenericService<Permissao, PermissaoRepository> {
 
-    protected PermissaoService(PermissaoRepository PermissaoRepository) {
-        super(PermissaoRepository);
+    private final TelaRepository telaRepository;
+    private final UsuarioRepository usuarioRepository;
+    private final PermissaoRepository permissaoRepository;
+
+    public PermissaoService(PermissaoRepository permissaoRepository,
+                            TelaRepository telaRepository,
+                            UsuarioRepository usuarioRepository) {
+        super(permissaoRepository);
+        this.permissaoRepository = permissaoRepository;
+        this.telaRepository = telaRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
+    @Transactional
+    public Permissao atribuirPermissoes(UUID usuarioAlvoId, UUID telaId,
+                                        boolean canCreate, boolean canRead,
+                                        boolean canUpdate, boolean canDelete) {
 
+//        if (usuarioAtribuidorId.equals(usuarioAlvoId)) {
+//            throw new RuntimeException("Um usuário não pode conceder permissões a si mesmo");
+//        }
+
+        Usuario usuarioAlvo = usuarioRepository.findById(usuarioAlvoId)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        Tela tela = telaRepository.findById(telaId)
+                .orElseThrow(() -> new RuntimeException("Tela não encontrada"));
+
+//        if (!permissaoRepository.existsByUsuarioIdAndTelaIdAndCreate(usuarioAtribuidorId, telaId, true)) {
+//            throw new RuntimeException("Você não tem permissão para conceder permissões nesta tela");
+//        }
+
+        Permissao permissao = permissaoRepository.findByUsuarioIdAndTelaId(usuarioAlvoId, telaId)
+                .orElse(new Permissao());
+
+        permissao.setUsuario(usuarioAlvo);
+        permissao.setTela(tela);
+        permissao.setCreate(canCreate);
+        permissao.setRead(canRead || canCreate || canUpdate || canDelete);
+        permissao.setUpdate(canUpdate);
+        permissao.setDelete(canDelete);
+
+        return permissaoRepository.save(permissao);
+    }
+
+    public boolean temPermissao(UUID usuarioId, UUID telaId, String acao) {
+        return permissaoRepository.existsByUsuarioIdAndTelaIdAndAcao(usuarioId, telaId, acao);
+    }
+
+    public List<Permissao> listarPermissoesUsuario(UUID usuarioId) {
+        return permissaoRepository.findByUsuarioId(usuarioId);
+    }
+
+    @Transactional
+    public void removerPermissoes(UUID usuarioId, UUID telaId) {
+        permissaoRepository.deleteByUsuarioIdAndTelaId(usuarioId, telaId);
+    }
 }

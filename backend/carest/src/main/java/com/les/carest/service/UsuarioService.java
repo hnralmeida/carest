@@ -5,9 +5,13 @@
 
 package com.les.carest.service;
 
+import com.les.carest.model.Permissao;
+import com.les.carest.model.Tela;
 import com.les.carest.model.Usuario;
 import com.les.carest.repository.UsuarioRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +27,16 @@ import org.springframework.validation.annotation.Validated;
 )
 public class UsuarioService extends _GenericService<Usuario, UsuarioRepository> {
     private final PasswordEncoder passwordEncoder;
+    private final PermissaoService permissaoService;
+    private final TelaService telaService;
 
     @Autowired
-    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder,
+                          PermissaoService permissaoService, TelaService telaService) {
         super(usuarioRepository);
         this.passwordEncoder = passwordEncoder;
+        this.permissaoService = permissaoService;
+        this.telaService = telaService;
     }
 
     public Usuario criar(Usuario usuario) {
@@ -50,5 +59,21 @@ public class UsuarioService extends _GenericService<Usuario, UsuarioRepository> 
         Optional<Usuario> optionalUsuario = Optional.ofNullable(((UsuarioRepository) this.repositoryGenerics).findByEmail(email));
         Usuario usuario = (Usuario)optionalUsuario.orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
         return this.passwordEncoder.matches(senha, usuario.getSenha());
+    }
+
+    public List<Permissao> buscarPermissoesPorUsuarioId(UUID usuarioId) {
+        Usuario usuario = this.buscarPorId(usuarioId);
+        return usuario.getPermissoes();
+    }
+
+    public void fazerPermissoes(UUID usuarioId) {
+        Usuario usuario = this.buscarPorId(usuarioId);
+        List<Tela> telas = telaService.listar();
+
+        for(Tela tela : telas) {
+            Permissao permissao = new Permissao(usuario, tela, false, false, false, false);
+            permissaoService.criar(permissao);
+        }
+
     }
 }

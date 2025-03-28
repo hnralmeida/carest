@@ -6,16 +6,16 @@
 package com.les.carest.model;
 
 import jakarta.persistence.*;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
@@ -34,16 +34,26 @@ public class Usuario implements UserDetails {
     private String nome;
     private String email;
     private String senha;
-    @OneToMany
-    private List<Permissao> role;
+
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
+    private List<Permissao> permissoes = new ArrayList<>();
 
     public Usuario() {
     }
 
-    public Usuario(String nome, String email, String senha) {
+    public Usuario(String nome, String email, String senha, List<Permissao> permissoes) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
+        this.permissoes = permissoes;
+    }
+
+    public List<Permissao> getPermissoes() {
+        return permissoes;
+    }
+
+    public void setPermissoes(List<Permissao> permissoes) {
+        this.permissoes = permissoes;
     }
 
     public UUID getId() {
@@ -79,7 +89,9 @@ public class Usuario implements UserDetails {
     }
 
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.emptyList();
+        return this.permissoes.stream()
+                .map(permissao -> new SimpleGrantedAuthority(permissao.getAuthority()))
+                .collect(Collectors.toList());
     }
 
     public String getPassword() {

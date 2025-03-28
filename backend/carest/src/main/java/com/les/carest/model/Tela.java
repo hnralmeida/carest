@@ -20,8 +20,8 @@ public class Tela {
         this.nome = nome;
     }
 
-    public Tela(String nome) {
-        this.nome = nome;
+    public Tela() {
+
     }
 
     public UUID getId() {

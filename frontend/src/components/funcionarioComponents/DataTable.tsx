@@ -22,6 +22,7 @@ import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { axiosClient } from "@/services/axiosClient";
 import EditFuncionario from "./editFuncionario";
+import EditPermissoes from "./editPermissoes";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -82,7 +83,7 @@ export function DataTable<TData, TValue>({
                       )}
                 </TableHead>
               ))}
-              <TableHead className="w-[96px]" />
+              <TableHead className="w-[140px]" />
             </TableRow>
           ))}
         </TableHeader>
@@ -102,7 +103,8 @@ export function DataTable<TData, TValue>({
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
-                <TableCell className="flex w-32 gap-2">
+                <TableCell className="flex w-48 gap-2">
+                  <EditPermissoes id={row.original.id} />
                   <EditFuncionario
                     id={row.original.id}
                     nome={row.original.nome}

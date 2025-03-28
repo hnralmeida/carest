@@ -1,14 +1,9 @@
 "use client";
 
+import { Usuario } from "@/app/models/usuario";
 import { ColumnDef } from "@tanstack/react-table";
 
-export type Funcionario = {
-  id: string;
-  nome: string;
-  email: string;
-};
-
-export const columns: ColumnDef<Funcionario>[] = [
+export const columns: ColumnDef<Usuario>[] = [
   {
     accessorKey: "nome",
     header: "Nome",

@@ -1,5 +1,6 @@
 package com.les.carest.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.UUID;
@@ -11,17 +12,25 @@ public class Permissao {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
+    @JsonIgnore
     private Usuario usuario;
 
     @ManyToOne
     @JoinColumn(name = "tela_id")
     private Tela tela;
 
+    @Column(name = "can_create")
     private boolean create;
+
+    @Column(name = "can_read")
     private boolean read;
+
+    @Column(name = "can_update")
     private boolean update;
+
+    @Column(name = "can_delete")
     private boolean delete;
 
     public Permissao(Usuario usuario, Tela tela, boolean create, boolean read, boolean update, boolean delete) {
@@ -38,6 +47,9 @@ public class Permissao {
         this.create = create;
         this.update = update;
         this.delete = delete;
+    }
+
+    public Permissao() {
     }
 
     public Usuario getUsuario() {
@@ -86,5 +98,13 @@ public class Permissao {
 
     public void setDelete(boolean delete) {
         this.delete = delete;
+    }
+
+    public String getAuthority() {
+        return "TELA_" + tela.getId().toString() + "_" +
+                (create ? "C" : "") +
+                (read ? "R" : "") +
+                (update ? "U" : "") +
+                (delete ? "D" : "");
     }
 }
