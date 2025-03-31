@@ -12,6 +12,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { usePermissaoHook } from "@/hooks/usePermissoes";
+import { UsuarioMock } from "@/app/models/usuario";
+import { Permissao } from "@/app/models/permissao";
 
 interface EditPermissoesProps {
   id: string;
@@ -19,24 +21,58 @@ interface EditPermissoesProps {
 
 export default function EditPermissoes({ id }: EditPermissoesProps) {
   const [open, setOpen] = useState(false);
+  const [localPermissoes, setLocalPermissoes] = useState<Permissao[]>([]);
 
-  const { permissoes, selecionarpermissao } = usePermissaoHook();
+  const [ loading, setLoading] = useState(false);
+
+  const { permissoes, selecionarpermissao, editarpermissao } =
+    usePermissaoHook();
 
   useEffect(() => {
-    console.log("id do funcionario: ");
-    console.log(id);
-    selecionarpermissao(id);
+    async function fetchPermissoes() {
+      await selecionarpermissao(id);
+      setLocalPermissoes(permissoes || []);
+    }
+
+    fetchPermissoes();
   }, [open, id]);
 
-  const onFormSubmit = async (event: React.FormEvent) => {
-    event.preventDefault(); // Evita que o formulário recarregue a página
+  //event: React.FormEvent
+  const onFormSubmit = async () => {
+    setLoading(true); // Inicia o carregamento
 
-    try {
-      console.log(id);
-    } catch (error) {
-      console.error("Erro na requisição:", error);
-      alert("Falha ao conectar com o servidor. ");
+    if (localPermissoes) {
+      const updatedPermissoes = localPermissoes.map((permissao, index) => ({
+        ...permissao,
+        usuario: UsuarioMock,
+        create: localPermissoes[index].create,
+        read: localPermissoes[index].read,
+        update: localPermissoes[index].update,
+        delete: localPermissoes[index].delete,
+      }));
+
+      try {
+        const response = await editarpermissao(updatedPermissoes, id);
+        setLoading(false); // Finaliza o carregamento
+
+        if (!response) {
+          throw new Error("Erro ao atualizar permissões");
+        }
+      } catch (error) {
+        console.error("Erro na requisição:", error);
+        setLoading(false); // Finaliza o carregamento
+        alert("Falha ao conectar com o servidor. ");
+      }
     }
+  };
+
+  const handleCheckboxChange = (index: number, field: "create" | "read" | "update" | "delete") => {
+    setLocalPermissoes((prev) =>
+      prev.map((perm, i) =>
+        i === index ? { ...perm, [field]: !perm[field] } : perm
+      )
+    );
+    console.log("localPermissoes", localPermissoes);
   };
 
   return (
@@ -57,21 +93,55 @@ export default function EditPermissoes({ id }: EditPermissoesProps) {
             <DialogTitle>Gerenciar Permissões</DialogTitle>
           </DialogHeader>
           <form onSubmit={onFormSubmit} className="flex flex-col gap-4">
-            {permissoes?.map((permissao) => (
-              <div
-                className="flex justify-between"
-                key={permissao?.tela?.id}
-              >
-                <p className="w-[128px]">{permissao?.tela?.nome}</p>
-                <Checkbox id="create-first" className="cursor-pointer"/>
-                <Checkbox id="read-first" className="cursor-pointer"/>
-                <Checkbox id="update-first" className="cursor-pointer"/>
-                <Checkbox id="delete-first" className="cursor-pointer"/>
-              </div>
-            ))} 
+            {localPermissoes
+              ? localPermissoes.map((permissao, index) => (
+                  <div
+                    className="flex justify-between"
+                    key={permissao?.tela?.id}
+                  >
+                    <p className="w-[128px]">{permissao?.tela?.nome}</p>
+                    <Checkbox
+                      id={`create-${permissao.tela.id}`}
+                      className="cursor-pointer"
+                      checked={localPermissoes[index].create}
+                      onCheckedChange={() =>
+                        handleCheckboxChange(index, "create")
+                      }
+                    />
+                    <Checkbox
+                      id={`read-${permissao.tela.id}`}
+                      className="cursor-pointer"
+                      checked={localPermissoes[index].read}
+                      onCheckedChange={() =>
+                        handleCheckboxChange(index, "read")
+                      }
+                    />
+                    <Checkbox
+                      id={`update-${permissao.tela.id}`}
+                      className="cursor-pointer"
+                      checked={localPermissoes[index].update}
+                      onCheckedChange={() =>
+                        handleCheckboxChange(index, "update")
+                      }
+                    />
+                    <Checkbox
+                      id={`delete-${permissao.tela.id}`}
+                      className="cursor-pointer"
+                      checked={localPermissoes[index].delete}
+                      onCheckedChange={() =>
+                        handleCheckboxChange(index, "delete")
+                      }
+                    />
+                  </div>
+                ))
+              : null}
 
-            <Button type="submit" className="mt-4 cursor-pointer">
-              Salvar
+            <Button type="submit" className="mt-4 cursor-pointer" disabled={loading}>
+              {loading ? (
+                <span className="animate-pulse">Salvando...</span>
+              ) : (
+                "Salvar"
+              )}
             </Button>
           </form>
         </DialogContent>

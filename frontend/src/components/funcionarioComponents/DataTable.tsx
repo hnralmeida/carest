@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { axiosClient } from "@/services/axiosClient";
 import EditFuncionario from "./editFuncionario";
 import EditPermissoes from "./editPermissoes";
+import { toast, Toaster } from "sonner";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -48,14 +49,14 @@ export function DataTable<TData, TValue>({
     if (confirmDelete) {
       try {
         axiosClient
-          .delete(`/funcionario/${id}`)
+          .delete(`/usuario/${id}`)
           .then(() => {
-            alert("Funcionário excluído com sucesso!");
             window.location.reload(); // Atualiza a lista após excluir
+            toast.success("Funcionario excluido com sucesso!");
           })
           .catch((error) => {
             console.error("Erro ao excluir:", error);
-            alert("Falha ao excluir o funcionario.");
+            toast.error("Falha ao excluir o funcionario.");
           });
       } catch (error) {
         console.error("Erro na requisição:", error);
@@ -144,6 +145,7 @@ export function DataTable<TData, TValue>({
             </button>
           ))}
         </TableFooter>
+        <Toaster richColors position="bottom-center" closeButton />
       </Table>
     </div>
   );

@@ -17,18 +17,15 @@ import { GalleryVerticalEnd, LogOut, User } from "lucide-react";
 import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { signOut } from "next-auth/react";
-import { getServerSession } from "next-auth";
-import { Session } from "next-auth";
+import { useSession } from "next-auth/react"
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   
-  const [session, setSession] = React.useState<Session | null>(null);
+  const { data: session } = useSession()
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const data = await getServerSession();
-      setSession(data);
-      console.log(data)
+      console.log(session)
     }
     fetchData();
   }, []);

@@ -60,6 +60,7 @@ export const useFuncionarioHook = () => {
         try {
             const response = await axiosClient.post('/usuario', Funcionario);
             if (response.data) {
+                axiosClient.post("/usuario/criarPermissoes/" + response.data.id);
                 setFuncionario(response.data);
                 return response.data;
             }
