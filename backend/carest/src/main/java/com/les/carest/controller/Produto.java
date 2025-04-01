@@ -1,5 +1,6 @@
 package main.java.com.les.carest.controller;
 
+import com.les.carest.controller.GenericController;
 import com.les.carest.domain.Produto;
 import com.les.carest.service.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
