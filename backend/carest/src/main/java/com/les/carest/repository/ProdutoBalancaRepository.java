@@ -1,4 +1,4 @@
-package main.java.com.les.carest.repository;
+package com.les.carest.repository;
 
 
 import com.les.carest.model.ProdutoBalanca;

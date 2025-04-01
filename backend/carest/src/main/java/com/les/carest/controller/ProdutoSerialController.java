@@ -1,11 +1,8 @@
-package main.java.com.les.carest.controller;
+package com.les.carest.controller;
 
-import com.les.carest.domain.ProdutoSerial;
+import com.les.carest.model.ProdutoSerial;
 import com.les.carest.service.ProdutoSerialService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Validated
 @RestController
-//tirar duvida do mapping //@RequestMapping("/cliente")
-public class ProdutoSerialController extends GenericController {
+@RequestMapping("/produtoSerial")
+public class ProdutoSerialController extends _GenericController<ProdutoSerial> {
     public ProdutoSerialController(ProdutoSerialService produtoSerialService) {
         super(produtoSerialService);
     }

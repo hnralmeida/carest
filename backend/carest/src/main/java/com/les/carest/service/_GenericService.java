@@ -1,36 +1,38 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
 package com.les.carest.service;
 
-import com.probuild.backend.exception.RegistroNotFoundException;
-import com.probuild.backend.exception.RegistroNotUpdated;
+import com.les.carest.exception.RegistroNotFoundException;
+import com.les.carest.exception.RegistroNotUpdated;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.UUID;
-
-public abstract class _GenericService<TipoEntidade, RepositorioGenerics extends JpaRepository<TipoEntidade, UUID>>
-        implements _GenericServiceTypes<TipoEntidade> {
-
+public abstract class _GenericService<TipoEntidade, RepositorioGenerics extends JpaRepository<TipoEntidade, UUID>> implements _GenericServiceTypes<TipoEntidade> {
     protected RepositorioGenerics repositoryGenerics;
 
     protected _GenericService(RepositorioGenerics repositoryGenerics) {
         this.repositoryGenerics = repositoryGenerics;
     }
 
-    @Override
     public List<TipoEntidade> listar() {
         try {
-            return repositoryGenerics.findAll();
+            return this.repositoryGenerics.findAll();
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao listar entidades", e);
         }
     }
 
-    @Override
     public TipoEntidade buscarPorId(UUID id) {
         try {
-            return repositoryGenerics.findById(id).orElseThrow(() -> new RegistroNotFoundException(id));
+            Optional<TipoEntidade> optionalEntity = this.repositoryGenerics.findById(id);
+            return (TipoEntidade)optionalEntity.orElseThrow(() -> new RegistroNotFoundException(id));
         } catch (RegistroNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         } catch (Exception e) {
@@ -38,20 +40,19 @@ public abstract class _GenericService<TipoEntidade, RepositorioGenerics extends 
         }
     }
 
-    @Override
     public TipoEntidade criar(TipoEntidade entity) {
         try {
-            return repositoryGenerics.save(entity);
+            return (TipoEntidade)this.repositoryGenerics.save(entity);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro ao criar entidade", e);
         }
     }
 
-    @Override
     public void excluir(UUID id) {
         try {
-            TipoEntidade entity = repositoryGenerics.findById(id).orElseThrow(() -> new RegistroNotFoundException(id));
-            repositoryGenerics.delete(entity);
+            Optional<TipoEntidade> optionalEntity = this.repositoryGenerics.findById(id);
+            TipoEntidade entity = (TipoEntidade)optionalEntity.orElseThrow(() -> new RegistroNotFoundException(id));
+            this.repositoryGenerics.delete(entity);
         } catch (RegistroNotFoundException e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         } catch (Exception e) {
@@ -59,14 +60,11 @@ public abstract class _GenericService<TipoEntidade, RepositorioGenerics extends 
         }
     }
 
-
-
-    @Override
     public TipoEntidade atualizar(UUID id, TipoEntidade entityAtualizada) {
         try {
-            TipoEntidade entity = repositoryGenerics.findById(id).orElseThrow(() -> new RegistroNotUpdated(id));
-            entity = entityAtualizada;
-            return repositoryGenerics.save(entity);
+            Optional<TipoEntidade> optionalEntity = this.repositoryGenerics.findById(id);
+            optionalEntity.orElseThrow(() -> new RegistroNotUpdated(id));
+            return (TipoEntidade)this.repositoryGenerics.save(entityAtualizada);
         } catch (RegistroNotUpdated e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         } catch (Exception e) {

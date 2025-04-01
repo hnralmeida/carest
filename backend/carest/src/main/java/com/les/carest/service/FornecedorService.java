@@ -11,9 +11,8 @@ import org.springframework.validation.annotation.Validated;
 @Tag(name = "FornecedorService", description = "Acesso aos métodos de Fornecedor")
 public class FornecedorService extends _GenericService<Fornecedor, FornecedorRepository> {
 
-    protected void FornecedorRepository(FornecedorRepository FornecedorRepository) {
+    protected FornecedorService(FornecedorRepository FornecedorRepository) {
         super(FornecedorRepository);
     }
-
 
 }

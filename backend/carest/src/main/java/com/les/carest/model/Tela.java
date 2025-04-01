@@ -9,15 +9,34 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "tela")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Tela {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String nome;
-    @OneToMany(mappedBy = "tela")
-    private List<Permissao> permissoes;
+
+    public Tela(UUID id, String nome) {
+        this.id = id;
+        this.nome = nome;
+    }
+
+    public Tela() {
+
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
 }
