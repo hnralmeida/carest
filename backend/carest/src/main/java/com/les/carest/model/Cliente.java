@@ -1,5 +1,6 @@
 package com.les.carest.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Entity;
 
 import java.util.Date;
@@ -16,12 +17,14 @@ public class Cliente {
     private UUID id;
     private String nome;
     private String codigo;
+    @JsonFormat(pattern = "yyyy/MM/dd")
     private Date nascimento;
     private String telefone;
     private String email;
     private double limite;
     private double saldo;
     private boolean em_uso;
+    @JsonFormat(pattern = "yyyy/MM/dd")
     private Date dividaData;
 
     public Cliente(){}
