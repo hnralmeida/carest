@@ -12,9 +12,10 @@ import java.util.UUID;
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, UUID> {
 
-    @Query("SELECT c FROM Cliente c WHERE FUNCTION('MONTH', c.nascimento) = FUNCTION('MONTH', CURRENT_DATE) AND FUNCTION('DAY', c.nascimento) = FUNCTION('DAY', CURRENT_DATE)")
+    @Query("SELECT c FROM Cliente c WHERE EXTRACT(MONTH FROM c.nascimento) = EXTRACT(MONTH FROM CURRENT_DATE) AND EXTRACT(DAY FROM c.nascimento) = EXTRACT(DAY FROM CURRENT_DATE)")
     List<Cliente> findAniversariantesDoDia();
 
-    @Query("SELECT c FROM Cliente c WHERE FUNCTION('MONTH', c.nascimento) = :mes AND FUNCTION('DAY', c.nascimento) = :dia")
+    // Consulta para data específica
+    @Query("SELECT c FROM Cliente c WHERE EXTRACT(MONTH FROM c.nascimento) = :mes AND EXTRACT(DAY FROM c.nascimento) = :dia")
     List<Cliente> findAniversariantesPorData(@Param("mes") int mes, @Param("dia") int dia);
 }

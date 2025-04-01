@@ -5,6 +5,8 @@ import com.les.carest.DTO.AniversarianteDTO;
 import com.les.carest.model.Cliente;
 import com.les.carest.service.ClienteService;
 import com.les.carest.service._GenericServiceTypes;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,8 +35,8 @@ public class AniversariantesController extends _GenericController<Cliente> {
 
     @GetMapping("/por-data")
     public ResponseEntity<List<AniversarianteDTO>> listarAniversariantesPorData(
-            @RequestParam int mes,
-            @RequestParam int dia) {
+            @RequestParam @Min(1) @Max(12) int mes,
+            @RequestParam @Min(1) @Max(31) int dia) {
         return ResponseEntity.ok(clienteService.listarAniversariantesPorData(mes, dia));
     }
 }

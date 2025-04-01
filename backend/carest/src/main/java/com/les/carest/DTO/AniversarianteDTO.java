@@ -29,7 +29,7 @@ public class AniversarianteDTO {
         int idade = LocalDate.now().getYear() - dataNasc.getYear();
 
         return new AniversarianteDTO(
-                cliente.getId(),  // Adicionei o ID que estava faltando
+                cliente.getId(),
                 cliente.getNome(),
                 cliente.getEmail(),
                 cliente.getTelefone(),
