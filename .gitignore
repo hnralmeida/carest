@@ -1,2 +1,39 @@
+backend/carest/src/main/resources/application.properties
 web/node_modules
 web/.env
+
+backend/carest/HELP.md
+backend/carest/target/
+backend/carest/!.mvn/wrapper/maven-wrapper.jar
+backend/carest/!**/src/main/**/target/
+backend/carest/!**/src/test/**/target/
+
+### STS ###
+backend/carest/.apt_generated
+backend/carest/.classpath
+backend/carest/.factorypath
+backend/carest/.project
+backend/carest/.settings
+backend/carest/.springBeans
+backend/carest/.sts4-cache
+backend/carest/.=
+### IntelliJ IDEA ###
+backend/carest/.idea
+backend/carest/*.iws
+backend/carest/*.iml
+backend/carest/*.ipr
+
+### NetBeans ###
+backend/carest//nbproject/private/
+backend/carest//nbbuild/
+backend/carest//dist/
+backend/carest//nbdist/
+backend/carest//.nb-gradle/
+backend/carest/build/
+backend/carest/!**/src/main/**/build/
+backend/carest/!**/src/test/**/build/
+
+### VS Code ###
+backend/carest/.vscode/
+backend/carest//src/main/resources/
+
