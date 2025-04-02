@@ -12,6 +12,8 @@ import java.time.Period;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Validated
@@ -26,33 +28,58 @@ public class ClienteService extends _GenericService<Cliente, ClienteRepository> 
     // Métodos específicos de aniversariantes
     public List<AniversarianteDTO> listarAniversariantesDoDia() {
         List<Cliente> clientes = this.repositoryGenerics.findAniversariantesDoDia();
-        return converterParaDTO(clientes);
+        return converterParaDTO(clientes, LocalDate.now().getMonthValue());
     }
 
-    public List<AniversarianteDTO> listarAniversariantesPorData(int mes, int dia) {
-        List<Cliente> clientes = this.repositoryGenerics.findAniversariantesPorData(mes, dia);
-        return converterParaDTO(clientes);
+    public List<AniversarianteDTO> listarAniversariantesPorMes(int mes) {
+        if (mes < 1 || mes > 12) {
+            throw new IllegalArgumentException("Mês deve ser entre 1 e 12");
+        }
+        List<Cliente> clientes = ((ClienteRepository) this.repositoryGenerics).findByMesAniversario(mes);
+        return converterParaDTO(clientes, mes);
     }
 
-    private List<AniversarianteDTO> converterParaDTO(List<Cliente> clientes) {
+    private void validateMes(int mes) {
+        if (mes < 1 || mes > 12) {
+            throw new IllegalArgumentException("Mês inválido. Deve ser entre 1 (janeiro) e 12 (dezembro)");
+        }
+    }
+
+    private List<AniversarianteDTO> converterParaDTO(List<Cliente> clientes, int mes) {
         return clientes.stream()
-                .map(this::converterClienteParaDTO)
+                .map(cliente -> converterClienteParaDTO(cliente, mes))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
     }
 
-    private AniversarianteDTO converterClienteParaDTO(Cliente cliente) {
-        Date nascimento = cliente.getNascimento();
-        LocalDate dataNasc = nascimento.toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDate();
-        int idade = Period.between(dataNasc, LocalDate.now()).getYears();
+    private Optional<AniversarianteDTO> converterClienteParaDTO(Cliente cliente, int mes) {
+        try {
+            Date nascimento = cliente.getNascimento();
+            LocalDate dataNasc = nascimento.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
 
-        return new AniversarianteDTO(
-                cliente.getId(),
-                cliente.getNome(),
-                cliente.getEmail(),
-                cliente.getTelefone(),
-                idade
-        );
+            if (dataNasc.getMonthValue() != mes) {
+                return Optional.empty();
+            }
+
+            int idade = Period.between(dataNasc, LocalDate.now()).getYears();
+
+            return Optional.of(new AniversarianteDTO(
+                    cliente.getId(),
+                    cliente.getNome(),
+                    cliente.getEmail(),
+                    cliente.getTelefone(),
+                    idade,
+                    dataNasc
+            ));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
+
+    private int calculateIdade(LocalDate dataNascimento) {
+        return Period.between(dataNascimento, LocalDate.now()).getYears();
     }
 }

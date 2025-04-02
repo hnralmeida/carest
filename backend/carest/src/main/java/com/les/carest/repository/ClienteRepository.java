@@ -16,6 +16,6 @@ public interface ClienteRepository extends JpaRepository<Cliente, UUID> {
     List<Cliente> findAniversariantesDoDia();
 
     // Consulta para data específica
-    @Query("SELECT c FROM Cliente c WHERE EXTRACT(MONTH FROM c.nascimento) = :mes AND EXTRACT(DAY FROM c.nascimento) = :dia")
-    List<Cliente> findAniversariantesPorData(@Param("mes") int mes, @Param("dia") int dia);
+    @Query("SELECT c FROM Cliente c WHERE EXTRACT(MONTH FROM c.nascimento) = :mes")
+    List<Cliente> findByMesAniversario(@Param("mes") int mes);
 }
