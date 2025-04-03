@@ -49,6 +49,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     fornecedores: false,
     controle_saida: false,
     dre: false,
+    tela: false,
   });
 
   // Função para resetar o estado
@@ -214,6 +215,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               active.dre = true;
             },
             isActive: active.dre,
+          },
+          {
+            title: "Tela",
+            url: "/tela",
+            onClick: () => {
+              resetActive();
+              active.tela = true;
+            },
+            isActive: active.tela,
           },
         ],
       },

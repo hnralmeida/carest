@@ -34,6 +34,11 @@ public class ClienteService extends _GenericService<Cliente, ClienteRepository> 
         return converterParaDTO(clientes);
     }
 
+    public List<AniversarianteDTO> listarAniversariantesPorMes (int mes) {
+        List<Cliente> clientes = this.repositoryGenerics.findAniversariantesPorMes(mes);
+        return converterParaDTO(clientes);
+    }
+
     private List<AniversarianteDTO> converterParaDTO(List<Cliente> clientes) {
         return clientes.stream()
                 .map(this::converterClienteParaDTO)
