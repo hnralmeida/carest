@@ -2,6 +2,7 @@ package com.les.carest.controller;
 
 import com.les.carest.DTO.ProdutoDTO_Balanca;
 import com.les.carest.DTO.ProdutoDTO_Serial;
+import com.les.carest.model.ProdutoBalanca;
 import com.les.carest.service.ProdutoBalancaService;
 import com.les.carest.service.ProdutoSerialService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,6 +51,13 @@ public class ProdutoController {
     public ResponseEntity<List<ProdutoDTO_Balanca>> listarTodosProdutosBalanca() {
         List<ProdutoDTO_Balanca> produtos = produtoBalancaService.listarTodosProdutos();
         return ResponseEntity.ok(produtos);
+    }
+
+    @GetMapping("/balanca/preco")
+    @Operation(summary = "Lista todos os produtos de balança")
+    public ResponseEntity<ProdutoBalanca> obterProdutoBalanca() {
+        ProdutoBalanca produto = produtoBalancaService.precoBalanca();
+        return ResponseEntity.ok(produto);
     }
 
     @PutMapping("/balanca/{id}")

@@ -16,3 +16,37 @@ export function dateToISO(date: Date) {
 export function dateToReadable(date: Date) {
   return date.toLocaleDateString()
 }
+
+export function ISODateToDate(d: Date): string {
+  const dia = String(d.getDate()).padStart(2, '0');     // Dia do mês
+  const mes = String(d.getMonth() + 1).padStart(2, '0'); // Mês (corrigido +1)
+  const ano = d.getFullYear();
+
+  return `${ano}-${mes}-${dia}`;
+}
+
+export const formatarParaMoeda = (valor: string) => {
+  // Remove qualquer caractere que não seja número
+  const numero = valor.replace(/\D/g, "");
+
+  // Converte para número com 2 casas decimais
+  const valorNumerico = (Number(numero) / 100).toFixed(2);
+
+  // Formata em BRL
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL"
+  }).format(Number(valorNumerico));
+};
+
+export const moedaParaNumero = (valor: string): number => {
+  if (!valor) return 0;
+
+  const apenasNumeros = valor
+    .replace(/\s/g, '')         // remove espaços
+    .replace('R$', '')          // remove símbolo do real
+    .replace(/\./g, '')         // remove separador de milhar
+    .replace(',', '.');         // troca vírgula decimal por ponto
+
+  return parseFloat(apenasNumeros) || 0;
+};

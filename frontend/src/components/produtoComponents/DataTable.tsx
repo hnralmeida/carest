@@ -84,7 +84,7 @@ export function DataTable<Produto, TValue>({
                       )}
                 </TableHead>
               ))}
-              <TableHead className="w-[140px]" />
+              <TableHead className="w-[96px]" />
             </TableRow>
           ))}
         </TableHeader>

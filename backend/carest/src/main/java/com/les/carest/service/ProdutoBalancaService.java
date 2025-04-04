@@ -3,6 +3,7 @@ package com.les.carest.service;
 import com.les.carest.DTO.ProdutoDTO_Balanca;
 import com.les.carest.model.ProdutoBalanca;
 import com.les.carest.repository.ProdutoBalancaRepository;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,6 +59,10 @@ public class ProdutoBalancaService extends _GenericService<ProdutoBalanca, Produ
 
     public void excluirProduto(UUID id) {
         super.excluir(id);
+    }
+
+    public ProdutoBalanca precoBalanca(){
+        return this.repositoryGenerics.findMostRecentProdutoBalanca().getFirst();
     }
 
 

@@ -15,10 +15,11 @@ import ButtonEditBalanca from "@/components/editBalanca";
 // }
 
 function Page() {
-  const { produtos, listarProdutos } = useProdutoHook();
+  const { produtos, listarProdutos, balanca, obterBalanca } = useProdutoHook();
 
   useEffect(() => {
     listarProdutos();
+    obterBalanca();
   }, []);
 
   return (
@@ -26,10 +27,13 @@ function Page() {
       <h1 className="text-2xl font-bold">Self-Service</h1>
       <div className="flex w-full justify-center gap-x-4 items-center mb-[16px]">
         <p className="border border-[var(--black-color)] rounded-[16px] px-[32px] py-[16px] font-bold">
-          Balança
+          {new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+          }).format(balanca)}
         </p>
 
-        <ButtonEditBalanca preco={99.99} />
+        {balanca&&<ButtonEditBalanca preco={balanca} />}
       </div>
       <div className="flex justify-between items-center w-full mb-4">
         <h1 className="text-2xl font-bold">Produtos</h1>

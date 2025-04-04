@@ -13,6 +13,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useProdutoHook } from "@/hooks/useProdutos";
+import { toast, Toaster } from "sonner";
+import { formatarParaMoeda, moedaParaNumero } from "@/lib/utils";
 
 interface EditProdutoProps {
   id: string;
@@ -24,14 +26,14 @@ interface EditProdutoProps {
 export default function EditProduto({ id, nome, valor, codigo }: EditProdutoProps) {
   const [open, setOpen] = useState(false);
   const [formNome, setFormNome] = useState("");
-  const [formValor, setFormValor] = useState(0);
+  const [formValor, setFormValor] = useState("");
   const [formCodigo, setFormCodigo] = useState(0);
 
   const { editarProduto } = useProdutoHook();
 
   useEffect(() => {
     setFormNome(nome);
-    setFormValor(valor);
+    setFormValor(`${valor}`);
     setFormCodigo(codigo);
   }, [nome, valor, codigo]);
 
@@ -42,26 +44,31 @@ export default function EditProduto({ id, nome, valor, codigo }: EditProdutoProp
       const data = {
         "id": id,
         "nome": formNome,
-        "valor": formValor,
+        "valor": moedaParaNumero(formValor),
         "codigo": formCodigo
       };
 
       const response = await editarProduto(data);
 
       if (response) {
-        alert("Produto alterado com sucesso!");
+        toast.success("Produto alterado com sucesso!");
         setOpen(false); // Fecha o modal após sucesso
         setFormNome(""); // Limpa o campo do formulário
-        setFormValor(0); // Limpa o campo do formulário
+        setFormValor(""); // Limpa o campo do formulário
         setFormCodigo(0); // Limpa o campo do formulário
         window.location.reload(); // Recarrega a página para exibir o novo Produto
       } else {
-        alert("Erro ao alterar Produto.");
+        toast.error("Erro ao alterar Produto.");
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
-      alert("Falha ao conectar com o servidor. ");
+      toast.error("Falha ao conectar com o servidor. ");
     }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const valorFormatado = formatarParaMoeda(e.target.value);
+    setFormValor(valorFormatado);
   };
 
   return (
@@ -81,7 +88,7 @@ export default function EditProduto({ id, nome, valor, codigo }: EditProdutoProp
           <DialogTitle>Editar Produto</DialogTitle>
         </DialogHeader>
         <form onSubmit={onFormSubmit} className="flex flex-col gap-4">
-        <div>
+          <div>
             <Label htmlFor="name">Nome do Produto</Label>
             <Input
               id="name"
@@ -97,8 +104,8 @@ export default function EditProduto({ id, nome, valor, codigo }: EditProdutoProp
             <Input
               id="valor"
               value={formValor}
-              onChange={(e) => setFormValor(Number(e.target.value))}
-              placeholder="Insira um valor"
+              onChange={handleChange}
+              placeholder="R$ 0,00"
               required
             />
           </div>
@@ -119,6 +126,7 @@ export default function EditProduto({ id, nome, valor, codigo }: EditProdutoProp
           </Button>
         </form>
       </DialogContent>
+      <Toaster richColors position="bottom-center" closeButton />
     </Dialog>
   );
 }

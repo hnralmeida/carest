@@ -15,11 +15,12 @@ import { Label } from "@/components/ui/label";
 import { toast, Toaster } from "sonner";
 import { useProdutoHook } from "@/hooks/useProdutos";
 import { Produto } from "@/app/models/produto";
+import { formatarParaMoeda, moedaParaNumero } from "@/lib/utils";
 
 export default function AddProduto() {
   const [open, setOpen] = useState(false);
   const [nome, setNome] = useState("");
-  const [valor, setValor] = useState(0);
+  const [valor, setValor] = useState("");
   const [codigo, setCodigo] = useState(0);
 
   const [error, setError] = useState<string | null>(null);
@@ -35,7 +36,7 @@ export default function AddProduto() {
     const data: Produto = {
       id: "",
       nome,
-      valor,
+      valor: moedaParaNumero(valor),
       codigo
     };
 
@@ -53,15 +54,20 @@ export default function AddProduto() {
       toast.success("Produto " + response?.nome + " adicionada com sucesso!")
       setOpen(false); // Fecha o modal após sucesso
       setNome(""); // Limpa o campo do formulário
-      setValor(0); // Limpa o campo do formulário
+      setValor("0"); // Limpa o campo do formulário
       setCodigo(0); // Limpa o campo do formulário
       setLoading(false); // Inicia o carregamento
 
     } catch (error) {
       setOpen(false); // Fecha o modal após sucesso
-      setLoading(false); 
+      setLoading(false);
       toast.error("Erro na requisição:" + error);
     }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const valorFormatado = formatarParaMoeda(e.target.value);
+    setValor(valorFormatado);
   };
 
   return (
@@ -97,8 +103,8 @@ export default function AddProduto() {
             <Input
               id="valor"
               value={valor}
-              onChange={(e) => setValor(Number(e.target.value))}
-              placeholder="Insira um valor"
+              onChange={handleChange}
+              placeholder="R$ 0,00"
               required
             />
           </div>
