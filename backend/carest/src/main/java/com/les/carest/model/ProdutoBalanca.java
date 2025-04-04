@@ -9,7 +9,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "produto_balanca")
-@NoArgsConstructor
 public class ProdutoBalanca extends Produto {
 
     private Date data;
@@ -18,6 +17,8 @@ public class ProdutoBalanca extends Produto {
         super(nome, valor);
         this.data = data;
     }
+
+    public ProdutoBalanca() {};
 
     public Date getData() {
         return data;

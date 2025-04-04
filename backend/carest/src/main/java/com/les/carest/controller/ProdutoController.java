@@ -15,7 +15,7 @@ import java.util.UUID;
 
 @Validated
 @RestController
-@RequestMapping("/api/produtos")
+@RequestMapping("/produtos")
 @Tag(name = "Produtos Controller", description = "Endpoints unificados para produtos (Balança e Serial)")
 public class ProdutoController {
 

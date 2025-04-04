@@ -10,7 +10,6 @@ import java.util.UUID;
 @Entity
 @Table(name = "produto")
 @Inheritance(strategy = InheritanceType.JOINED)
-@NoArgsConstructor
 public class Produto {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -28,6 +27,8 @@ public class Produto {
         this.nome = nome;
         this.valor = valor;
     }
+
+    public Produto() {}
 
     public UUID getId() {
         return id;
