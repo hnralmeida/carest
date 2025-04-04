@@ -8,11 +8,12 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "produto_serial")
-@NoArgsConstructor
 public class ProdutoSerial extends Produto {
 
     private int codigo;
-    
+
+    public ProdutoSerial() {}
+
     public ProdutoSerial(String nome, double valor, int codigo) {
         super(nome, valor);
         this.codigo = codigo;
