@@ -23,7 +23,7 @@ public class ProdutoSerialService extends _GenericService<ProdutoSerial, Produto
         produto.setId(dto.getId());
         produto.setValor(dto.getValor());
         produto.setCodigo(dto.getCodigo()); // Campo específico do Serial (equivalente ao "data" da balança)
-        produto.setNome("SERIAL"); // Definindo o tipo fixo (como no Balança)
+        produto.setNome(dto.getNome()); // Definindo o tipo fixo (como no Balança)
         return produto;
     }
 
@@ -31,7 +31,7 @@ public class ProdutoSerialService extends _GenericService<ProdutoSerial, Produto
         ProdutoDTO_Serial dto = new ProdutoDTO_Serial();
         dto.setId(produto.getId());
         dto.setValor(produto.getValor());
-        dto.setNome("SERIAl");
+        dto.setNome(produto.getNome());
         dto.setCodigo(produto.getCodigo()); // Campo específico
         return dto;
     }
@@ -40,7 +40,7 @@ public class ProdutoSerialService extends _GenericService<ProdutoSerial, Produto
     public ProdutoDTO_Serial criarProduto(ProdutoDTO_Serial produtoDTO) {
         ProdutoSerial produto = new ProdutoSerial();
         produto.setCodigo(produtoDTO.getCodigo());//Adicionar tipo
-        produto.setNome("SERIAL");//Adicionar tipo
+        produto.setNome(produtoDTO.getNome());//Adicionar tipo
         produto.setValor(produtoDTO.getValor());//Adicionar tipo
         return toDTO(super.criar(produto));
     }
