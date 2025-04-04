@@ -1,17 +1,15 @@
 package com.les.carest.service;
 
+import com.les.carest.DTO.ProdutoDTO_Serial;
 import com.les.carest.model.ProdutoSerial;
 import com.les.carest.repository.ProdutoSerialRepository;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
-@Validated
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 @Service
-@Tag(name = "ProdutoSerialService", description = "Acesso aos métodos de Produto Serial")
-public class ProdutoSerialService extends _GenericService<ProdutoSerial, ProdutoSerialRepository> {
+public class ProdutoSerialService {
 
-    protected ProdutoSerialService(ProdutoSerialRepository ProdutoSerialRepository) {
-        super(ProdutoSerialRepository);
-    }
 }

@@ -13,6 +13,4 @@ public class CarestApplication {
 		SpringApplication.run(CarestApplication.class, args);
 
 	}
-
-
 }

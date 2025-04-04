@@ -8,6 +8,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "produto_serial")
+@NoArgsConstructor
 public class ProdutoSerial extends Produto {
 
     private int codigo;
