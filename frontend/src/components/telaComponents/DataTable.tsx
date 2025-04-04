@@ -24,15 +24,15 @@ import { axiosClient } from "@/services/axiosClient";
 import EditTela from "./editTela";
 import { toast, Toaster } from "sonner";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+interface DataTableProps<Tela, TValue> {
+  columns: ColumnDef<Tela, TValue>[];
+  data: Tela[];
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<Tela, TValue>({
   columns,
   data,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<Tela, TValue>) {
   const table = useReactTable({
     data,
     columns,
@@ -83,7 +83,7 @@ export function DataTable<TData, TValue>({
                       )}
                 </TableHead>
               ))}
-              <TableHead className="w-[140px]" />
+              <TableHead className="w-[96px]" />
             </TableRow>
           ))}
         </TableHeader>

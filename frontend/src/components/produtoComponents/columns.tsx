@@ -1,9 +1,9 @@
 "use client";
 
-import { Tela } from "@/app/models/tela";
+import { Produto } from "@/app/models/balanca";
 import { ColumnDef } from "@tanstack/react-table";
 
-export const columns: ColumnDef<Tela>[] = [
+export const columns: ColumnDef<Produto>[] = [
   {
     accessorKey: "nome",
     header: "Nome",

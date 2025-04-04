@@ -41,7 +41,7 @@ public class AniversariantesController extends _GenericController<Cliente> {
     }
 
     @GetMapping("/mes")
-    public ResponseEntity<List<AniversarianteDTO>> listarAniversariantesPorData(
+    public ResponseEntity<List<Cliente>> listarAniversariantesPorData(
             @RequestParam @Min(1) @Max(12) int mes) {
         return ResponseEntity.ok(clienteService.listarAniversariantesPorMes(mes));
     }

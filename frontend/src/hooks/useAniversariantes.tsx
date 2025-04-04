@@ -18,7 +18,8 @@ export const useAniversariantesHook = () => {
             }
         ])
         try {
-            const response = await axiosClient.get('/aniversariantes/mes');
+            const hoje = new Date();
+            const response = await axiosClient.get(`/aniversariantes/mes?mes=${hoje.getMonth()+1}`);
             if (response.data) {
                 setAniversariantes(response.data);
             }

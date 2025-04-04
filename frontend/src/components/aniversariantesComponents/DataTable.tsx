@@ -53,7 +53,6 @@ export function DataTable<Cliente, TValue>({
                       )}
                 </TableHead>
               ))}
-              <TableHead className="w-[140px]" />
             </TableRow>
           ))}
         </TableHeader>
