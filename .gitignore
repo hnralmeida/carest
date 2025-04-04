@@ -36,4 +36,3 @@ backend/carest/!**/src/test/**/build/
 ### VS Code ###
 backend/carest/.vscode/
 backend/carest//src/main/resources/
-

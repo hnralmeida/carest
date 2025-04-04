@@ -28,6 +28,8 @@ public class Produto {
         this.valor = valor;
     }
 
+    public Produto() {}
+
     public UUID getId() {
         return id;
     }

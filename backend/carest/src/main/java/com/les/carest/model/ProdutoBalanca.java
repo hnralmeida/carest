@@ -18,6 +18,8 @@ public class ProdutoBalanca extends Produto {
         this.data = data;
     }
 
+    public ProdutoBalanca() {};
+
     public Date getData() {
         return data;
     }

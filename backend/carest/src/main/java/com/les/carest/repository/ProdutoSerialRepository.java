@@ -7,13 +7,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 
 
 @Repository
-public interface ProdutoSerialRepository extends JpaRepository<ProdutoSerial, UUID>{
-    //    @Query("SELECT * FROM produtoSerial u WHERE u.id=:id")
-    //    ProdutoSerial findByIdTeste(@Param("id") Long id);
-
+public interface ProdutoSerialRepository extends JpaRepository<ProdutoSerial, UUID> {
+        @Query("SELECT u FROM ProdutoSerial u WHERE u.codigo=:codigo")
+        ProdutoSerial findByIdTeste(@Param("codigo") int codigo);
 }
