@@ -1,6 +1,6 @@
 "use client";
 
-import { Produto } from "@/app/models/balanca";
+import { Produto } from "@/app/models/produto";
 import { ColumnDef } from "@tanstack/react-table";
 
 export const columns: ColumnDef<Produto>[] = [
