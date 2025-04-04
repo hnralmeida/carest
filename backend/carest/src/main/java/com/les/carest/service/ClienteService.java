@@ -31,18 +31,13 @@ public class ClienteService extends _GenericService<Cliente, ClienteRepository> 
         return converterParaDTO(clientes, LocalDate.now().getMonthValue());
     }
 
-    public List<AniversarianteDTO> listarAniversariantesPorMes(int mes) {
-        if (mes < 1 || mes > 12) {
-            throw new IllegalArgumentException("Mês deve ser entre 1 e 12");
-        }
-        List<Cliente> clientes = ((ClienteRepository) this.repositoryGenerics).findByMesAniversario(mes);
-        return converterParaDTO(clientes, mes);
+    public List<AniversarianteDTO> listarAniversariantesPorData(int mes, int dia) {
+        List<Cliente> clientes = this.repositoryGenerics.findAniversariantesPorData(mes, dia);
+        return converterParaDTO(clientes);
     }
 
-    private void validateMes(int mes) {
-        if (mes < 1 || mes > 12) {
-            throw new IllegalArgumentException("Mês inválido. Deve ser entre 1 (janeiro) e 12 (dezembro)");
-        }
+    public List<Cliente> listarAniversariantesPorMes (int mes) {
+        return this.repositoryGenerics.findAniversariantesPorMes(mes);
     }
 
     private List<AniversarianteDTO> converterParaDTO(List<Cliente> clientes, int mes) {

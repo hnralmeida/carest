@@ -14,10 +14,12 @@ public class Tela {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String nome;
+    private String rota;
 
-    public Tela(UUID id, String nome) {
+    public Tela(UUID id, String nome, String rota) {
         this.id = id;
         this.nome = nome;
+        this.rota = rota;
     }
 
     public Tela() {
@@ -39,4 +41,13 @@ public class Tela {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
+    public String getRota() {
+        return rota;
+    }
+
+    public void setRota(String rota) {
+        this.rota = rota;
+    }
+
 }

@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { axiosClient } from "@/services/axiosClient";
 import { Cliente } from "./columns";
 import { dateToISO } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface EditClienteProps {
   id: string;
@@ -24,6 +25,14 @@ interface EditClienteProps {
 export default function EditCliente({ id, item }: EditClienteProps) {
   const [open, setOpen] = useState(false);
   const [formCliente, setFormCliente] = useState<Cliente>({} as Cliente);
+
+  function ISODateToDate(d: Date): string {
+    const dia = String(d.getDate()).padStart(2, '0');     // Dia do mês
+    const mes = String(d.getMonth() + 1).padStart(2, '0'); // Mês (corrigido +1)
+    const ano = d.getFullYear();
+  
+    return `${ano}/${mes}/${dia}`;
+  }
 
   useEffect(() => {
     setFormCliente((prevData) => ({
@@ -62,22 +71,22 @@ export default function EditCliente({ id, item }: EditClienteProps) {
         email: formCliente.email,
         telefone: formCliente.telefone,
         codigo: formCliente.codigo,
-        nascimento: formCliente.nascimento,
+        nascimento: ISODateToDate(new Date(`${formCliente.nascimento}T12:00:00`)),
       };
 
       const response = await axiosClient.put("/cliente/" + id, data);
 
       if (response.status < 205) {
-        alert("Cliente alterado com sucesso!");
+        toast.success("Cliente alterado com sucesso!");
         setOpen(false); // Fecha o modal após sucesso
         setFormCliente({} as Cliente); // Limpa o campo do formulário
         window.location.reload(); // Recarrega a página para exibir o novo cliente
       } else {
-        alert("Erro ao alterar cliente. " + response.statusText.toString());
+        toast.error("Erro ao alterar cliente. " + response.statusText.toString());
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
-      alert("Falha ao conectar com o servidor. ");
+      toast.error("Falha ao conectar com o servidor. ");
     }
   };
 

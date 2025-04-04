@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { axiosClient } from "@/services/axiosClient";
+import { toast, Toaster } from "sonner";
 
 export default function AddCliente() {
   const [open, setOpen] = useState(false);
@@ -22,6 +23,14 @@ export default function AddCliente() {
   const [codigo, setCodigo] = useState("");
   const [nascimento, setNascimento] = useState("");
 
+  function ISODateToDate(d: Date): string {
+    const dia = String(d.getDate()).padStart(2, '0');     // Dia do mês
+    const mes = String(d.getMonth() + 1).padStart(2, '0'); // Mês (corrigido +1)
+    const ano = d.getFullYear();
+  
+    return `${ano}/${mes}/${dia}`;
+  }
+
   const onFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault(); // Evita que o formulário recarregue a página
 
@@ -29,29 +38,29 @@ export default function AddCliente() {
 
     const data = {
       nome: nome,
-      nascimento: nascimentoDate.toISOString(),
+      nascimento: ISODateToDate(nascimentoDate),
       telefone: telefone,
       email: email,
       limite: 0,
       saldo: 0,
       em_uso: false,
       codigo: codigo,
-      dividaData: new Date(),
+      dividaData: ISODateToDate(new Date())
     };
     try {
       const response = await axiosClient.post("/cliente", data);
 
-      if (response.status === 201) {
-        alert("Cliente adicionado com sucesso!");
+      if (response.status < 205) {
+        toast.success("Cliente adicionado com sucesso!");
         setOpen(false); // Fecha o modal após sucesso
         setNome(""); // Limpa o campo do formulário
         window.location.reload(); // Recarrega a página para exibir o novo cliente
       } else {
-        alert("Erro ao adicionar cliente.");
+        toast.error("Erro ao adicionar cliente.");
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
-      alert("Falha ao conectar com o servidor.");
+      toast.error("Falha ao conectar com o servidor.");
     }
   };
 
@@ -127,6 +136,7 @@ export default function AddCliente() {
           </Button>
         </form>
       </DialogContent>
+      <Toaster position="bottom-center" richColors/>
     </Dialog>
   );
 }
