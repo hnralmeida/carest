@@ -16,11 +16,9 @@ const nextAuthOption: AuthOptions = {
         senha: { label: "senha", type: "password" },
       },
       async authorize(credentials) {
-        console.log("CREDENCIAIS", credentials);
         if (!credentials?.email || !credentials?.senha) {
           throw new Error("Dados de Login necessários");
         }
-        console.log("CREDENCIAIS", credentials);
         try {
           const response = await axiosClient.post("/auth/login", {
             email: credentials.email,
@@ -30,11 +28,10 @@ const nextAuthOption: AuthOptions = {
           if (!user) {
             throw new Error("Usuário não encontrado");
           }
-          console.log("USUÁRIO AAAAAAAAAAAAAAAA", user);
           return user;
-        } catch (error: unknown) {
-          console.log(error);
-          throw new Error("Usuario ou senha Incorreto");
+        } catch (error: any) {
+          const msg = error?.response?.data || "Erro desconhecido";
+          throw new Error(msg);
         }
       },
     }),

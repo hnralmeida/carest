@@ -2,10 +2,10 @@ import React from "react";
 import {
   columns,
   Cliente,
-} from "../../../components/clienteComponents/columns";
+} from "../../../components/pageClienteComponents/columns";
 import { axiosClient } from "@/services/axiosClient";
-import AddCliente from "@/components/clienteComponents/addCliente";
-import { DataTable } from "@/components/clienteComponents/DataTable";
+import AddCliente from "@/components/pageClienteComponents/addCliente";
+import { DataTable } from "@/components/pageClienteComponents/DataTable";
 
 async function getData(): Promise<Cliente[]> {
   const response = await axiosClient.get("/cliente");

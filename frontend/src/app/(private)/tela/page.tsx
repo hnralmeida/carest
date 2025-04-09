@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { columns } from "../../../components/telaComponents/columns";
-import AddTela from "@/components/telaComponents/addTela";
-import { DataTable } from "@/components/telaComponents/DataTable";
+import { columns } from "../../../components/pageTelaComponents/columns";
+import AddTela from "@/components/pageTelaComponents/addTela";
+import { DataTable } from "@/components/pageTelaComponents/DataTable";
 import { useTelaHook } from "@/hooks/useTela";
 
 // async function getData(): Promise<Tela[]> {

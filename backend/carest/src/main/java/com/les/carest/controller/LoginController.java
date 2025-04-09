@@ -23,7 +23,10 @@ public class LoginController{
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public LoginController(UsuarioService genericService) {
+    private final UsuarioService usuarioService;
+
+    public LoginController(UsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
     }
 
     @PostMapping("/login")
@@ -38,7 +41,8 @@ public class LoginController{
         }
 
         // Verifica se a senha está correta
-        if (!usuarioOptional.get().getSenha().equals(loginDTO.getSenha())) {
+        // if (!usuarioOptional.get().getSenha().equals(loginDTO.getSenha())) {
+        if (!this.usuarioService.validarSenha(loginDTO.getEmail(), loginDTO.getSenha())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Senha incorreta");
         }
 

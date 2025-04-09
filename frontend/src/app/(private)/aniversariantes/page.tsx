@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { columns } from "../../../components/aniversariantesComponents/columns";
-import { DataTable } from "@/components/aniversariantesComponents/DataTable";
+import { columns } from "../../../components/pageAniversariantesComponents/columns";
+import { DataTable } from "@/components/pageAniversariantesComponents/DataTable";
 import { useAniversariantesHook } from "@/hooks/useAniversariantes";
 
 // async function getData(): Promise<Tela[]> {

@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { columns } from "../../../components/produtoComponents/columns";
-import AddProduto from "@/components/produtoComponents/addProduto";
-import { DataTable } from "@/components/produtoComponents/DataTable";
+import { columns } from "../../../components/pageProdutoComponents/columns";
+import AddProduto from "@/components/pageProdutoComponents/addProduto";
+import { DataTable } from "@/components/pageProdutoComponents/DataTable";
 import { useProdutoHook } from "@/hooks/useProdutos";
 import ButtonEditBalanca from "@/components/editBalanca";
 
@@ -32,8 +32,7 @@ function Page() {
             currency: 'BRL',
           }).format(balanca)}
         </p>
-
-        {balanca&&<ButtonEditBalanca preco={balanca} />}
+        {balanca ? <ButtonEditBalanca preco={balanca} /> : null}
       </div>
       <div className="flex justify-between items-center w-full mb-4">
         <h1 className="text-2xl font-bold">Produtos</h1>

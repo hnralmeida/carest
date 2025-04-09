@@ -2,9 +2,9 @@ import React from "react";
 import {
   columns,
   Fornecedor,
-} from "../../../components/fornecedorComponents/columns";
-import { DataTable } from "../../../components/fornecedorComponents/DataTable";
-import AddFornecedor from "@/components/fornecedorComponents/addFornecedor";
+} from "../../../components/pageFornecedorComponents/columns";
+import { DataTable } from "../../../components/pageFornecedorComponents/DataTable";
+import AddFornecedor from "@/components/pageFornecedorComponents/addFornecedor";
 import { axiosClient } from "@/services/axiosClient";
 
 async function getData(): Promise<Fornecedor[]> {

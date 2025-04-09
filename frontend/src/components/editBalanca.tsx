@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "./ui/input";
 import { useProdutoHook } from "@/hooks/useProdutos";
 import { toast } from "sonner";
+import { formatarParaMoeda } from "@/lib/utils";
 
 interface EditBalancaProps {
     preco: number;
@@ -19,12 +20,12 @@ interface EditBalancaProps {
 
 export default function ButtonEditBalanca({ preco }: EditBalancaProps) {
     const [open, setOpen] = useState(false);
-    const [valor, setValor] = useState<number>(0);
+    const [valor, setValor] = useState("");
     const { atualizarBalanca } = useProdutoHook();
 
     const onFormSubmit = async () => {
         try {
-            await atualizarBalanca(valor);
+            await atualizarBalanca(Number(valor));
             toast.success("Preço Atualizado")
         } catch (e: any) {
             toast.error(e);
@@ -32,21 +33,12 @@ export default function ButtonEditBalanca({ preco }: EditBalancaProps) {
     }
 
     useEffect(() => {
-        setValor(preco)
+        setValor(`${preco}`)
     }, [])
 
-    const formatarMoeda = (valorDigitado: string) => {
-        // Remove tudo que não for número
-        const numero = valorDigitado.replace(/\D/g, "");
-
-        // Converte para float com 2 casas
-        const valorFloat = (Number(numero) / 100).toFixed(2);
-
-        // Formata como moeda BRL
-        return new Intl.NumberFormat("pt-BR", {
-            style: "currency",
-            currency: "BRL",
-        }).format(Number(valorFloat));
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const valorFormatado = formatarParaMoeda(e.target.value);
+        setValor(valorFormatado);
     };
 
     return (
@@ -71,8 +63,8 @@ export default function ButtonEditBalanca({ preco }: EditBalancaProps) {
                         <Input
                             id="valor"
                             value={valor}
-                            onChange={(e) => setValor(Number(e.target.value))}
-                            placeholder="Digite o nome do Produto"
+                            onChange={handleChange}
+                            placeholder="R$ 0,00"
                             autoFocus={false}
                             required
                         />

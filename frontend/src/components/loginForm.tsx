@@ -31,25 +31,9 @@ export default function LoginForm() {
       ...data,
       redirect: false,
     });
-    
-    if(res?.status==401){
-      toast("Problema com a conexão", {
-        description: res.error,
-        action: {
-          label: "Tente Novamente",
-          onClick: () => console.log("Undo"),
-        },
-      }); 
-    }
 
     if (res?.error) {
-      toast("Oooops...", {
-        description: res.error,
-        action: {
-          label: "Tente Novamente",
-          onClick: () => console.log("Undo"),
-        },
-      }); // Toast
+      toast.error(res.error)
     } else {
       router.push("/");
     }

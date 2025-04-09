@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { columns } from "../../../components/funcionarioComponents/columns";
-import AddFuncionario from "@/components/funcionarioComponents/addFuncionario";
-import { DataTable } from "@/components/funcionarioComponents/DataTable";
+import { columns } from "../../../components/pageFuncionarioComponents/columns";
+import AddFuncionario from "@/components/pageFuncionarioComponents/addFuncionario";
+import { DataTable } from "@/components/pageFuncionarioComponents/DataTable";
 import { useFuncionarioHook } from "@/hooks/useFuncionario";
 
 // async function getData(): Promise<Funcionario[]> {

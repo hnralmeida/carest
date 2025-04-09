@@ -1,4 +1,4 @@
-import { Cliente } from "@/components/clienteComponents/columns";
+import { Cliente } from "@/components/pageClienteComponents/columns";
 import { useState } from "react";
 import { axiosClient } from "@/services/axiosClient";
 

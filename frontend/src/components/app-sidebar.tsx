@@ -77,7 +77,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           },
           {
             title: "Vendas",
-            url: "/venda",
+            url: "/vendas ",
             onClick: () => {
               resetActive();
               active.venda = true;

@@ -25,12 +25,12 @@ export function ISODateToDate(d: Date): string {
   return `${ano}-${mes}-${dia}`;
 }
 
-export const formatarParaMoeda = (valor: string) => {
+export const formatarParaMoeda = (valor: string, formatado?: boolean) => {
   // Remove qualquer caractere que não seja número
   const numero = valor.replace(/\D/g, "");
 
   // Converte para número com 2 casas decimais
-  const valorNumerico = (Number(numero) / 100).toFixed(2);
+  const valorNumerico = formatado ?  (Number(numero)).toFixed(2) : (Number(numero) / 100).toFixed(2);
 
   // Formata em BRL
   return new Intl.NumberFormat("pt-BR", {
