@@ -39,6 +39,10 @@ public class Venda {
         this.valor = valor;
     }
 
+    public Venda() {
+        
+    }
+
     public UUID getId() {
         return id;
     }
