@@ -1,4 +1,5 @@
 // import { axiosClient } from "@/services/axiosClient";
+import { useUsuarioHook } from "@/hooks/useUsuario";
 import { axiosClient } from "@/services/axiosClient";
 import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -24,11 +25,18 @@ const nextAuthOption: AuthOptions = {
             email: credentials.email,
             senha: credentials.senha,
           });
+
           const user = response.data;
+          
           if (!user) {
             throw new Error("Usuário não encontrado");
           }
-          return user;
+          return {
+            id: user.id,
+            nome: user.nome,
+            email: user.email,
+            permissoes: user.permissoes
+          };
         } catch (error: any) {
           const msg = error?.response?.data || "Erro desconhecido";
           throw new Error(msg);
@@ -36,6 +44,19 @@ const nextAuthOption: AuthOptions = {
       },
     }),
   ],
+  callbacks: {
+    async session({ session, token, user }) {
+      // Adiciona o usuário da JWT à sessão
+      session.user = token.user as any;
+      return session;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.user = user;
+      }
+      return token;
+    },
+  },
 };
 
 const handler = NextAuth(nextAuthOption);

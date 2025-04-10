@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -71,5 +72,9 @@ public class PermissaoService extends _GenericService<Permissao, PermissaoReposi
     @Transactional
     public void removerPermissoes(UUID usuarioId, UUID telaId) {
         permissaoRepository.deleteByUsuarioIdAndTelaId(usuarioId, telaId);
+    }
+
+    public Optional<Permissao> buscarPorUsuarioETela(Usuario usuario, Tela tela) {
+        return permissaoRepository.findByUsuarioAndTela(usuario, tela);
     }
 }

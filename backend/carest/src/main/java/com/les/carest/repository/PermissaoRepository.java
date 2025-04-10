@@ -1,6 +1,8 @@
 package com.les.carest.repository;
 
 import com.les.carest.model.Permissao;
+import com.les.carest.model.Tela;
+import com.les.carest.model.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,6 +20,8 @@ public interface PermissaoRepository extends JpaRepository<Permissao, UUID> {
     List<Permissao> findByUsuarioId(UUID usuarioId);
 
     List<Permissao> findByTelaId(UUID telaId);
+
+    Optional<Permissao> findByUsuarioAndTela(Usuario usuario, Tela tela);
 
     boolean existsByUsuarioIdAndTelaId(UUID usuarioId, UUID telaId);
 

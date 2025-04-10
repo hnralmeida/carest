@@ -9,14 +9,9 @@ export const useUsuarioHook = () => {
     const getUsuario = (): Usuario | null => {
         return usuario;
     };
-
-    const definirUsuario = (data: Usuario): void => {
-        setUsuario(data);
-    };
-
     return { 
         usuario,
         getUsuario,
-        definirUsuario
+        setUsuario
     };
 };

@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useTelaHook } from "@/hooks/useTela";
+import { toast, Toaster } from "sonner";
 
 interface EditRotaProps {
   id: string;
@@ -45,22 +46,23 @@ export default function EditRota({ id, nome, rota }: EditRotaProps) {
       const response = await editarTela(data);
 
       if (response) {
-        alert("Tela alterado com sucesso!");
+        toast.success("Tela alterado com sucesso!");
         setOpen(false); // Fecha o modal após sucesso
         setFormNome(""); // Limpa o campo do formulário
         setFormRota(""); // Limpa o campo do formulário
         window.location.reload(); // Recarrega a página para exibir o novo Rota
       } else {
-        alert("Erro ao alterar Tela.");
+        toast.error("Erro ao alterar Tela.");
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
-      alert("Falha ao conectar com o servidor. ");
+      toast.error("Falha ao conectar com o servidor. ");
     }
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
+      <Toaster position="top-center" richColors />
       <DialogTrigger asChild>
         <Button
           className="button-table"

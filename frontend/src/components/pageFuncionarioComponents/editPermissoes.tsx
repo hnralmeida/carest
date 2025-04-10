@@ -23,7 +23,7 @@ export default function EditPermissoes({ id }: EditPermissoesProps) {
   const [open, setOpen] = useState(false);
   const [localPermissoes, setLocalPermissoes] = useState<Permissao[]>([]);
 
-  const [ loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const { permissoes, selecionarpermissao, editarpermissao } =
     usePermissaoHook();
@@ -95,14 +95,23 @@ export default function EditPermissoes({ id }: EditPermissoesProps) {
           <form onSubmit={onFormSubmit} className="flex flex-col gap-4">
             {localPermissoes
               ? localPermissoes.map((permissao, index) => (
+                <>
+                  {index==0&&<div className="grid grid-cols-5 gap-4 mb-2">
+                    <div className="font-semibold" /> {/* espaço para o nome da tela */}
+                    <p className="font-semibold">Criar</p>
+                    <p className="font-semibold">Editar</p>
+                    <p className="font-semibold">Visualizar</p>
+                    <p className="font-semibold">Excluir</p>
+                  </div>}
                   <div
-                    className="flex justify-between"
+                    className="grid grid-cols-5 items-center gap-4"
                     key={permissao?.tela?.id}
                   >
-                    <p className="w-[128px]">{permissao?.tela?.nome}</p>
+                    <p className="font-medium">{permissao?.tela?.nome}</p>
+
                     <Checkbox
                       id={`create-${permissao.tela.id}`}
-                      className="cursor-pointer"
+                      className="cursor-pointer border-[var(--black-color)]"
                       checked={localPermissoes[index].create}
                       onCheckedChange={() =>
                         handleCheckboxChange(index, "create")
@@ -110,7 +119,7 @@ export default function EditPermissoes({ id }: EditPermissoesProps) {
                     />
                     <Checkbox
                       id={`read-${permissao.tela.id}`}
-                      className="cursor-pointer"
+                      className="cursor-pointer border-[var(--black-color)]"
                       checked={localPermissoes[index].read}
                       onCheckedChange={() =>
                         handleCheckboxChange(index, "read")
@@ -118,7 +127,7 @@ export default function EditPermissoes({ id }: EditPermissoesProps) {
                     />
                     <Checkbox
                       id={`update-${permissao.tela.id}`}
-                      className="cursor-pointer"
+                      className="cursor-pointer border-[var(--black-color)]"
                       checked={localPermissoes[index].update}
                       onCheckedChange={() =>
                         handleCheckboxChange(index, "update")
@@ -126,14 +135,15 @@ export default function EditPermissoes({ id }: EditPermissoesProps) {
                     />
                     <Checkbox
                       id={`delete-${permissao.tela.id}`}
-                      className="cursor-pointer"
+                      className="cursor-pointer border-[var(--black-color)]"
                       checked={localPermissoes[index].delete}
                       onCheckedChange={() =>
                         handleCheckboxChange(index, "delete")
                       }
                     />
                   </div>
-                ))
+                </>
+              ))
               : null}
 
             <Button type="submit" className="mt-4 cursor-pointer" disabled={loading}>

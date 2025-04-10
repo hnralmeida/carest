@@ -18,9 +18,10 @@ import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react"
+import { useUsuarioHook } from "@/hooks/useUsuario";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  
+
   const { data: session } = useSession()
 
   React.useEffect(() => {
@@ -29,35 +30,28 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     }
     fetchData();
   }, []);
-  
-  // Estado para controlar os itens ativos
-  const [active, setActive] = React.useState<Record<string, boolean>>({
-    dashboard: false,
-    acesso: false,
-    venda: false,
-    produto: false,
-    cliente: false,
-    credito: false,
-    funcionarios: false,
-    em_aberto: false,
-    consumo_diario: false,
-    clientes_diario: false,
-    aniversariantes: false,
-    ticket: false,
-    ultima_compra: false,
-    relatorio: false,
-    fornecedores: false,
-    controle_saida: false,
-    dre: false,
-    tela: false,
-  });
 
-  // Função para resetar o estado
-  const resetActive = () => {
-    setActive((prev) =>
-      Object.keys(prev).reduce((acc, key) => ({ ...acc, [key]: false }), {})
-    );
-  };
+  // // Estado para controlar os itens ativos
+  // const [active, setActive] = React.useState<Record<string, boolean>>({
+  //   dashboard: false,
+  //   acesso: false,
+  //   venda: false,
+  //   produto: false,
+  //   cliente: false,
+  //   credito: false,
+  //   funcionarios: false,
+  //   em_aberto: false,
+  //   consumo_diario: false,
+  //   clientes_diario: false,
+  //   aniversariantes: false,
+  //   ticket: false,
+  //   ultima_compra: false,
+  //   relatorio: false,
+  //   fornecedores: false,
+  //   controle_saida: false,
+  //   dre: false,
+  //   tela: false,
+  // });
 
   const data = {
     versions: ["Carest"],
@@ -69,47 +63,27 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           {
             title: "Acesso",
             url: "/acesso",
-            onClick: () => {
-              resetActive();
-              active.acesso = true;
-            },
-            isActive: active.acesso,
+
           },
           {
             title: "Vendas",
             url: "/vendas ",
-            onClick: () => {
-              resetActive();
-              active.venda = true;
-            },
-            isActive: active.venda,
+
           },
           {
             title: "Produtos",
             url: "/produto",
-            onClick: () => {
-              resetActive();
-              active.produto = true;
-            },
-            isActive: active.produto,
+
           },
           {
             title: "Clientes",
             url: "/cliente",
-            onClick: () => {
-              resetActive();
-              active.cliente = true;
-            },
-            isActive: active.cliente,
+
           },
           {
             title: "Crédito",
             url: "/credito",
-            onClick: () => {
-              resetActive();
-              active.credito = true;
-            },
-            isActive: active.credito,
+
           },
         ],
       },
@@ -120,117 +94,73 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           {
             title: "Funcionários",
             url: "/funcionario",
-            onClick: () => {
-              resetActive();
-              active.funcionario = true;
-            },
-            isActive: active.funcionario,
+
           },
           {
             title: "Clientes em aberto",
             url: "/em_aberto",
-            onClick: () => {
-              resetActive();
-              active.em_aberto = true;
-            },
-            isActive: active.em_aberto,
+
           },
           {
             title: "Consumo Diário",
             url: "/consumo_diario",
-            onClick: () => {
-              resetActive();
-              active.consumo_diario = true;
-            },
-            isActive: active.consumo_diario,
+
           },
           {
             title: "Clientes Diário",
             url: "/clientes_diario",
-            onClick: () => {
-              resetActive();
-              active.clientes_diario = true;
-            },
-            isActive: active.clientes_diario,
+
           },
           {
             title: "Aniversariantes",
             url: "/aniversariantes",
-            onClick: () => {
-              resetActive();
-              active.aniversariantes = true;
-            },
-            isActive: active.aniversariantes,
+
           },
           {
             title: "Ticket Médio",
             url: "/ticket",
-            onClick: () => {
-              resetActive();
-              active.ticket = true;
-            },
-            isActive: active.ticket,
+
           },
           {
             title: "Última Compra",
             url: "/ultima_compra",
-            onClick: () => {
-              resetActive();
-              active.ultima_compra = true;
-            },
-            isActive: active.ultima_compra,
+
           },
           {
             title: "Relatório de produtos",
             url: "/relatorio_produtos",
-            onClick: () => {
-              resetActive();
-              active.relatorio_produtos = true;
-            },
-            isActive: active.relatorio_produtos,
+
           },
           {
             title: "Fornecedores",
             url: "/fornecedor",
-            onClick: () => {
-              resetActive();
-              active.fornecedor = true;
-            },
-            isActive: active.fornecedor,
+
           },
           {
             title: "Controle de Saída",
             url: "/controle_saida",
-            onClick: () => {
-              resetActive();
-              active.controle_saida = true;
-            },
-            isActive: active.controle_saida,
+
           },
           {
             title: "DRE Diário",
             url: "/dre",
-            onClick: () => {
-              resetActive();
-              active.dre = true;
-            },
-            isActive: active.dre,
+
           },
           {
             title: "Tela",
             url: "/tela",
-            onClick: () => {
-              resetActive();
-              active.tela = true;
-            },
-            isActive: active.tela,
+
           },
         ],
       },
     ],
   };
 
-  const handleLogout = () =>{
+  const handleLogout = () => {
+    signOut();
+  }
+
+  const handlePerfil = () => {
     signOut();
   }
 
@@ -260,15 +190,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <SidebarMenuItem
                     key={item.title}
                     className={
-                      item.isActive
-                        ? "bg-[var(--primary-key)] text-white"
-                        : "hover:bg-gray-200"
+                      "hover:bg-gray-200"
                     }
                   >
                     <SidebarMenuButton
                       asChild
-                      isActive={item.isActive}
-                      onClick={item.onClick}
                     >
                       <a href={item.url}>{item.title}</a>
                     </SidebarMenuButton>
@@ -279,17 +205,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarGroup>
         ))}
       </SidebarContent>
-      
-      <SidebarContent className="p-4 border-t mt-auto max-h-32">
+
+      <SidebarContent className="p-4 border-t mt-auto max-h-[96px]">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="w-full flex items-center gap-8 cursor-pointer">
               <User className="size-5 mr-2" />
-              <span>{session?.user?.name || 'Usuário'}</span>
+              <span>{session?.user?.nome || 'Usuário'}</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={handleLogout} className="text-red-500 flex items-center btn-hover-scale cursor-pointer">
+          <DropdownMenuContent side="top" align="end" className="flex flex-col bg-white shadow-md w-56 pt-4 pb-4 border rounded-lg">
+            <DropdownMenuItem onClick={handlePerfil} className="text-[var(--black-color)] flex items-center btn-hover-scale cursor-pointer w-fit ml-4 mr-4">
+              <User className="size-4 mr-2" /> Perfil
+            </DropdownMenuItem>
+            <div className="border-t my-2 mx-4" />
+            <DropdownMenuItem onClick={handleLogout} className="text-[var(--error-color)] flex items-center btn-hover-scale cursor-pointer w-fit ml-4 mr-4 mt-2">
               <LogOut className="size-4 mr-2" /> Sair
             </DropdownMenuItem>
           </DropdownMenuContent>

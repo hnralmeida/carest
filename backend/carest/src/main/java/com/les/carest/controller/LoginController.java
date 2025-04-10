@@ -4,6 +4,7 @@ import com.les.carest.DTO.LoginDTO;
 import com.les.carest.exception.GenericOperation;
 import com.les.carest.model.Usuario;
 import com.les.carest.repository.UsuarioRepository;
+import com.les.carest.service.TelaService;
 import com.les.carest.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,14 +25,17 @@ public class LoginController{
     private UsuarioRepository usuarioRepository;
 
     private final UsuarioService usuarioService;
+    private final TelaService telaService;
 
-    public LoginController(UsuarioService usuarioService) {
+    public LoginController(UsuarioService usuarioService, TelaService telaService) {
         this.usuarioService = usuarioService;
+        this.telaService = telaService;
     }
 
     @PostMapping("/login")
     @GenericOperation(description = "Endpoint para autenticação de usuário")
     public ResponseEntity<?> login(@Valid @RequestBody LoginDTO loginDTO) {
+
         // Busca o usuário pelo nome
         Optional<Usuario> usuarioOptional = Optional.ofNullable(usuarioRepository.findByEmail(loginDTO.getEmail()));//.orElse(->new Exception)
 
@@ -47,6 +51,6 @@ public class LoginController{
         }
 
         // Retorna uma resposta de sucesso
-        return ResponseEntity.ok("Login bem-sucedido");
+        return ResponseEntity.ok(usuarioOptional.get());
     }
 }

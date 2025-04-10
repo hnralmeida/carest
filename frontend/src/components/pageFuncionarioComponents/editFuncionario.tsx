@@ -13,6 +13,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { axiosClient } from "@/services/axiosClient";
+import { useFuncionarioHook } from "@/hooks/useFuncionario";
+import { toast, Toaster } from "sonner";
 
 interface EditFuncionarioProps {
   id: string;
@@ -24,6 +26,8 @@ export default function EditFuncionario({ id, nome, email }: EditFuncionarioProp
   const [open, setOpen] = useState(false);
   const [formNome, setFormNome] = useState("");
   const [formEmail, setFormEmail] = useState("");
+
+  const { editarFuncionario } = useFuncionarioHook();
 
   useEffect(() => {
     setFormNome(nome);
@@ -40,16 +44,16 @@ export default function EditFuncionario({ id, nome, email }: EditFuncionarioProp
         "email": formEmail,
       };
 
-      const response = await axiosClient.put("/funcionario/" + id, data);
+      const response = await editarFuncionario(data);
 
-      if (response.status < 205) {
-        alert("Funcionário alterado com sucesso!");
+      if (response?.id) {
+        toast.success("Funcionário alterado com sucesso!");
         setOpen(false); // Fecha o modal após sucesso
         setFormNome(""); // Limpa o campo do formulário
         setFormEmail(""); // Limpa o campo do formulário
         window.location.reload(); // Recarrega a página para exibir o novo Funcionario
       } else {
-        alert("Erro ao alterar Funcionário. " + response.statusText.toString());
+        toast.error("Erro ao alterar Funcionário. " + response);
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
@@ -69,6 +73,7 @@ export default function EditFuncionario({ id, nome, email }: EditFuncionarioProp
           <Pencil size={24} />
         </Button>
       </DialogTrigger>
+      <Toaster position="top-center" richColors />
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Editar Funcionario</DialogTitle>

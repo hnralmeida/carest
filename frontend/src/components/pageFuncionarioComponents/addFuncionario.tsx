@@ -44,12 +44,7 @@ export default function AddFuncionario() {
 
     if (senha !== senha2) {
       setError("As senhas não coincidem!");
-      toast("As senhas não coincidem!", {
-        action: {
-          label: "Tentar Novamente",
-          onClick: () => console.log("Undo"),
-        },
-      });
+      toast.error("As senhas não coincidem!");
       setLoading(false); // Inicia o carregamento
       return;
     }
@@ -68,14 +63,8 @@ export default function AddFuncionario() {
       setLoading(false); // Inicia o carregamento
       setOpen(false); // Fecha o modal após sucesso
       setLoading(false); // Inicia o carregamento
-      console.error("Erro na requisição:", error);
 
-      toast("Erro na requisição:" + error, {
-        action: {
-          label: "Ok",
-          onClick: () => console.log("OK"),
-        },
-      });
+      toast.error("Erro na requisição:" + error);
     }
   };
 

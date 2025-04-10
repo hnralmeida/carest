@@ -17,10 +17,15 @@ export const useTelaHook = () => {
         try {
             const response = await axiosClient.get('/tela');
             if (response.data) {
+                // ordenar resposta por ordem alfabética de nome
+                response.data.sort((a: Tela, b: Tela) => a.nome.localeCompare(b.nome));
                 setTelas(response.data);
+            } else {
+                setTelas([]);
             }
         } catch (error) {
             console.error('Error fetching administrators:', error);
+            setTelas([]);
         }
     };
 
@@ -58,20 +63,21 @@ export const useTelaHook = () => {
 
     const criarTela = async (Tela: Tela): Promise<Tela | null> => {
         try {
-            const response = await axiosClient.post('/tela', Tela);
+            await axiosClient.post('/tela', Tela);
+            await axiosClient.post('/tela/autoGenerate');
         } catch (error) {
-            console.error('Error creating tela:', error);
+            return Promise.reject(error);
         }
         return null;
     };
 
-    return { 
-        telas, 
-        tela, 
-        listarTelas, 
-        selecionarTela, 
-        editarTela, 
-        deletarTela, 
-        criarTela 
+    return {
+        telas,
+        tela,
+        listarTelas,
+        selecionarTela,
+        editarTela,
+        deletarTela,
+        criarTela
     };
 };

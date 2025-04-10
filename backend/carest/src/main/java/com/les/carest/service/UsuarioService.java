@@ -70,10 +70,14 @@ public class UsuarioService extends _GenericService<Usuario, UsuarioRepository> 
         Usuario usuario = this.buscarPorId(usuarioId);
         List<Tela> telas = telaService.listar();
 
-        for(Tela tela : telas) {
-            Permissao permissao = new Permissao(usuario, tela, false, false, false, false);
-            permissaoService.criar(permissao);
-        }
+        for (Tela tela : telas) {
+            // Verifica se já existe a permissão
+            Optional<Permissao> permissaoExistente = permissaoService.buscarPorUsuarioETela(usuario, tela);
 
+            if (permissaoExistente.isEmpty()) {
+                Permissao permissao = new Permissao(usuario, tela, false, false, false, false);
+                permissaoService.criar(permissao);
+            }
+        }
     }
 }

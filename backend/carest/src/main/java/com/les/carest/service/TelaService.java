@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.List;
+
 @Validated
 @Service
 @Tag(name = "TelaService", description = "Acesso aos métodos da Tela")
@@ -14,4 +16,5 @@ public class TelaService extends _GenericService<Tela, TelaRepository> {
     protected TelaService(TelaRepository TelaRepository) {
         super(TelaRepository);
     }
+
 }

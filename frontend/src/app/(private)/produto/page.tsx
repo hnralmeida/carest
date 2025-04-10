@@ -7,13 +7,6 @@ import { DataTable } from "@/components/pageProdutoComponents/DataTable";
 import { useProdutoHook } from "@/hooks/useProdutos";
 import ButtonEditBalanca from "@/components/editBalanca";
 
-// async function getData(): Promise<Produto[]> {
-//   const response = await axiosClient.get("/usuario");
-//   return response.data.sort((a: Produto, b: Produto) =>
-//     a.nome.localeCompare(b.nome)
-//   );
-// }
-
 function Page() {
   const { produtos, listarProdutos, balanca, obterBalanca } = useProdutoHook();
 

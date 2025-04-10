@@ -26,6 +26,8 @@ export default function AddTela() {
 
   const { criarTela } = useTelaHook();
 
+  const [rotaTocada, setRotaTocada] = useState(false);
+
   const onFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault(); // Evita que o formulário recarregue a página
     setLoading(true); // Inicia o carregamento
@@ -85,7 +87,14 @@ export default function AddTela() {
             <Input
               id="name"
               value={nome}
-              onChange={(e) => setNome(e.target.value)}
+              onChange={(e) => {
+                const novoNome = e.target.value;
+                setNome(novoNome);
+              
+                if (!rotaTocada) {
+                  setrota(novoNome.toLowerCase().replace(/\s+/g, "-"));
+                }
+              }}
               placeholder="Digite o nome"
               autoComplete="off"
               required
