@@ -3,34 +3,60 @@
 import React, { useState } from "react";
 import { Cliente } from "@/components/pageClienteComponents/columns";
 import { Produto } from "@/app/models/produto";
+import { axiosClient } from "@/services/axiosClient";
+
+interface VendaItem {
+    produto: Produto;
+    quantidade: number;
+    valor: number;
+}
 
 export const useVendasHook = () => {
-    const [produtos, setProdutos] = React.useState<Produto[]>([]);
+    const [produtos, setProdutos] = React.useState<VendaItem[]>([]);
     const [cliente, setCliente] = React.useState({} as Cliente);
 
-    function buscarProduto(codigo: string) {
-        const novoProduto = {
-          id: "1",
-          nome: "Produto 1",
-          codigo: 123,
-          valor: 10.00,
-        };
-      
-        setProdutos(prev => [...prev, novoProduto]);
-      }
+    async function buscarProduto(codigo: string): Promise<void> {
+        const response = await axiosClient.get(`/produtos/serial/codigo/${codigo}`);
+        const produto = response.data;
 
-    function buscarCliente(codigo: string) {
-        setCliente ({
-            id: "1",
-            nome: "Cliente 1",
-            saldo: "100.00",
-            telefone: "123456789",
-            dividaData: "2023-10-01",
-            em_uso: true,
-            nascimento: "1990-01-01",
-            limite: "500.00",
-            email: "email@email.com"
+        if (response.status > 205) {
+            return Promise.reject("Produto não encontrado");
+        }
+
+        setProdutos(prev => {
+            const index = prev.findIndex(item => item.produto.codigo === produto.codigo);
+
+            if (index !== -1) {
+                // Produto já existe, atualiza a quantidade
+                const updated = [...prev];
+                updated[index] = {
+                    ...updated[index],
+                    quantidade: updated[index].quantidade + 1
+                };
+                return updated;
+            } else {
+                // Produto novo, adiciona ao carrinho
+                return [
+                    ...prev,
+                    {
+                        produto,
+                        quantidade: 1,
+                        valor: produto.valor
+                    }
+                ];
+            }
         });
+    }
+
+
+    async function buscarCliente(codigo: string) {
+        const response = await axiosClient.get(`/cliente/codigo/${codigo}`);
+        const cliente = response.data;
+        if (response.status > 205) {
+            return Promise.reject("Cliente não encontrado");
+        } else {
+            setCliente(cliente);
+        }
     }
 
     const resetarVenda = () => {
@@ -38,11 +64,28 @@ export const useVendasHook = () => {
         setCliente({} as Cliente);
     }
 
+    const registrarVenda = async () => {
+        const response = await axiosClient.post("/vendas", {
+            clienteId: cliente.id,
+            itens: produtos.map(item => ({
+                produtoId: item.produto.id,
+                quantidade: item.quantidade
+            }))
+        });
+        if (response.status > 205) {
+            return Promise.reject("Erro ao registrar venda");
+        } else {
+            setProdutos([]);
+            setCliente({} as Cliente);
+        }
+    }
+
     return {
         produtos,
         cliente,
         buscarProduto,
         buscarCliente,
-        resetarVenda
+        resetarVenda,
+        registrarVenda
     };
 };

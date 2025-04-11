@@ -10,20 +10,20 @@ import java.util.UUID;
 @Table(name = "produto_serial")
 public class ProdutoSerial extends Produto {
 
-    private int codigo;
+    private String codigo;
 
     public ProdutoSerial() {}
 
-    public ProdutoSerial(String nome, double valor, int codigo) {
+    public ProdutoSerial(String nome, double valor, String codigo) {
         super(nome, valor);
         this.codigo = codigo;
     }
 
-    public int getCodigo() {
+    public String getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(int codigo) {
+    public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
 }

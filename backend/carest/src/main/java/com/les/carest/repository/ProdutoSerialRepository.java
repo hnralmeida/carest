@@ -14,6 +14,8 @@ import java.util.UUID;
 
 @Repository
 public interface ProdutoSerialRepository extends JpaRepository<ProdutoSerial, UUID> {
+
         @Query("SELECT u FROM ProdutoSerial u WHERE u.codigo=:codigo")
-        ProdutoSerial findByIdTeste(@Param("codigo") int codigo);
+        ProdutoSerial buscarByCodigo(@Param("codigo") String codigo);
+
 }

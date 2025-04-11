@@ -1,43 +1,29 @@
 package com.les.carest.model;
 
 import jakarta.persistence.*;
-import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "venda")
 public class Venda {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "produto_id")
-    private Produto produto;
-
-    @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
+    @OneToMany(mappedBy = "venda", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ItemVenda> itens = new ArrayList<>();
+
     private Date dataVenda;
-    private int valor;
+    private double valorTotal;
 
-    public Venda(UUID id, Produto produto, Cliente cliente, Date dataVenda, int valor) {
-        this.id = id;
-        this.produto = produto;
-        this.cliente = cliente;
-        this.dataVenda = dataVenda;
-        this.valor = valor;
-    }
-
-    public Venda(Produto produto, Cliente cliente, Date dataVenda, int valor) {
-        this.produto = produto;
-        this.cliente = cliente;
-        this.dataVenda = dataVenda;
-        this.valor = valor;
-    }
+    // + Getters e Setters
 
     public UUID getId() {
         return id;
@@ -45,14 +31,6 @@ public class Venda {
 
     public void setId(UUID id) {
         this.id = id;
-    }
-
-    public Produto getProduto() {
-        return produto;
-    }
-
-    public void setProduto(Produto produto) {
-        this.produto = produto;
     }
 
     public Cliente getCliente() {
@@ -63,6 +41,14 @@ public class Venda {
         this.cliente = cliente;
     }
 
+    public List<ItemVenda> getItens() {
+        return itens;
+    }
+
+    public void setItens(List<ItemVenda> itens) {
+        this.itens = itens;
+    }
+
     public Date getDataVenda() {
         return dataVenda;
     }
@@ -71,11 +57,11 @@ public class Venda {
         this.dataVenda = dataVenda;
     }
 
-    public int getValor() {
-        return valor;
+    public double getValorTotal() {
+        return valorTotal;
     }
 
-    public void setValor(int valor) {
-        this.valor = valor;
+    public void setValorTotal(double valorTotal) {
+        this.valorTotal = valorTotal;
     }
 }

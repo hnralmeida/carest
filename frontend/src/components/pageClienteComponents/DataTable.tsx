@@ -22,6 +22,7 @@ import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import EditCliente from "./editCliente";
 import { axiosClient } from "@/services/axiosClient";
+import { toast, Toaster } from "sonner";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -49,16 +50,16 @@ export function DataTable<TData, TValue>({
         axiosClient
           .delete(`/cliente/${id}`)
           .then(() => {
-            alert("Cliente excluído com sucesso!");
+            toast.success("Cliente excluído com sucesso!");
             window.location.reload(); // Atualiza a lista após excluir
           })
           .catch((error) => {
             console.error("Erro ao excluir:", error);
-            alert("Falha ao excluir o Cliente.");
+            toast.error("Falha ao excluir o Cliente.");
           });
       } catch (error) {
         console.error("Erro na requisição:", error);
-        alert("Erro ao conectar com o servidor.");
+        toast.error("Erro ao conectar com o servidor.");
       }
     }
   }
@@ -142,6 +143,7 @@ export function DataTable<TData, TValue>({
           ))}
         </TableFooter>
       </Table>
+      <Toaster richColors position="top-center" />
     </div>
   );
 }

@@ -4,9 +4,11 @@ import com.les.carest.DTO.ProdutoDTO_Serial;
 import com.les.carest.model.ProdutoBalanca;
 import com.les.carest.model.ProdutoSerial;
 import com.les.carest.repository.ProdutoSerialRepository;
+import com.les.carest.repository.UsuarioRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -47,6 +49,11 @@ public class ProdutoSerialService extends _GenericService<ProdutoSerial, Produto
 
     public ProdutoDTO_Serial buscarProdutoPorId(UUID id) {
         return toDTO(super.buscarPorId(id));
+    }
+
+    public ProdutoDTO_Serial buscarProdutoPorCodigo(String codigo) {
+        Optional<ProdutoSerial> produto = Optional.ofNullable(((ProdutoSerialRepository) this.repositoryGenerics).buscarByCodigo(codigo));
+        return produto.map(this::toDTO).orElse(null);
     }
 
     public List<ProdutoDTO_Serial> listarTodosProdutos() {

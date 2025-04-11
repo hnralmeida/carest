@@ -5,10 +5,11 @@ import { Radio } from "lucide-react";
 import { ItemVenda } from "./item";
 import { useVendasHook } from "@/hooks/useVendas";
 import { formatarParaMoeda } from "@/lib/utils";
+import { toast, Toaster } from "sonner";
 
 const VendasView = () => {
 
-    const { buscarCliente, buscarProduto, resetarVenda, cliente, produtos } = useVendasHook();
+    const { buscarCliente, buscarProduto, resetarVenda, registrarVenda, cliente, produtos } = useVendasHook();
 
     const [codigoLido, setCodigoLido] = React.useState("");
 
@@ -24,11 +25,36 @@ const VendasView = () => {
                 return;
             }
 
+            if (codigoLido.trim() == "9000") {
+                registrarVenda().then(() => {
+                    toast.success("Venda registrada com sucesso")
+                })
+                setCodigoLido("");
+                return;
+            }
+
             if (codigoLido.length > 0) {
-                if (cliente?.id)
-                    buscarProduto(codigoLido)
-                else
-                    buscarCliente(codigoLido)
+                try {
+                    if (cliente?.id)
+                        await buscarProduto(codigoLido)
+                    else
+                        await buscarCliente(codigoLido)
+                } catch (e: any) {
+                    if (e.response.status == 404 && cliente?.id) {
+                        toast.error("Produto não encontrado")
+                    } else if (e.response.status == 404) {
+                        toast.error("Cliente não encontrado")
+                    }
+                    else if (e.response.status == 500) {
+                        toast.error("Erro interno do servidor")
+                    }
+                    else if (e.response.status == 400) {
+                        toast.error("Código inválido")
+                    }
+                    else if (e.response.status == 401) {
+                        toast.error("Código já utilizado")
+                    }
+                }
             }
             setCodigoLido("");
         }
@@ -63,8 +89,8 @@ const VendasView = () => {
         return (
             <div className="flex flex-col justify-center items-start w-full h-[128px] gap-[8px] mb-4 px-[64px]">
                 <p className="font-semibold">{String(cliente.nome)}</p>
-                <p className="font-semibold">Saldo: {formatarParaMoeda(cliente.saldo)}</p>
-                <p className="font-semibold">Limite: {formatarParaMoeda(cliente.limite)}</p>
+                <p className="font-semibold">Saldo: {formatarParaMoeda(String(cliente.saldo), true)}</p>
+                <p className="font-semibold">Limite: {formatarParaMoeda(String(cliente.limite), true)}</p>
             </div>
         )
     }
@@ -90,10 +116,10 @@ const VendasView = () => {
                     {produtos.length > 0 ? produtos.map((item, index) => (
                         <ItemVenda
                             key={index}
-                            id={item.id}
-                            nome={item.nome}
+                            id={item.produto.id}
+                            nome={item.produto.nome}
                             preco={item.valor}
-                            quantidade={2}
+                            quantidade={item.quantidade}
                         />
                     )) : (
                         <div className="flex flex-row gap-[16px]">
@@ -104,6 +130,7 @@ const VendasView = () => {
                     )}
                 </div>
             </div>
+            <Toaster richColors position="top-center" />
         </>
     )
 }

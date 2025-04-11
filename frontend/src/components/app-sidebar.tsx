@@ -18,6 +18,7 @@ import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react"
+import { getServerSession } from "next-auth";
 
 interface SidebarType {
   versions: string[];
@@ -76,10 +77,10 @@ const fullData = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
-  const { data: session } = useSession()
-
+  const {data: session} = useSession();
+  
   const [data, setData] = React.useState<SidebarType>(fullData as SidebarType);
-
+  
   React.useEffect(() => {
     console.log(session)
     if (session) {
@@ -91,7 +92,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
           return {
             ...section,
-            items: session.user.permissoes
+            items: session.user.permissoes&&session.user.permissoes
               .filter((item: any) => !nomesIgnorados.includes(item.tela.nome))
               .map((item: any) => ({
                 title: item.tela.nome,
@@ -136,7 +137,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {item.items.map((item) => (
+                {item.items&&item.items.map((item) => (
                   <SidebarMenuItem
                     key={item.title}
                     className={

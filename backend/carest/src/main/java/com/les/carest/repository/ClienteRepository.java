@@ -1,6 +1,7 @@
 package com.les.carest.repository;
 
 import com.les.carest.model.Cliente;
+import com.les.carest.model.ProdutoSerial;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,4 +23,8 @@ public interface ClienteRepository extends JpaRepository<Cliente, UUID> {
     // Consulta para mes
     @Query("SELECT c FROM Cliente c WHERE EXTRACT(MONTH FROM c.nascimento) = :mes")
     List<Cliente> findAniversariantesPorMes(@Param("mes") int mes);
+
+    @Query("SELECT u FROM Cliente u WHERE u.codigo=:codigo")
+    Cliente buscarByCodigo(@Param("codigo") String codigo);
+
 }
