@@ -18,143 +18,93 @@ import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react"
-import { useUsuarioHook } from "@/hooks/useUsuario";
+
+interface SidebarType {
+  versions: string[];
+  navMain: {
+    title: string;
+    url: string;
+    items: {
+      title: string;
+      url: string;
+    }[];
+  }[];
+}
+
+
+const fullData = {
+  versions: ["Carest"],
+  navMain: [
+    {
+      title: "Principal",
+      url: "#",
+      items: [
+        {
+          title: "Acesso",
+          url: "/acesso",
+
+        },
+        {
+          title: "Vendas",
+          url: "/vendas ",
+
+        },
+        {
+          title: "Produtos",
+          url: "/produto",
+
+        },
+        {
+          title: "Clientes",
+          url: "/cliente",
+
+        },
+        {
+          title: "Crédito",
+          url: "/credito",
+
+        },
+      ],
+    },
+    {
+      title: "Controle",
+      url: "#",
+      items: [],
+    },
+  ],
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const { data: session } = useSession()
 
+  const [data, setData] = React.useState<SidebarType>(fullData as SidebarType);
+
   React.useEffect(() => {
-    const fetchData = async () => {
-      console.log(session)
+    console.log(session)
+    if (session) {
+      let filteredData = { ...fullData };
+
+      filteredData.navMain = filteredData.navMain.map((section, index) => {
+        if (index === 1) {
+          const nomesIgnorados = ["Acesso", "Vendas", "Produtos", "Clientes", "Crédito"];
+
+          return {
+            ...section,
+            items: session.user.permissoes
+              .filter((item: any) => !nomesIgnorados.includes(item.tela.nome))
+              .map((item: any) => ({
+                title: item.tela.nome,
+                url: item.tela.rota,
+              })),
+          };
+        }
+        return section;
+      });
+
+      setData(filteredData);
     }
-    fetchData();
-  }, []);
-
-  // // Estado para controlar os itens ativos
-  // const [active, setActive] = React.useState<Record<string, boolean>>({
-  //   dashboard: false,
-  //   acesso: false,
-  //   venda: false,
-  //   produto: false,
-  //   cliente: false,
-  //   credito: false,
-  //   funcionarios: false,
-  //   em_aberto: false,
-  //   consumo_diario: false,
-  //   clientes_diario: false,
-  //   aniversariantes: false,
-  //   ticket: false,
-  //   ultima_compra: false,
-  //   relatorio: false,
-  //   fornecedores: false,
-  //   controle_saida: false,
-  //   dre: false,
-  //   tela: false,
-  // });
-
-  const data = {
-    versions: ["Carest"],
-    navMain: [
-      {
-        title: "Principal",
-        url: "#",
-        items: [
-          {
-            title: "Acesso",
-            url: "/acesso",
-
-          },
-          {
-            title: "Vendas",
-            url: "/vendas ",
-
-          },
-          {
-            title: "Produtos",
-            url: "/produto",
-
-          },
-          {
-            title: "Clientes",
-            url: "/cliente",
-
-          },
-          {
-            title: "Crédito",
-            url: "/credito",
-
-          },
-        ],
-      },
-      {
-        title: "Controle",
-        url: "#",
-        items: [
-          {
-            title: "Funcionários",
-            url: "/funcionario",
-
-          },
-          {
-            title: "Clientes em aberto",
-            url: "/em_aberto",
-
-          },
-          {
-            title: "Consumo Diário",
-            url: "/consumo_diario",
-
-          },
-          {
-            title: "Clientes Diário",
-            url: "/clientes_diario",
-
-          },
-          {
-            title: "Aniversariantes",
-            url: "/aniversariantes",
-
-          },
-          {
-            title: "Ticket Médio",
-            url: "/ticket",
-
-          },
-          {
-            title: "Última Compra",
-            url: "/ultima_compra",
-
-          },
-          {
-            title: "Relatório de produtos",
-            url: "/relatorio_produtos",
-
-          },
-          {
-            title: "Fornecedores",
-            url: "/fornecedor",
-
-          },
-          {
-            title: "Controle de Saída",
-            url: "/controle_saida",
-
-          },
-          {
-            title: "DRE Diário",
-            url: "/dre",
-
-          },
-          {
-            title: "Tela",
-            url: "/tela",
-
-          },
-        ],
-      },
-    ],
-  };
+  }, [session]);
 
   const handleLogout = () => {
     signOut();
@@ -181,7 +131,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         {/* We create a SidebarGroup for each parent. */}
-        {data.navMain.map((item) => (
+        {data && data.navMain.map((item) => (
           <SidebarGroup key={item.title}>
             <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
             <SidebarGroupContent>
