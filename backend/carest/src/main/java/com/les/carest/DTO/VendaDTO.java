@@ -7,7 +7,6 @@ public class VendaDTO {
     private UUID clienteId;
     private List<ItemVendaDTO> itens;
 
-
     public UUID getClienteId() {
         return clienteId;
     }

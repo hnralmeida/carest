@@ -118,4 +118,16 @@ public class ProdutoController {
         produtoSerialService.excluirProduto(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/serial/codigo/{codigo}")
+    @Operation(summary = "Busca um produto serial por Codigo")
+    public ResponseEntity<ProdutoDTO_Serial> buscarProdutoSerialPorCodigo(@PathVariable String codigo) {
+        ProdutoDTO_Serial produto = produtoSerialService.buscarProdutoPorCodigo(codigo);
+
+        if (produto == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(produto);
+    }
 }

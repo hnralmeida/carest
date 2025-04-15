@@ -12,6 +12,7 @@ public class ProdutoSerial extends Produto {
 
     @Column(nullable = true, length = 100)
     private String codigo;
+    private String codigo;
 
     public ProdutoSerial() {}
 
