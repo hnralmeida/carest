@@ -21,7 +21,7 @@ export default function AddProduto() {
   const [open, setOpen] = useState(false);
   const [nome, setNome] = useState("");
   const [valor, setValor] = useState("");
-  const [codigo, setCodigo] = useState(0);
+  const [codigo, setCodigo] = useState("");
 
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -55,7 +55,7 @@ export default function AddProduto() {
       setOpen(false); // Fecha o modal após sucesso
       setNome(""); // Limpa o campo do formulário
       setValor("0"); // Limpa o campo do formulário
-      setCodigo(0); // Limpa o campo do formulário
+      setCodigo(""); // Limpa o campo do formulário
       setLoading(false); // Inicia o carregamento
 
     } catch (error) {
@@ -114,7 +114,16 @@ export default function AddProduto() {
             <Input
               id="codigo"
               value={codigo}
-              onChange={(e) => setCodigo(Number(e.target.value))}
+              onChange={(e) => {
+                const apenasLetrasENumeros = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
+                setCodigo(apenasLetrasENumeros);
+              }}
+              onKeyDown={(e) => {
+                if ((e.key).toLocaleLowerCase() == 'enter') {
+                  e.preventDefault(); // impede que o enter dispare comportamento padrão
+                  // você pode adicionar uma ação aqui se quiser, tipo submeter ou processar
+                }
+              }}
               placeholder="Insira um codigo"
               required
             />
