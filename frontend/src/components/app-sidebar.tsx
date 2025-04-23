@@ -18,7 +18,8 @@ import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react"
-import { getServerSession } from "next-auth";
+import { useUsuarioHook } from "@/hooks/useUsuario";
+import { Usuario } from "@/app/models/usuario";
 
 interface SidebarType {
   versions: string[];
@@ -77,13 +78,24 @@ const fullData = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
-  const {data: session} = useSession();
-  
+  const { data: session } = useSession();
+
   const [data, setData] = React.useState<SidebarType>(fullData as SidebarType);
-  
+
+  const { getUsuario } = useUsuarioHook();
+  const [usuario, setUsuario] = React.useState<Usuario | null>(null);
+
   React.useEffect(() => {
-    console.log(session)
-    if (session) {
+    console.log("session", session)
+    if (session&& session.user) {
+      const email = session.user.email || "email";
+
+      session.user && getUsuario(email).then((response) => {
+        setUsuario(response as Usuario);
+      }).catch((error) => {
+        console.error("Erro ao buscar usuário:", error);
+      });
+      
       let filteredData = { ...fullData };
 
       filteredData.navMain = filteredData.navMain.map((section, index) => {
@@ -92,12 +104,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
           return {
             ...section,
-            items: session.user.permissoes&&session.user.permissoes
-              .filter((item: any) => !nomesIgnorados.includes(item.tela.nome))
+            items: usuario?.permissao
+              ?.filter((item: any) => !nomesIgnorados.includes(item.tela.nome))
               .map((item: any) => ({
                 title: item.tela.nome,
                 url: item.tela.rota,
-              })),
+              })) || [],
           };
         }
         return section;
@@ -137,7 +149,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {item.items&&item.items.map((item) => (
+                {item.items && item.items.map((item) => (
                   <SidebarMenuItem
                     key={item.title}
                     className={
