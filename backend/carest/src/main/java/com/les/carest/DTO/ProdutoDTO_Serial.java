@@ -11,7 +11,7 @@ public class ProdutoDTO_Serial {
     // Construtor vazio
     public ProdutoDTO_Serial() {}
 
-    // Getters e Setters (gerar via IDE ou Lombok)
+    // Getters e Setters
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
     public String getNome() { return nome; }

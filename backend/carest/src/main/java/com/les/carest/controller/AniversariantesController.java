@@ -1,10 +1,9 @@
 package com.les.carest.controller;
 
 
-import com.les.carest.DTO.AniversarianteDTO;
+import com.les.carest.DTO.ClienteDTO;
 import com.les.carest.model.Cliente;
 import com.les.carest.service.ClienteService;
-import com.les.carest.service._GenericServiceTypes;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/aniversariantes")
@@ -29,12 +29,12 @@ public class AniversariantesController extends _GenericController<Cliente> {
     }
 
     @GetMapping("/hoje")
-    public ResponseEntity<List<AniversarianteDTO>> listarAniversariantesDoDia() {
+    public ResponseEntity<List<ClienteDTO>> listarAniversariantesDoDia() {
         return ResponseEntity.ok(clienteService.listarAniversariantesDoDia());
     }
 
     @GetMapping("/por-data")
-    public ResponseEntity<List<AniversarianteDTO>> listarAniversariantesPorData(
+    public ResponseEntity<List<ClienteDTO>> listarAniversariantesPorData(
             @RequestParam @Min(1) @Max(12) int mes,
             @RequestParam @Min(1) @Max(31) int dia) {
         return ResponseEntity.ok(clienteService.listarAniversariantesPorData(mes, dia));

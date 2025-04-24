@@ -1,6 +1,6 @@
 package com.les.carest.service;
 
-import com.les.carest.DTO.AniversarianteDTO;
+import com.les.carest.DTO.ClienteDTO;
 import com.les.carest.model.Cliente;
 import com.les.carest.repository.ClienteRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,35 +24,100 @@ public class ClienteService extends _GenericService<Cliente, ClienteRepository> 
     }
 
     // Métodos específicos de aniversariantes
-    public List<AniversarianteDTO> listarAniversariantesDoDia() {
+    public List<ClienteDTO> listarAniversariantesDoDia() {
         List<Cliente> clientes = this.repositoryGenerics.findAniversariantesDoDia();
         return converterParaDTO(clientes);
     }
 
-    public List<AniversarianteDTO> listarAniversariantesPorData(int mes, int dia) {
+    public List<ClienteDTO> listarAniversariantesPorData(int mes, int dia) {
         List<Cliente> clientes = this.repositoryGenerics.findAniversariantesPorData(mes, dia);
         return converterParaDTO(clientes);
     }
 
-    private List<AniversarianteDTO> converterParaDTO(List<Cliente> clientes) {
+    private List<ClienteDTO> converterParaDTO(List<Cliente> clientes) {
         return clientes.stream()
                 .map(this::converterClienteParaDTO)
                 .collect(Collectors.toList());
     }
 
-    private AniversarianteDTO converterClienteParaDTO(Cliente cliente) {
+
+    private List<ClienteDTO> toDTO(List<Cliente> clientes) {
+        return clientes.stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    private ClienteDTO converterClienteParaDTO(Cliente cliente) {//apenas aniversairante
         Date nascimento = cliente.getNascimento();
         LocalDate dataNasc = nascimento.toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate();
         int idade = Period.between(dataNasc, LocalDate.now()).getYears();
 
-        return new AniversarianteDTO(
+        return new ClienteDTO(
                 cliente.getId(),
                 cliente.getNome(),
                 cliente.getEmail(),
                 cliente.getTelefone(),
                 idade
         );
+    }
+
+    private ClienteDTO toDTO(Cliente cliente) {//para saldo
+
+        return new ClienteDTO(
+                cliente.getId(),
+                cliente.getNome(),
+                cliente.getEmail(),
+                cliente.getTelefone(),
+                cliente.getSaldo(),
+                cliente.getDividaData(),
+                cliente.getCodigo()
+        );
+    }
+
+    public List<ClienteDTO> listarEndividados() {
+        List<Cliente> clientes = this.repositoryGenerics.findEndividados();
+        return toDTO(clientes);
+    }
+
+    public ClienteDTO acharCliente(String codigo) {
+        Cliente cliente = this.repositoryGenerics.findByCodigoCliente(codigo);
+        return toDTO(cliente);
+    }
+
+
+    //TEMPORARIO
+
+    public ClienteDTO adicionarCredito(String codigoCliente, double valorRecarga) {
+        // Busca o cliente pelo código - corrigido para usar o repositório genérico
+        Cliente cliente = this.repositoryGenerics.findByCodigoCliente(codigoCliente);
+        // Validação do valor
+        if(valorRecarga <= 0) {
+            throw new IllegalArgumentException("Valor da recarga deve ser positivo");
+        }
+
+        // Atualiza o saldo
+        double novoSaldo = cliente.getSaldo() + valorRecarga;
+        cliente.setSaldo(novoSaldo);
+
+        // Salva a alteração - usando o repositório genérico
+        this.repositoryGenerics.save(cliente);
+
+        // Converte para DTO usando o método correto (com saldo)
+        return toDTO(cliente);
+    }
+    // Add this method to convert DTO to Entity
+    private Cliente toEntity(ClienteDTO clienteDTO) {
+        Cliente cliente = new Cliente();
+        cliente.setId(clienteDTO.getId());
+        cliente.setNome(clienteDTO.getNome());
+        cliente.setEmail(clienteDTO.getEmail());
+        cliente.setTelefone(clienteDTO.getTelefone());
+        cliente.setSaldo(clienteDTO.getSaldo());
+        cliente.setCodigo(clienteDTO.getCodigo());
+        // Note: You'll need to set other required fields like nascimento, codigoCliente, etc.
+        // depending on your model structure
+        return cliente;
     }
 }
