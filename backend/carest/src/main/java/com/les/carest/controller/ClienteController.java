@@ -1,6 +1,7 @@
 package com.les.carest.controller;
 
 import com.les.carest.DTO.ClienteDTO;
+import com.les.carest.DTO.ClienteDiarioDTO;
 import com.les.carest.DTO.RecargaDTO;
 import com.les.carest.model.Cliente;
 import com.les.carest.service.ClienteService;
@@ -12,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -67,10 +67,24 @@ public class ClienteController extends _GenericController<Cliente> {
         }
     }
 
+//    @GetMapping("/diario")
+//    public ResponseEntity<List<ClienteDTO>> listarDiario(Date data) {//incluir limite
+//        List<ClienteDTO> clientes = clienteService.listarEndividados();
+//        return ResponseEntity.ok(clientes);
+//    }
+//
+
     @GetMapping("/diario")
-    public ResponseEntity<List<ClienteDTO>> listarDiario(Date data) {//incluir limite
-        List<ClienteDTO> clientes = clienteService.listarEndividados();
+    public ResponseEntity<List<ClienteDiarioDTO>> getClientesDiariosComGasto() {
+        List<ClienteDiarioDTO> clientes = clienteService.findClientesDiariosComGasto();
         return ResponseEntity.ok(clientes);
     }
 
+//    @GetMapping("/diarios/{data}")
+//    @Operation(summary = "Listar clientes com gastos por data específica")
+//    public ResponseEntity<List<ClienteDiarioDTO>> listarClientesDiariosPorData(
+//            @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date data) {
+//        List<ClienteDiarioDTO> clientes = clienteService.listarClientesDiariosPorData(data);
+//        return ResponseEntity.ok(clientes);
+//    }
 }

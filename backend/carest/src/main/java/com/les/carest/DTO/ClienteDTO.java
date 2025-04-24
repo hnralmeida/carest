@@ -13,7 +13,6 @@ public class ClienteDTO {
     private String email;
     private String codigo;
 
-
     private String telefone;
     private int idade;
     private double saldo;
@@ -54,6 +53,8 @@ public class ClienteDTO {
                 idade
         );
     }
+
+
 
     public UUID getId() {
         return id;

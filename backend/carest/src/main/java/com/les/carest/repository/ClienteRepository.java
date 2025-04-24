@@ -24,9 +24,40 @@ public interface ClienteRepository extends JpaRepository<Cliente, UUID> {
     List<Cliente> findEndividados();
 
     @Query("select Cliente c from Venda v where v.dataVenda =:dia")
-    List <Cliente> listVendasDia(@Param("dia") Date dia);//todo colocar em vendas
+    List<Cliente> listVendasDia(@Param("dia") Date dia);//todo colocar em vendas
 
     @Query("select c from Cliente c where c.codigo =:codigo")
     Cliente findByCodigoCliente(@Param("codigo") String codigo);
 
+    public interface ClienteDiarioProjection {
+        String getNome();
+
+        Double getValorTotal();
+
+        String getHoraVenda();
+    }
+
+
+    @Query("SELECT " +
+            "c.nome, " +
+            "SUM(v.valorTotal), " +
+            "FUNCTION('TO_CHAR', v.dataVenda, 'HH24:MI') " +
+            "FROM Venda v " +
+            "JOIN v.cliente c " +
+            "WHERE CAST(v.dataVenda AS date) = CURRENT_DATE " +
+            "GROUP BY c.nome, FUNCTION('TO_CHAR', v.dataVenda, 'HH24:MI') " +
+            "ORDER BY SUM(v.valorTotal) DESC")
+    List<Object[]> findClientesDiariosComGastoRaw();
+
+//    // Consulta para data específica
+//    @Query("SELECT NEW com.les.carest.DTO.ClienteDiarioDTO(" +
+//            "c.nome, " +
+//            "SUM(v.valorTotal), " +
+//            "FUNCTION('TO_CHAR', v.dataVenda, 'HH24:MI')) " +
+//            "FROM Venda v " +
+//            "JOIN v.cliente c " +
+//            "WHERE CAST(v.dataVenda AS date) = :data " +
+//            "GROUP BY c.nome, FUNCTION('TO_CHAR', v.dataVenda, 'HH24:MI') " +
+//            "ORDER BY SUM(v.valorTotal) DESC")
+//    List<Tuple> findClientesDiariosPorData(@Param("data") Date data);
 }

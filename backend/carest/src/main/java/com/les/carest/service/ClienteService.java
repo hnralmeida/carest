@@ -1,6 +1,7 @@
 package com.les.carest.service;
 
 import com.les.carest.DTO.ClienteDTO;
+import com.les.carest.DTO.ClienteDiarioDTO;
 import com.les.carest.model.Cliente;
 import com.les.carest.repository.ClienteRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,9 +20,13 @@ import java.util.stream.Collectors;
 @Tag(name = "ClienteService", description = "Acesso aos métodos de Cliente")
 public class ClienteService extends _GenericService<Cliente, ClienteRepository> {
 
+    private final ClienteRepository clienteRepository;
+
     public ClienteService(ClienteRepository clienteRepository) {
         super(clienteRepository);
+        this.clienteRepository = clienteRepository;
     }
+
 
     // Métodos específicos de aniversariantes
     public List<ClienteDTO> listarAniversariantesDoDia() {
@@ -93,7 +98,7 @@ public class ClienteService extends _GenericService<Cliente, ClienteRepository> 
         // Busca o cliente pelo código - corrigido para usar o repositório genérico
         Cliente cliente = this.repositoryGenerics.findByCodigoCliente(codigoCliente);
         // Validação do valor
-        if(valorRecarga <= 0) {
+        if (valorRecarga <= 0) {
             throw new IllegalArgumentException("Valor da recarga deve ser positivo");
         }
 
@@ -107,6 +112,7 @@ public class ClienteService extends _GenericService<Cliente, ClienteRepository> 
         // Converte para DTO usando o método correto (com saldo)
         return toDTO(cliente);
     }
+
     // Add this method to convert DTO to Entity
     private Cliente toEntity(ClienteDTO clienteDTO) {
         Cliente cliente = new Cliente();
@@ -120,4 +126,25 @@ public class ClienteService extends _GenericService<Cliente, ClienteRepository> 
         // depending on your model structure
         return cliente;
     }
+
+
+    public List<ClienteDiarioDTO> findClientesDiariosComGasto() {
+        List<Object[]> results = clienteRepository.findClientesDiariosComGastoRaw();
+
+        return results.stream()
+                .map(arr -> new ClienteDiarioDTO(
+                        (String) arr[0],       // nome
+                        (Double) arr[1],       // valorTotal
+                        (String) arr[2]        // horaVenda
+                ))
+                .collect(Collectors.toList());
+    }
+
+//    // Versão alternativa com tratamento de data específica
+//    public List<ClienteDiarioDTO> listarClientesDiariosPorData(Date data) {
+//        return clienteRepository.findClientesDiariosPorData(data);
+//
+//    }
+
+
 }
