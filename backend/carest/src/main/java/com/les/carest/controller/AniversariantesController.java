@@ -1,7 +1,7 @@
 package com.les.carest.controller;
 
 
-import com.les.carest.DTO.AniversarianteDTO;
+import com.les.carest.DTO.ClienteDTO;
 import com.les.carest.model.Cliente;
 import com.les.carest.service.ClienteService;
 import jakarta.validation.constraints.Max;
@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @RestController
 @RequestMapping("/aniversariantes")

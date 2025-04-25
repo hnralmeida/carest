@@ -1,7 +1,7 @@
 package com.les.carest.service;
 
-import com.les.carest.DTO.AniversarianteDTO;
-import com.les.carest.DTO.ProdutoDTO_Serial;
+import com.les.carest.DTO.ClienteDTO;
+import com.les.carest.DTO.ClienteDiarioDTO;
 import com.les.carest.model.Cliente;
 import com.les.carest.model.ProdutoSerial;
 import com.les.carest.repository.ClienteRepository;
@@ -24,16 +24,125 @@ import java.util.stream.Collectors;
 @Tag(name = "ClienteService", description = "Acesso aos métodos de Cliente")
 public class ClienteService extends _GenericService<Cliente, ClienteRepository> {
 
+    private final ClienteRepository clienteRepository;
+
     public ClienteService(ClienteRepository clienteRepository) {
         super(clienteRepository);
+        this.clienteRepository = clienteRepository;
     }
+
 
     public List<Cliente> listarAniversariantesPorMes (int mes) {
         return this.repositoryGenerics.findAniversariantesPorMes(mes);
     }
 
-    public Cliente buscarClientePorCodigo(String codigo) {
-        return ((ClienteRepository) this.repositoryGenerics).buscarByCodigo(codigo);
+    private List<ClienteDTO> converterParaDTO(List<Cliente> clientes) {
+        return clientes.stream()
+                .map(this::converterClienteParaDTO)
+                .collect(Collectors.toList());
     }
+
+
+    private List<ClienteDTO> toDTO(List<Cliente> clientes) {
+        return clientes.stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    private ClienteDTO converterClienteParaDTO(Cliente cliente) {//apenas aniversairante
+        Date nascimento = cliente.getNascimento();
+        LocalDate dataNasc = nascimento.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        int idade = Period.between(dataNasc, LocalDate.now()).getYears();
+
+        return new ClienteDTO(
+                cliente.getId(),
+                cliente.getNome(),
+                cliente.getEmail(),
+                cliente.getTelefone(),
+                idade
+        );
+    }
+
+    private ClienteDTO toDTO(Cliente cliente) {//para saldo
+
+        return new ClienteDTO(
+                cliente.getId(),
+                cliente.getNome(),
+                cliente.getEmail(),
+                cliente.getTelefone(),
+                cliente.getSaldo(),
+                cliente.getDividaData(),
+                cliente.getCodigo()
+        );
+    }
+
+    public List<ClienteDTO> listarEndividados() {
+        List<Cliente> clientes = this.repositoryGenerics.findEndividados();
+        return toDTO(clientes);
+    }
+
+    public ClienteDTO acharCliente(String codigo) {
+        Cliente cliente = this.repositoryGenerics.findByCodigoCliente(codigo);
+        return toDTO(cliente);
+    }
+
+
+    //TEMPORARIO
+
+    public ClienteDTO adicionarCredito(String codigoCliente, double valorRecarga) {
+        // Busca o cliente pelo código - corrigido para usar o repositório genérico
+        Cliente cliente = this.repositoryGenerics.findByCodigoCliente(codigoCliente);
+        // Validação do valor
+        if (valorRecarga <= 0) {
+            throw new IllegalArgumentException("Valor da recarga deve ser positivo");
+        }
+
+        // Atualiza o saldo
+        double novoSaldo = cliente.getSaldo() + valorRecarga;
+        cliente.setSaldo(novoSaldo);
+
+        // Salva a alteração - usando o repositório genérico
+        this.repositoryGenerics.save(cliente);
+
+        // Converte para DTO usando o método correto (com saldo)
+        return toDTO(cliente);
+    }
+
+    // Add this method to convert DTO to Entity
+    private Cliente toEntity(ClienteDTO clienteDTO) {
+        Cliente cliente = new Cliente();
+        cliente.setId(clienteDTO.getId());
+        cliente.setNome(clienteDTO.getNome());
+        cliente.setEmail(clienteDTO.getEmail());
+        cliente.setTelefone(clienteDTO.getTelefone());
+        cliente.setSaldo(clienteDTO.getSaldo());
+        cliente.setCodigo(clienteDTO.getCodigo());
+        // Note: You'll need to set other required fields like nascimento, codigoCliente, etc.
+        // depending on your model structure
+        return cliente;
+    }
+
+
+    public List<ClienteDiarioDTO> findClientesDiariosComGasto() {
+        List<Object[]> results = clienteRepository.findClientesDiariosComGastoRaw();
+
+        return results.stream()
+                .map(arr -> new ClienteDiarioDTO(
+                        (String) arr[0],       // nome
+                        (Double) arr[1],       // valorTotal
+                        (String) arr[2]        // horaVenda
+                ))
+                .collect(Collectors.toList());
+    }
+
+//    // Versão alternativa com tratamento de data específica
+//    public List<ClienteDiarioDTO> listarClientesDiariosPorData(Date data) {
+//        return clienteRepository.findClientesDiariosPorData(data);
+//
+//    }
+
+
 
 }

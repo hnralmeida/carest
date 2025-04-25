@@ -1,7 +1,6 @@
 package com.les.carest.model;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 import java.util.Date;
 import java.util.UUID;
@@ -14,11 +13,13 @@ public class Recarga {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "imagem_id")
+    @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
     private Date data;
     private double valor;
+
+    public Recarga() {}
 
     public Recarga(UUID id, Date data, Cliente cliente, double valor) {
         this.id = id;
