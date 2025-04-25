@@ -82,20 +82,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const [data, setData] = React.useState<SidebarType>(fullData as SidebarType);
 
-  const { getUsuario } = useUsuarioHook();
-  const [usuario, setUsuario] = React.useState<Usuario | null>(null);
+  const { usuario } = useUsuarioHook();
 
   React.useEffect(() => {
     console.log("session", session)
-    if (session&& session.user) {
-      const email = session.user.email || "email";
+    if (usuario) {
 
-      session.user && getUsuario(email).then((response) => {
-        setUsuario(response as Usuario);
-      }).catch((error) => {
-        console.error("Erro ao buscar usuário:", error);
-      });
-      
       let filteredData = { ...fullData };
 
       filteredData.navMain = filteredData.navMain.map((section, index) => {

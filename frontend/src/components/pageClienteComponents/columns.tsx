@@ -9,6 +9,7 @@ export type Cliente = {
     saldo: string;
     telefone: string;
     email: string;
+    codigo?: string;
     limite: string;
     em_uso: boolean;
     nascimento: string;

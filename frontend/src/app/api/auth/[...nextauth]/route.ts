@@ -1,6 +1,6 @@
 // import { axiosClient } from "@/services/axiosClient";
+import { useUsuarioHook } from "@/hooks/useUsuario";
 import { axiosClient } from "@/services/axiosClient";
-import { TIMEOUT } from "dns";
 import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
