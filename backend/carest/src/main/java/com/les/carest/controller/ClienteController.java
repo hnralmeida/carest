@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -67,12 +68,44 @@ public class ClienteController extends _GenericController<Cliente> {
         }
     }
 
+    @PutMapping("/recarga/limite")
+    @Operation(summary = "muda limite")
+    public ResponseEntity<ClienteDTO> mudarLimite(@RequestBody @Valid RecargaDTO recargaDTO) {
+        try {
+            ClienteDTO clienteAtualizado = clienteService.adicionarLimite(
+                    recargaDTO.getCodigoCliente(),
+                    recargaDTO.getValorRecarga()//gambiarra so pra nao criar outro dto para a mesma situação
+            );
+            return ResponseEntity.ok(clienteAtualizado);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PutMapping("/recarga/bloqueado")
+    @Operation(summary = "muda limite")
+    public ResponseEntity<ClienteDTO> mudarAcesso(String codigo) {
+        ResponseEntity.ok("acesso modificado");
+        return ResponseEntity.ok(clienteService.mudarEstadoDeAcesso(codigo));
+    }
+
+
+
 //    @GetMapping("/diario")
 //    public ResponseEntity<List<ClienteDTO>> listarDiario(Date data) {//incluir limite
 //        List<ClienteDTO> clientes = clienteService.listarEndividados();
 //        return ResponseEntity.ok(clientes);
 //    }
 //
+
+
+
+    @GetMapping("/diario/{data}")
+    public ResponseEntity<List<ClienteDiarioDTO>> getDiario(@PathVariable Date data) {
+        List<ClienteDiarioDTO> clientes = clienteService.findClientesDiariosData(data);
+        return ResponseEntity.ok(clientes);
+    }
+
 
     @GetMapping("/diario")
     public ResponseEntity<List<ClienteDiarioDTO>> getClientesDiariosComGasto() {

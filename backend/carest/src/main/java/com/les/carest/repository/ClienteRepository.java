@@ -49,15 +49,15 @@ public interface ClienteRepository extends JpaRepository<Cliente, UUID> {
             "ORDER BY SUM(v.valorTotal) DESC")
     List<Object[]> findClientesDiariosComGastoRaw();
 
-//    // Consulta para data específica
-//    @Query("SELECT NEW com.les.carest.DTO.ClienteDiarioDTO(" +
-//            "c.nome, " +
-//            "SUM(v.valorTotal), " +
-//            "FUNCTION('TO_CHAR', v.dataVenda, 'HH24:MI')) " +
-//            "FROM Venda v " +
-//            "JOIN v.cliente c " +
-//            "WHERE CAST(v.dataVenda AS date) = :data " +
-//            "GROUP BY c.nome, FUNCTION('TO_CHAR', v.dataVenda, 'HH24:MI') " +
-//            "ORDER BY SUM(v.valorTotal) DESC")
-//    List<Tuple> findClientesDiariosPorData(@Param("data") Date data);
+    // Consulta para data específica
+    @Query("SELECT " +
+            "c.nome, " +
+            "SUM(v.valorTotal), " +
+            "FUNCTION('TO_CHAR', v.dataVenda, 'HH24:MI') " +
+            "FROM Venda v " +
+            "JOIN v.cliente c " +
+            "WHERE CAST(v.dataVenda AS date) = :data " +
+            "GROUP BY c.nome, FUNCTION('TO_CHAR', v.dataVenda, 'HH24:MI') " +
+            "ORDER BY SUM(v.valorTotal) DESC")
+    List<Object[]> findClientesDiariosPorData(@Param("data") Date data);
 }

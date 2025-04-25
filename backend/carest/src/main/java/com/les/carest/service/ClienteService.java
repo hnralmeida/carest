@@ -113,6 +113,42 @@ public class ClienteService extends _GenericService<Cliente, ClienteRepository> 
         return toDTO(cliente);
     }
 
+
+    public ClienteDTO adicionarLimite(String codigoCliente, double novoLimite) {
+        // Busca o cliente pelo código - corrigido para usar o repositório genérico
+        Cliente cliente = this.repositoryGenerics.findByCodigoCliente(codigoCliente);
+        // Validação do valor
+        if (novoLimite <= 0) {
+            throw new IllegalArgumentException("Valor do limite deve ser positivo");
+        }
+
+        // Atualiza o saldo
+
+        cliente.setLimite(novoLimite);
+
+        // Salva a alteração - usando o repositório genérico
+        this.repositoryGenerics.save(cliente);
+
+        // Converte para DTO usando o método
+        return toDTO(cliente);
+    }
+
+    public ClienteDTO mudarEstadoDeAcesso(String codigoCliente) {
+
+        Cliente cliente = this.repositoryGenerics.findByCodigoCliente(codigoCliente);
+
+        cliente.setBloqueado(!cliente.getBloqueado());
+        this.repositoryGenerics.save(cliente);
+
+        return toDTO(cliente);
+    }
+
+
+
+
+
+
+
     // Add this method to convert DTO to Entity
     private Cliente toEntity(ClienteDTO clienteDTO) {
         Cliente cliente = new Cliente();
@@ -140,11 +176,20 @@ public class ClienteService extends _GenericService<Cliente, ClienteRepository> 
                 .collect(Collectors.toList());
     }
 
-//    // Versão alternativa com tratamento de data específica
-//    public List<ClienteDiarioDTO> listarClientesDiariosPorData(Date data) {
-//        return clienteRepository.findClientesDiariosPorData(data);
-//
-//    }
+
+
+    public List<ClienteDiarioDTO> findClientesDiariosData(Date data) {
+        List<Object[]> results = clienteRepository.findClientesDiariosPorData(data);
+
+        return results.stream()
+                .map(arr -> new ClienteDiarioDTO(
+                        (String) arr[0],       // nome
+                        (Double) arr[1],       // valorTotal
+                        (String) arr[2]        // horaVenda
+                ))
+                .collect(Collectors.toList());
+    }
+
 
 
 }
