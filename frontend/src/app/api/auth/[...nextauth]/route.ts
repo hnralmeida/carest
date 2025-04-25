@@ -1,6 +1,6 @@
 // import { axiosClient } from "@/services/axiosClient";
+import { useUsuarioHook } from "@/hooks/useUsuario";
 import { axiosClient } from "@/services/axiosClient";
-import { TIMEOUT } from "dns";
 import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -28,25 +28,48 @@ const nextAuthOption: AuthOptions = {
 
           const user = response.data;
 
-          console.log('login   ', user)
-          function timeout(ms: number): Promise<void> {
-            return new Promise(resolve => setTimeout(resolve, ms));
-          }
-          
-          // Uso:
-          await timeout(2000);
-
           if (!user) {
             throw new Error("Usuário não encontrado");
           }
-          return user;
+          return {
+            id: user.id,
+            nome: user.nome,
+            email: user.email,
+            permissoes: user.permissoes,
+          };
         } catch (error: any) {
           const msg = error?.response?.data || "Erro desconhecido";
           throw new Error(msg);
         }
       },
     }),
-  ]
+  ],
+  session: {
+    strategy: "jwt",
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        return {
+          ...token
+        };
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      let data;
+      if (token) {
+        data = {
+          id: token.id as string,
+          nome: token.nome as string,
+          email: token.email as string | null | undefined,
+          permissoes: token.permissoes as any[], // Adiciona as permissões ao objeto de sessão
+        };
+        session.user = data as { id: string; email: string; nome: string; permissoes: any[] };
+      }
+      return session;
+    }
+  }
 };
 
 const handler = NextAuth(nextAuthOption);

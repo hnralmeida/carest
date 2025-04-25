@@ -37,4 +37,11 @@ public class UsuarioController extends _GenericController<Usuario> {
 
         return ResponseEntity.ok("Permissões criadas");
     }
+
+    @GetMapping("/email/{email}")
+    public ResponseEntity<Usuario> usuarioPorEmail(@PathVariable String email) {
+        Usuario user = usuarioService.buscarUsuarioPorEmail(email);
+
+        return ResponseEntity.ok(user);
+    }
 }

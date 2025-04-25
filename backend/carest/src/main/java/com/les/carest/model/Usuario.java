@@ -5,6 +5,7 @@
 
 package com.les.carest.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.*;
@@ -35,6 +36,7 @@ public class Usuario implements UserDetails {
     private String email;
     private String senha;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
     private List<Permissao> permissoes = new ArrayList<>();
 
