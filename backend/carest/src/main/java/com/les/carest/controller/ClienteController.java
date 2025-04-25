@@ -54,7 +54,7 @@ public class ClienteController extends _GenericController<Cliente> {
         return ResponseEntity.ok(clientes);
     }
 
-    @PutMapping("/recarga")
+    @PutMapping("/recarga/saldo")
     @Operation(summary = "Adicionar Crédito")
     public ResponseEntity<ClienteDTO> adicionarCredito(@RequestBody @Valid RecargaDTO recargaDTO) {
         try {
@@ -83,14 +83,15 @@ public class ClienteController extends _GenericController<Cliente> {
     }
 
     @PutMapping("/recarga/bloqueado")
-    @Operation(summary = "muda limite")
-    public ResponseEntity<ClienteDTO> mudarAcesso(String codigo) {
-        ResponseEntity.ok("acesso modificado");
-        return ResponseEntity.ok(clienteService.mudarEstadoDeAcesso(codigo));
+    @Operation(summary = "Altera o estado de bloqueio do cliente")
+    public ResponseEntity<String> mudarAcesso(@RequestBody @Valid RecargaDTO recargaDTO) {
+        try {
+            ClienteDTO clienteAtualizado = clienteService.mudarEstadoDeAcesso(recargaDTO.getCodigoCliente());
+            return ResponseEntity.ok("\"acesso modificado\"");
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
-
-
-
 //    @GetMapping("/diario")
 //    public ResponseEntity<List<ClienteDTO>> listarDiario(Date data) {//incluir limite
 //        List<ClienteDTO> clientes = clienteService.listarEndividados();

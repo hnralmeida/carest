@@ -132,19 +132,18 @@ public class ClienteService extends _GenericService<Cliente, ClienteRepository> 
         // Converte para DTO usando o método
         return toDTO(cliente);
     }
-
     public ClienteDTO mudarEstadoDeAcesso(String codigoCliente) {
-
         Cliente cliente = this.repositoryGenerics.findByCodigoCliente(codigoCliente);
+
+        // Valida se o cliente existe
+        if (cliente == null) {
+            throw new IllegalArgumentException("Cliente não encontrado com o código: " + codigoCliente);
+        }
 
         cliente.setBloqueado(!cliente.getBloqueado());
         this.repositoryGenerics.save(cliente);
-
         return toDTO(cliente);
     }
-
-
-
 
 
 
