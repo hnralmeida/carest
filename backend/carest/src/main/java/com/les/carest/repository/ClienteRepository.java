@@ -28,8 +28,6 @@ public interface ClienteRepository extends JpaRepository<Cliente, UUID> {
     @Query("SELECT u FROM Cliente u WHERE u.codigo=:codigo")
     Cliente buscarByCodigo(@Param("codigo") String codigo);
 
-}
-
     @Query("select c from Cliente c where c.saldo < 0")
     List<Cliente> findEndividados();
 
@@ -71,3 +69,4 @@ public interface ClienteRepository extends JpaRepository<Cliente, UUID> {
 //            "ORDER BY SUM(v.valorTotal) DESC")
 //    List<Tuple> findClientesDiariosPorData(@Param("data") Date data);
 }
+

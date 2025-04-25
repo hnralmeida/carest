@@ -21,7 +21,6 @@ import java.util.UUID;
 @RequestMapping("/cliente")
 @Tag(name = "Cliente", description = "Gerencia de Clientes")
 public class ClienteController extends _GenericController<Cliente> {
-    private final ClienteService clienteService;
     public ClienteController(ClienteService clienteService) {
         super(clienteService);
     }
