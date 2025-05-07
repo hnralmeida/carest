@@ -12,8 +12,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { usePermissaoHook } from "@/hooks/usePermissoes";
-import { UsuarioMock } from "@/app/models/usuario";
-import { Permissao } from "@/app/models/permissao";
+import { UsuarioMock } from "@/models/usuario";
+import { Permissao } from "@/models/permissao";
 
 interface EditPermissoesProps {
   id: string;

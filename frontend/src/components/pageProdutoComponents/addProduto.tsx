@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast, Toaster } from "sonner";
 import { useProdutoHook } from "@/hooks/useProdutos";
-import { Produto } from "@/app/models/produto";
+import { Produto } from "@/models/produto";
 import { formatarParaMoeda, moedaParaNumero } from "@/lib/utils";
 
 export default function AddProduto() {

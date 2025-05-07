@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast, Toaster } from "sonner";
 import { useTelaHook } from "@/hooks/useTela";
-import { Tela } from "@/app/models/tela";
+import { Tela } from "@/models/tela";
 
 export default function AddTela() {
   const [open, setOpen] = useState(false);

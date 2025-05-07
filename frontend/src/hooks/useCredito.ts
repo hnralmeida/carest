@@ -3,20 +3,8 @@ import { useState } from "react";
 import { axiosClient } from "@/services/axiosClient";
 
 
-export const useRelatoriosHook = () => {
-    const [clientesDiario, setClientesDiario] = useState<Cliente[] | null>(null);
+export const useCreditoHook = () => {
     const [cliente, setCliente] = useState({} as Cliente);
-
-    const listarClientesDiario = async () => {
-        try {
-            const response = await axiosClient.get(`/cliente/diario`);
-            if (response.data) {
-                setClientesDiario(response.data);
-            }
-        } catch (error) {
-            console.error('Error fetching administrators:', error);
-        }
-    };
 
     async function buscarCliente(codigo: string) {
         const response = await axiosClient.get(`/cliente/codigo/${codigo}`);
@@ -28,10 +16,27 @@ export const useRelatoriosHook = () => {
         }
     }
 
+    async function fazerRecarga(valor: string, codigo: number) {
+        const data = {
+            valorRecarga: valor,
+            codigoCliente: codigo
+        }
+
+        console.log(data)
+        const response = await axiosClient.put(`/cliente/recarga`, data);
+        const clienteRes = response.data;
+
+        if (response.status > 205) {
+            return Promise.reject("Cliente não encontrado");
+        } else {
+            setCliente(clienteRes);
+        }
+    }
+
+        
     return {
-        clientesDiario,
-        listarClientesDiario,
         cliente,
-        buscarCliente
+        buscarCliente,
+        fazerRecarga
     };
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { Tela } from "@/app/models/tela";
+import { Tela } from "@/models/tela";
 import { ColumnDef } from "@tanstack/react-table";
 
 export const columns: ColumnDef<Tela>[] = [

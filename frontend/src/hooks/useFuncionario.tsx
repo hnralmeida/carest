@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Usuario } from "@/app/models/usuario";
+import { Usuario } from "@/models/usuario";
 import { axiosClient } from "@/services/axiosClient";
 
 export const useFuncionarioHook = () => {

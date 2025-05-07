@@ -19,7 +19,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react"
 import { useUsuarioHook } from "@/hooks/useUsuario";
-import { Usuario } from "@/app/models/usuario";
+import { Usuario } from "@/models/usuario";
 
 interface SidebarType {
   versions: string[];
@@ -78,25 +78,23 @@ const fullData = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
-  const { data: session } = useSession();
-
   const [data, setData] = React.useState<SidebarType>(fullData as SidebarType);
 
-  const { usuario } = useUsuarioHook();
+  const { data: session } = useSession();
 
   React.useEffect(() => {
-    console.log("session", session)
-    if (usuario) {
+    console.log("session ", session?.user);
+    if (session) {
 
       let filteredData = { ...fullData };
 
       filteredData.navMain = filteredData.navMain.map((section, index) => {
         if (index === 1) {
-          const nomesIgnorados = ["Acesso", "Vendas", "Produtos", "Clientes", "Crédito"];
+          const nomesIgnorados = ["Acesso", "Vendas", "Venda", "Produtos", "Produto", "Clientes", "Cliente", "Crédito"];
 
           return {
             ...section,
-            items: usuario?.permissao
+            items: session?.user.permissoes
               ?.filter((item: any) => !nomesIgnorados.includes(item.tela.nome))
               .map((item: any) => ({
                 title: item.tela.nome,
@@ -166,7 +164,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="w-full flex items-center gap-8 cursor-pointer">
               <User className="size-5 mr-2" />
-              <span>{session?.user?.nome || 'Usuário'}</span>
+              <span>{session?.user.nome || 'Usuário'}</span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent side="top" align="end" className="flex flex-col bg-white shadow-md w-56 pt-4 pb-4 border rounded-lg">

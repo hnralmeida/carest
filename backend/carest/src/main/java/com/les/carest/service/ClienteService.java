@@ -71,6 +71,7 @@ public class ClienteService extends _GenericService<Cliente, ClienteRepository> 
                 cliente.getId(),
                 cliente.getNome(),
                 cliente.getEmail(),
+                cliente.getLimite(),
                 cliente.getTelefone(),
                 cliente.getSaldo(),
                 cliente.getDividaData(),

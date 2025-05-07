@@ -4,7 +4,7 @@ export interface Usuario {
   nome: string;
   senha?: string;
   email: string;
-  permissao?: string[];
+  permissoes?: string[];
   codigo?: string;
 }
 

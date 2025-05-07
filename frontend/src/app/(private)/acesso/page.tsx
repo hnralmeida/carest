@@ -1,4 +1,4 @@
-'use Client'
+'use client'
 
 import { getServerSession } from "next-auth";
 

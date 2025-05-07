@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Tela } from "@/app/models/tela";
+import { Tela } from "@/models/tela";
 import { axiosClient } from "@/services/axiosClient";
 
 export const useTelaHook = () => {

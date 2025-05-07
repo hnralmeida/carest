@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Cliente } from "@/components/pageClienteComponents/columns";
-import { Produto } from "@/app/models/produto";
+import { Produto } from "@/models/produto";
 import { axiosClient } from "@/services/axiosClient";
 
 interface VendaItem {
@@ -47,7 +47,6 @@ export const useVendasHook = () => {
             }
         });
     }
-
 
     async function buscarCliente(codigo: string) {
         const response = await axiosClient.get(`/cliente/codigo/${codigo}`);

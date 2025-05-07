@@ -1,6 +1,7 @@
+"use client";
+
 import React, { useState } from "react";
 import { Button } from "../ui/button";
-import { PlusCircle } from "lucide-react";
 import {
     Dialog,
     DialogContent,
@@ -11,11 +12,14 @@ import {
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Toaster } from "sonner";
+import { useCreditoHook } from "@/hooks/useCredito";
 
 const OptionButtonSaldo = () => {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const [valor, setValor] = useState(0);
+
+    const { fazerRecarga, cliente } = useCreditoHook(); // Importando o hook de crédito
 
     const formatarParaBRL = (valor: number) => {
         return new Intl.NumberFormat("pt-BR", {
@@ -25,8 +29,12 @@ const OptionButtonSaldo = () => {
     };
 
     async function onFormSubmit(event: React.FormEvent) {
-        event.preventDefault(); // Adicionado para evitar reload
+        event.preventDefault(); // Adicionado para evitar reload  
         setLoading(true);
+        console.log("cliente: ", cliente);
+        
+        await fazerRecarga(valor.toString(), Number(cliente.codigo)); // Chama a função de recarga com o valor formatado
+
         setTimeout(() => {
             setValor(0); // Limpa o valor após o envio
             setLoading(false);

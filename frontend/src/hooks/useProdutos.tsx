@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Produto } from "@/app/models/produto";
+import { Produto } from "@/models/produto";
 import { axiosClient } from "@/services/axiosClient";
-import { ProdutoBalanca } from "@/app/models/balanca";
+import { ProdutoBalanca } from "@/models/balanca";
 import { ISODateToDate } from "@/lib/utils";
 
 export const useProdutoHook = () => {

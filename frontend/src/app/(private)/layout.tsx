@@ -4,21 +4,22 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { Separator } from "@radix-ui/react-separator";
+import AuthProvider from "@/providers/AuthProvider";
 
 export default function PrivateLayout({
-    children,
-  }: {
-    children: React.ReactNode
-  }) {
-    return (
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <AuthProvider>
       <SidebarProvider>
-          <AppSidebar />
-          <SidebarInset className="p-4">
-            <header className="flex h-16 shrink-0 items-center gap-2 px-4">
-              <SidebarTrigger className="-ml-1" />
-            
-              {/* <Breadcrumb>
+        <AppSidebar />
+        <SidebarInset className="p-4">
+          <header className="flex shrink-0 items-center gap-2 px-4">
+            <SidebarTrigger />
+
+            {/* <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem className="hidden md:block">
                     <BreadcrumbLink href="#">
@@ -31,9 +32,10 @@ export default function PrivateLayout({
                   </BreadcrumbItem>
                 </BreadcrumbList>
               </Breadcrumb>*/}
-            </header>
-            {children}
-          </SidebarInset>
-        </SidebarProvider>
-    )
-  }
+          </header>
+          {children}
+        </SidebarInset>
+      </SidebarProvider>
+    </AuthProvider>
+  )
+}

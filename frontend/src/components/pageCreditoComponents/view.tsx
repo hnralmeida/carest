@@ -8,10 +8,11 @@ import { toast, Toaster } from "sonner";
 import OptionButtonLimite from "./optionLimite";
 import OptionButtonSaldo from "./optionSaldo";
 import OptionButtonBloquear from "./optionBloquear";
+import { useCreditoHook } from "@/hooks/useCredito";
 
 const CreditoView = () => {
 
-    const { buscarCliente, buscarProduto, resetarVenda, registrarVenda, cliente, produtos } = useVendasHook();
+    const { buscarCliente, cliente } = useCreditoHook();
 
     const [codigoLido, setCodigoLido] = React.useState("");
 
@@ -20,31 +21,15 @@ const CreditoView = () => {
     React.useEffect(() => {
         const fetch = async () => {
             await new Promise(resolve => setTimeout(resolve, 1000));
-            console.log(codigoLido.trim())
-            if (codigoLido.trim() == "123456") {
-                resetarVenda();
-                setCodigoLido("");
-                return;
-            }
-
-            if (codigoLido.trim() == "9000") {
-                registrarVenda().then(() => {
-                    toast.success("Venda registrada com sucesso")
-                })
-                setCodigoLido("");
-                return;
-            }
 
             if (codigoLido.length > 0) {
                 try {
-                    if (cliente?.id)
-                        await buscarProduto(codigoLido)
-                    else
-                        await buscarCliente(codigoLido)
+                    console.log(codigoLido)
+                    //retira tudo que não for numeros de codigoLido
+                    const codigoLidoLimpo = codigoLido.replace(/\D/g, "");
+                    await buscarCliente(codigoLidoLimpo)
                 } catch (e: any) {
-                    if (e.response.status == 404 && cliente?.id) {
-                        toast.error("Produto não encontrado")
-                    } else if (e.response.status == 404) {
+                    if (e.response.status == 404) {
                         toast.error("Cliente não encontrado")
                     }
                     else if (e.response.status == 500) {
@@ -93,6 +78,7 @@ const CreditoView = () => {
                 <p className="font-semibold">{String(cliente.nome)}</p>
                 <p className="font-semibold">Saldo: {formatarParaMoeda(String(cliente.saldo), true)}</p>
                 <p className="font-semibold">Limite: {formatarParaMoeda(String(cliente.limite), true)}</p>
+                <p className="font-semibold">Codigo: {String(cliente.codigo)}</p>
             </div>
         )
     }
@@ -109,6 +95,7 @@ const CreditoView = () => {
         <>
             <div className="rounded-md overflow-x-auto h-[256px]">
                 {!cliente?.id && <h1 className="text-2xl">Aproxime o cartão da leitora</h1>}
+                {cliente?.id && <h1 className="text-2xl">Cliente</h1>}
                 {cliente?.id ? <ClienteView /> : <PulseView />}
             </div>
 

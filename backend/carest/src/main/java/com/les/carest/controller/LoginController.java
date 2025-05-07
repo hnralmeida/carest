@@ -1,6 +1,7 @@
 package com.les.carest.controller;
 
 import com.les.carest.DTO.LoginDTO;
+import com.les.carest.DTO.LoginResponse;
 import com.les.carest.exception.GenericOperation;
 import com.les.carest.model.Usuario;
 import com.les.carest.repository.UsuarioRepository;
@@ -50,7 +51,11 @@ public class LoginController{
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Senha incorreta");
         }
 
+        Usuario user = usuarioOptional.get();
+
+        LoginResponse response = new LoginResponse(user.getId(), user.getNome(), user.getEmail(), user.getPermissoes());
+
         // Retorna uma resposta de sucesso
-        return ResponseEntity.ok(usuarioOptional.get());
+        return ResponseEntity.ok(response);
     }
 }

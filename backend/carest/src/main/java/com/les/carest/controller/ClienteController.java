@@ -36,7 +36,6 @@ public class ClienteController extends _GenericController<Cliente> {
         return ResponseEntity.ok(cliente);
     }
 
-
     // Buscar
     @GetMapping("/codigo/{codigo}")//devia usar os DTO provavelmente
     @Operation(summary = "Busca um Cliente pelo ID")

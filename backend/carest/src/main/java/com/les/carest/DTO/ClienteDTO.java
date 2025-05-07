@@ -12,6 +12,7 @@ public class ClienteDTO {
     private String nome;
     private String email;
     private String codigo;
+    private double limite;
 
     private String telefone;
     private int idade;
@@ -21,7 +22,7 @@ public class ClienteDTO {
     // Construtor completo
     public ClienteDTO(Cliente cliente) {}
 
-    public ClienteDTO(UUID id, String nome, String email, String telefone,double saldo, Date dataDivida, String codigo) {
+    public ClienteDTO(UUID id, String nome, String email, double limite, String telefone,double saldo, Date dataDivida, String codigo) {
 
         this.id = id;
         this.codigo = codigo;
@@ -30,6 +31,7 @@ public class ClienteDTO {
         this.telefone = telefone;
         this.saldo = saldo;
         this.dataDivida = dataDivida;
+        this.limite = limite;
 
     }
     public ClienteDTO(UUID id, String nome, String email, String telefone, int idade) {
@@ -55,6 +57,13 @@ public class ClienteDTO {
     }
 
 
+    public double getLimite() {
+        return limite;
+    }
+
+    public void setLimite(double limite) {
+        this.limite = limite;
+    }
 
     public UUID getId() {
         return id;

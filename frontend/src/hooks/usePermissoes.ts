@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Permissao } from "@/app/models/permissao";
+import { Permissao } from "@/models/permissao";
 import { axiosClient } from "@/services/axiosClient";
-import { PermissaoDTO } from "@/app/models/permissaoDTO";
+import { PermissaoDTO } from "@/models/permissaoDTO";
 
 export const usePermissaoHook = () => {
   const [permissoes, setPermissoes] = useState<Permissao[] | null>(null);

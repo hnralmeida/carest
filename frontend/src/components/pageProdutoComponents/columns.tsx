@@ -1,6 +1,6 @@
 "use client";
 
-import { Produto } from "@/app/models/produto";
+import { Produto } from "@/models/produto";
 import { formatarParaMoeda } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 

@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast, Toaster } from "sonner";
 import { useFuncionarioHook } from "@/hooks/useFuncionario";
-import { Usuario } from "@/app/models/usuario";
+import { Usuario } from "@/models/usuario";
 
 export default function AddFuncionario() {
   const [open, setOpen] = useState(false);
@@ -39,7 +39,7 @@ export default function AddFuncionario() {
       email,
       senha,
       codigo: "",
-      permissao: [],
+      permissoes: [],
     };
 
     if (senha !== senha2) {
