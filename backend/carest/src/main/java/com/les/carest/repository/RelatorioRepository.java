@@ -21,9 +21,8 @@ public interface RelatorioRepository extends JpaRepository<Venda,UUID> {//mudar 
     // Onde Object[0] = clienteId, Object[1] = valorMedio
     @Query("SELECT v.cliente.id, AVG(v.valorTotal) " +
             "FROM Venda v " +
-            "WHERE v.cliente.id IN :clientesIds " +
             "GROUP BY v.cliente.id")
-    List<Object[]> getTicketMedioMultiplosClientes(@Param("clientesIds") List<UUID> clientesIds);
+    List<Object[]> getTicketMedioMultiplosClientes();
 
     // Última venda para um cliente - retorna Object[]
     // Onde Object[0] = vendaId, Object[1] = clienteId, Object[2] = dataVenda, Object[3] = valorTotal
@@ -33,16 +32,27 @@ public interface RelatorioRepository extends JpaRepository<Venda,UUID> {//mudar 
             "ORDER BY v.dataVenda DESC LIMIT 1")
     Object[] getUltimaVenda(@Param("idCliente") UUID idCliente);
 
-    // Últimas vendas para múltiplos clientes - retorna List<Object[]>
-    // Onde cada Object[] contém: [vendaId, clienteId, dataVenda, valorTotal]
-    @Query("SELECT v.id, v.cliente.id, v.dataVenda, v.valorTotal " +
-            "FROM Venda v " +
-            "WHERE v.id IN (SELECT MAX(v2.id) FROM Venda v2 WHERE v2.cliente.id IN :clientesIds GROUP BY v2.cliente.id)")
-    List<Object[]> getUltimaVendaMultiplosClientes(@Param("clientesIds") List<UUID> clientesIds);
+//    @Query("SELECT DISTINCT ON (v.cliente.id)  FROM Venda v ORDER BY v.cliente.id, v.dataVenda DESC")
+//    List<Object[]> getUltimaVendaMultiplosClientes();
 
 
+    @Query(value = """
+    SELECT 
+        v.id as venda_id,
+        c.id as cliente_id,
+        c.nome as cliente_nome,
+        CAST(v.data_venda AS timestamp) as data_venda,
+        v.valor_total
+    FROM venda v
+    JOIN cliente c ON v.cliente_id = c.id
+    WHERE (c.id, v.data_venda) IN (
+        SELECT cliente_id, MAX(data_venda)
+        FROM venda
+        GROUP BY cliente_id
+    )
+    """, nativeQuery = true)
+    List<Object[]> findUltimasVendasNativo();
 
-    ///ANIVERSARIANTE
     @Query("SELECT c FROM Cliente c WHERE EXTRACT(MONTH FROM c.nascimento) = EXTRACT(MONTH FROM CURRENT_DATE) AND EXTRACT(DAY FROM c.nascimento) = EXTRACT(DAY FROM CURRENT_DATE)")
     List<Cliente> findAniversariantesDoDia();
 

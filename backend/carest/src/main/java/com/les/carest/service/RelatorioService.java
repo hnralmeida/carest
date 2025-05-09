@@ -26,8 +26,8 @@ public class RelatorioService {
         return relatorioRepository.getTicketMedio(clienteId);
     }
 
-    public List<TicketMedioDTO> getTicketMedioMultiplosClientes(List<UUID> clientesIds) {
-        return relatorioRepository.getTicketMedioMultiplosClientes(clientesIds)
+    public List<TicketMedioDTO> getTicketMedioMultiplosClientes() {
+        return relatorioRepository.getTicketMedioMultiplosClientes()
                 .stream()
                 .map(result -> new TicketMedioDTO((UUID) result[0], (Double) result[1]))
                 .collect(Collectors.toList());
@@ -41,12 +41,13 @@ public class RelatorioService {
         return relatorioRepository.findClientesEndividados();
     }
 
-    public List<UltimaVendaDTO> getUltimasVendasMultiplosClientes(List<UUID> clientesIds) {
-        return relatorioRepository.getUltimaVendaMultiplosClientes(clientesIds)
-                .stream()
+    // Versão alternativa (nativa)
+    public List<UltimaVendaDTO> getUltimasVendasComClientesNativo() {
+        return relatorioRepository.findUltimasVendasNativo().stream()
                 .map(UltimaVendaDTO::new)
                 .collect(Collectors.toList());
     }
+
 
     // ---- RELATÓRIOS DE CLIENTES ---- //
     public List<AniversarianteDTO> getAniversariantesDoDia() {

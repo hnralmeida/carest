@@ -13,9 +13,8 @@ public class Recarga {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-
-    @ManyToOne
-    @JoinColumn(name = "codigo")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
     private Date data;

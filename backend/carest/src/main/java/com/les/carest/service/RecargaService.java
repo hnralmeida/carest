@@ -24,7 +24,7 @@ public class RecargaService extends _GenericService<Recarga, RecargaRepository> 
 
     // 1. Registrar recarga (já existente)
     public RecargaDTO registrarRecarga(RecargaDTO recargaDTO) {
-        if (recargaDTO.getValorRecarga() <= 0) {
+        if (recargaDTO.getValorRecarga() < 0) {
             throw new IllegalArgumentException("Valor da recarga deve ser positivo");
         }
 

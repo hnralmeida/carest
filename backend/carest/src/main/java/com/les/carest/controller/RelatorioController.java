@@ -34,9 +34,8 @@ public class RelatorioController {//modificar os Resquest params para igual do a
 
     // Endpoint 2 (GET): Ticket médio para múltiplos clientes
     @GetMapping("/ticket-medio/multiplos-clientes")
-    public ResponseEntity<List<TicketMedioDTO>> getTicketMedioMultiplosClientes(
-            @RequestParam List<UUID> clientesIds) {  // Requisição: ?clientesIds=id1,id2,id3
-        List<TicketMedioDTO> resultados = relatorioService.getTicketMedioMultiplosClientes(clientesIds);
+    public ResponseEntity<List<TicketMedioDTO>> getTicketMedioMultiplosClientes() {  // Requisição: ?clientesIds=id1,id2,id3
+        List<TicketMedioDTO> resultados = relatorioService.getTicketMedioMultiplosClientes();
         return ResponseEntity.ok(resultados);
     }
 
@@ -47,12 +46,12 @@ public class RelatorioController {//modificar os Resquest params para igual do a
         return ResponseEntity.ok(ultimaVenda);
     }
 
-    // Endpoint 4: Últimas vendas de múltiplos clientes (via lista de IDs no corpo da requisição)
-    @PostMapping("/ultimas-vendas/multiplos-clientes")
-    public ResponseEntity<List<UltimaVendaDTO>> getUltimasVendasMultiplosClientes(
-            @RequestBody List<UUID> clientesIds) {
-        List<UltimaVendaDTO> resultados = relatorioService.getUltimasVendasMultiplosClientes(clientesIds);
-        return ResponseEntity.ok(resultados);
+
+    @GetMapping("/ultimas-vendas")
+    public ResponseEntity<List<UltimaVendaDTO>> getUltimasVendas() {
+        return ResponseEntity.ok(
+                relatorioService.getUltimasVendasComClientesNativo()
+        );
     }
 
     // Endpoint 5: Aniversariantes do dia
