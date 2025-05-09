@@ -28,6 +28,6 @@ public abstract class CustomUserDetailsService implements UserDetailsService {
                     List.of(new SimpleGrantedAuthority(null))
                 );
         }
-        throw new RuntimeException("0 fodas");
+        throw new RuntimeException("");
     }
 }

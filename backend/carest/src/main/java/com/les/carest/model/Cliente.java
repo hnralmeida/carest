@@ -13,7 +13,10 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String nome;
+
+    @Column(unique = true)
     private String codigo;
+
     @JsonFormat(pattern = "yyyy/MM/dd")
     private Date nascimento;
     private String telefone;
@@ -21,6 +24,7 @@ public class Cliente {
     private double limite;
     private double saldo;
     private boolean em_uso;
+
     @JsonFormat(pattern = "yyyy/MM/dd")
     private Date dividaData;
     private boolean bloqueado;
@@ -122,13 +126,9 @@ public class Cliente {
         this.dividaData = dividaData;
     }
 
-    public boolean getBloqueado() {
-        return bloqueado;
-    }
+    public boolean getBloqueado() {return bloqueado;    }
 
-    public void setBloqueado(boolean bloqueado) {
-        this.bloqueado = bloqueado;
-    }
+    public void setBloqueado(boolean bloqueado) { this.bloqueado = bloqueado; }
 
 
 }
