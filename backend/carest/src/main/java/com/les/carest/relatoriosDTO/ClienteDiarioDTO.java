@@ -1,4 +1,4 @@
-package com.les.carest.DTO;
+package com.les.carest.relatoriosDTO;
 
 public class ClienteDiarioDTO {
     private String nome;

@@ -76,6 +76,19 @@ public interface RelatorioRepository extends JpaRepository<Venda,UUID> {//mudar 
             "ORDER BY SUM(v.valorTotal) DESC")
     List<Object[]> findClientesDiariosPorData(@Param("data") Date data);
 
+
+
+    @Query("SELECT " +
+            "c.nome, " +
+            "SUM(v.valorTotal), " +
+            "FUNCTION('TO_CHAR', v.dataVenda, 'HH24:MI') " +
+            "FROM Venda v " +
+            "JOIN v.cliente c " +
+            "WHERE CAST(v.dataVenda AS date) = CURRENT_DATE " +
+            "GROUP BY c.nome, FUNCTION('TO_CHAR', v.dataVenda, 'HH24:MI') " +
+            "ORDER BY SUM(v.valorTotal) DESC")
+    List<Object[]> findClientesDiariosComGastoRaw();
+
 }
 
 

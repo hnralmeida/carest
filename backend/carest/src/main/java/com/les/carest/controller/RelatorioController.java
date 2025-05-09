@@ -1,6 +1,7 @@
 package com.les.carest.controller;
 
 import com.les.carest.DTO.AniversarianteDTO;
+import com.les.carest.relatoriosDTO.ClienteDiarioDTO;
 import com.les.carest.relatoriosDTO.TicketMedioDTO;
 import com.les.carest.relatoriosDTO.UltimaVendaDTO;
 import com.les.carest.service.RelatorioService;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -69,6 +71,21 @@ public class RelatorioController {//modificar os Resquest params para igual do a
         List<AniversarianteDTO> aniversariantes = relatorioService.getAniversariantesPorData(mes, dia);
         return ResponseEntity.ok(aniversariantes);
     }
+
+
+    @GetMapping("/diario/{data}")
+    public ResponseEntity<List<ClienteDiarioDTO>> getDiario(@PathVariable Date data) {
+        List<ClienteDiarioDTO> clientes = relatorioService.findClientesDiariosData(data);
+        return ResponseEntity.ok(clientes);
+    }
+
+
+    @GetMapping("/diario")
+    public ResponseEntity<List<ClienteDiarioDTO>> getClientesDiariosComGasto() {
+        List<ClienteDiarioDTO> clientes = relatorioService.findClientesDiariosComGasto();
+        return ResponseEntity.ok(clientes);
+    }
+
 
 
 //    // Lista clientes endividados

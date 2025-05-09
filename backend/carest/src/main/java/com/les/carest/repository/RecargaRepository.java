@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 
@@ -18,16 +17,15 @@ public interface RecargaRepository extends JpaRepository<Recarga, UUID> {
 
     // Correção: Retorna Cliente (entidade), não DTO
     @Query("SELECT c FROM Cliente c WHERE c.codigo = :codigo")
-    Optional<Cliente> findClienteByCodigo(@Param("codigo") String codigo);
+    Cliente findClienteByCodigo(@Param("codigo") String codigo);
 
     // Correção: Retorna Cliente (entidade), não DTO
-    @Query("SELECT c FROM Cliente c WHERE c.id = :id")
-    Optional<Cliente> findClienteById(@Param("codigo") UUID id);
+    @Query("SELECT c FROM Cliente c WHERE c.id = :idCliente")
+    Cliente findClienteById(@Param("idCliente") UUID idCliente);
 
     // Correção: Retorna Recarga (entidade) e ajuste do parâmetro
     @Query("SELECT r FROM Recarga r WHERE r.data = :data AND r.cliente.id = :idCliente")
     List<Recarga> findByDataAndClienteId(@Param("data") Date data, @Param("idCliente") UUID idCliente);
-
 
 }
 

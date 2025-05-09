@@ -3,11 +3,13 @@ package com.les.carest.service;
 
 import com.les.carest.DTO.AniversarianteDTO;
 import com.les.carest.model.Cliente;
+import com.les.carest.relatoriosDTO.ClienteDiarioDTO;
 import com.les.carest.relatoriosDTO.TicketMedioDTO;
 import com.les.carest.relatoriosDTO.UltimaVendaDTO;
 import com.les.carest.repository.RelatorioRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -64,6 +66,38 @@ public class RelatorioService {
                 .collect(Collectors.toList());
     }
 
+
+    public List<ClienteDiarioDTO> findClientesDiariosComGasto() {
+        List<Object[]> results = relatorioRepository.findClientesDiariosComGastoRaw();
+
+        return results.stream()
+                .map(arr -> new ClienteDiarioDTO(
+                        (String) arr[0],       // nome
+                        (Double) arr[1],       // valorTotal
+                        (String) arr[2]        // horaVenda
+                ))
+                .collect(Collectors.toList());
+    }
+
+
+
+    public List<ClienteDiarioDTO> findClientesDiariosData(Date data) {
+        List<Object[]> results = relatorioRepository.findClientesDiariosPorData(data);
+
+        return results.stream()
+                .map(arr -> new ClienteDiarioDTO(
+                        (String) arr[0],       // nome
+                        (Double) arr[1],       // valorTotal
+                        (String) arr[2]        // horaVenda
+                ))
+                .collect(Collectors.toList());
+    }
+
+
+
+
+
+
     public void relatorioProtudo(){//relatorio de fornecedor nao de produto
         //Tela de relatório de Relatório de produto, apresenta os valores gasto pelos clientes em um produto selecionado para o fornecedor.
     }
@@ -72,5 +106,10 @@ public class RelatorioService {
     public void diarioDRE(){
         //Tela de relatório de Demonstração do Resultado do Exercício, mostrando os valores iniciais, de entrada e saída diário e final do caixa do restaurante.
         //entrada de dinheiro no dia e o numero de clientes.
+    }
+
+    public void historicoRegargas(){
+        //retorna o histico de regarcas do usuario
+
     }
 }
