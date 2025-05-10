@@ -12,6 +12,14 @@ public class Permissao {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
     @JsonIgnore
@@ -107,4 +115,5 @@ public class Permissao {
                 (update ? "U" : "") +
                 (delete ? "D" : "");
     }
+
 }

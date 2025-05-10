@@ -21,6 +21,7 @@ export default function AddProduto() {
   const [open, setOpen] = useState(false);
   const [nome, setNome] = useState("");
   const [valor, setValor] = useState("");
+  const [custo, setCusto] = useState("");
   const [codigo, setCodigo] = useState("");
 
   const [error, setError] = useState<string | null>(null);
@@ -36,8 +37,9 @@ export default function AddProduto() {
     const data: Produto = {
       id: "",
       nome,
+      codigo,
       valor: moedaParaNumero(valor),
-      codigo
+      custo: moedaParaNumero(custo),
     };
 
     if (!nome || !valor || !codigo) {
@@ -49,12 +51,13 @@ export default function AddProduto() {
     try {
       const response = await criarProduto(data);
 
-      window.location.reload(); // Recarrega a página para exibir o novo Funcionario
+     window.location.reload(); // Recarrega a página para exibir o novo Funcionario
 
       toast.success("Produto " + response?.nome + " adicionada com sucesso!")
       setOpen(false); // Fecha o modal após sucesso
       setNome(""); // Limpa o campo do formulário
       setValor("0"); // Limpa o campo do formulário
+      setCusto("0"); // Limpa o campo do formulário
       setCodigo(""); // Limpa o campo do formulário
       setLoading(false); // Inicia o carregamento
 
@@ -65,9 +68,14 @@ export default function AddProduto() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeValor = (e: React.ChangeEvent<HTMLInputElement>) => {
     const valorFormatado = formatarParaMoeda(e.target.value);
     setValor(valorFormatado);
+  };
+
+  const handleChangeCusto = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const valorFormatado = formatarParaMoeda(e.target.value);
+    setCusto(valorFormatado);
   };
 
   return (
@@ -103,7 +111,17 @@ export default function AddProduto() {
             <Input
               id="valor"
               value={valor}
-              onChange={handleChange}
+              onChange={handleChangeValor}
+              placeholder="R$ 0,00"
+              required
+            />
+          </div>
+          <div>
+            <Label htmlFor="custo">Custo</Label>
+            <Input
+              id="custo"
+              value={custo}
+              onChange={handleChangeCusto}
               placeholder="R$ 0,00"
               required
             />

@@ -6,7 +6,16 @@ public class ProdutoDTO_Serial {
     private UUID id;
     private String nome;
     private double valor;
+    private double custo;
     private String codigo; // Campo específico do Serial
+
+    public double getCusto() {
+        return custo;
+    }
+
+    public void setCusto(double custo) {
+        this.custo = custo;
+    }
 
     // Construtor vazio
     public ProdutoDTO_Serial() {}

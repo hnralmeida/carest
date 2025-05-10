@@ -9,8 +9,14 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog";
 import { Toaster } from "sonner";
+import { Cliente } from "@/models/cliente";
+import { formatarParaMoeda } from "@/lib/utils";
 
-const OptionButtonBloquear = () => {
+interface OptionButtonBloquearProps {
+    cliente: Cliente;
+}
+
+const OptionButtonBloquear = ({cliente}: OptionButtonBloquearProps) => {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
 
@@ -30,6 +36,7 @@ const OptionButtonBloquear = () => {
                 <Button
                     className="button-alt items-center text-35px w-[180px]"
                     onClick={() => setOpen(true)}
+                    disabled={cliente.id==undefined}
                 >
                     Bloquear cartão
                 </Button>
@@ -43,9 +50,9 @@ const OptionButtonBloquear = () => {
                         Deseja bloquear o cartão do cliente?
                     </p>
                     <p className="w-full text-center">
-                        <p className="font-bold">John Doe</p>
-                        <p className="text-xs">SALDO: R$ -2,00</p>
-                        <p className="text-xs">Limite: R$ 100,00</p>
+                        <p className="font-bold">{cliente.nome}</p>
+                        <p className="text-xs">SALDO: {formatarParaMoeda(`${cliente.saldo}`, true)}</p>
+                        <p className="text-xs">Limite: {formatarParaMoeda(`${cliente.limite}`, true)}</p>
                     </p>
                     <Button type="submit" className="mt-4" disabled={loading}>
                         {loading ? "Carregando..." : "Bloquear Cartão"}

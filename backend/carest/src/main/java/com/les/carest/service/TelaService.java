@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
+import java.util.Optional;
 
 @Validated
 @Service
@@ -17,4 +18,8 @@ public class TelaService extends _GenericService<Tela, TelaRepository> {
         super(TelaRepository);
     }
 
+    public Tela buscarPorNome(String nome){
+        return this.repositoryGenerics.findByNome(nome)
+                .orElseThrow(() -> new RuntimeException("Tela com nome '" + nome + "' não encontrada"));
+    }
 }

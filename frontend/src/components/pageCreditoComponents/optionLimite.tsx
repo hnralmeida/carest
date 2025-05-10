@@ -11,11 +11,20 @@ import {
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Toaster } from "sonner";
+import { Cliente } from "@/models/cliente";
+import { useCreditoHook } from "@/hooks/useCredito";
 
-const OptionButtonLimite = () => {
+interface OptionButtonLimiteProps {
+    cliente: Cliente;
+}
+
+const OptionButtonLimite = ({cliente}: OptionButtonLimiteProps) => {
+
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const [valor, setValor] = useState(0);
+
+     const { alterarLimite } = useCreditoHook(); // Importando o hook de crédito
 
     const formatarParaBRL = (valor: number) => {
         return new Intl.NumberFormat("pt-BR", {
@@ -27,10 +36,14 @@ const OptionButtonLimite = () => {
     async function onFormSubmit(event: React.FormEvent) {
         event.preventDefault(); // Adicionado para evitar reload
         setLoading(true);
+
+        await alterarLimite(valor, cliente); // Chama a função de alteração de limite com o valor formatado
+
         setTimeout(() => {
             setValor(0); // Limpa o valor após o envio
             setLoading(false);
             setOpen(false);
+            window.location.reload(); // Recarrega a página após 2 segundos
         }, 2000);
     }
 
@@ -40,6 +53,7 @@ const OptionButtonLimite = () => {
                 <Button
                     className="button-alt items-center text-35px w-[180px]"
                     onClick={() => setOpen(true)}
+                    disabled={cliente.id==undefined}
                 >
                     Alterar limite
                 </Button>

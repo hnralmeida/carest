@@ -20,22 +20,25 @@ interface EditProdutoProps {
   id: string;
   nome: string;
   valor: number;
-  codigo: number;
+  custo: number;
+  codigo: string;
 }
 
-export default function EditProduto({ id, nome, valor, codigo }: EditProdutoProps) {
+export default function EditProduto({ id, nome, valor, codigo, custo }: EditProdutoProps) {
   const [open, setOpen] = useState(false);
   const [formNome, setFormNome] = useState("");
   const [formValor, setFormValor] = useState("");
-  const [formCodigo, setFormCodigo] = useState(0);
+  const [formCusto, setFormCusto] = useState("");
+  const [formCodigo, setFormCodigo] = useState("");
 
   const { editarProduto } = useProdutoHook();
 
   useEffect(() => {
     setFormNome(nome);
-    setFormValor(`${valor}`);
+    setFormValor(formatarParaMoeda(valor.toString()));
+    setFormCusto(formatarParaMoeda(custo.toString()));
     setFormCodigo(codigo);
-  }, [nome, valor, codigo]);
+  }, [nome, valor, codigo, custo]);
 
   const onFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault(); // Evita que o formulário recarregue a página
@@ -45,6 +48,7 @@ export default function EditProduto({ id, nome, valor, codigo }: EditProdutoProp
         "id": id,
         "nome": formNome,
         "valor": moedaParaNumero(formValor),
+        "custo": moedaParaNumero(formCusto),
         "codigo": formCodigo
       };
 
@@ -55,7 +59,8 @@ export default function EditProduto({ id, nome, valor, codigo }: EditProdutoProp
         setOpen(false); // Fecha o modal após sucesso
         setFormNome(""); // Limpa o campo do formulário
         setFormValor(""); // Limpa o campo do formulário
-        setFormCodigo(0); // Limpa o campo do formulário
+        setFormCusto(""); // Limpa o campo do formulário
+        setFormCodigo(""); // Limpa o campo do formulário
         window.location.reload(); // Recarrega a página para exibir o novo Produto
       } else {
         toast.error("Erro ao alterar Produto.");
@@ -66,9 +71,14 @@ export default function EditProduto({ id, nome, valor, codigo }: EditProdutoProp
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeValor = (e: React.ChangeEvent<HTMLInputElement>) => {
     const valorFormatado = formatarParaMoeda(e.target.value);
     setFormValor(valorFormatado);
+  };
+
+   const handleChangeCusto = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const valorFormatado = formatarParaMoeda(e.target.value);
+    setFormCusto(valorFormatado);
   };
 
   return (
@@ -104,7 +114,18 @@ export default function EditProduto({ id, nome, valor, codigo }: EditProdutoProp
             <Input
               id="valor"
               value={formValor}
-              onChange={handleChange}
+              onChange={handleChangeValor}
+              placeholder="R$ 0,00"
+              required
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="custo">Custo</Label>
+            <Input
+              id="custo"
+              value={formCusto}
+              onChange={handleChangeCusto}
               placeholder="R$ 0,00"
               required
             />
@@ -115,7 +136,7 @@ export default function EditProduto({ id, nome, valor, codigo }: EditProdutoProp
             <Input
               id="codigo"
               value={formCodigo}
-              onChange={(e) => setFormCodigo(Number(e.target.value))}
+              onChange={(e) => setFormCodigo(e.target.value)}
               placeholder="Insira um codigo"
               required
             />

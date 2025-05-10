@@ -77,4 +77,5 @@ public class PermissaoService extends _GenericService<Permissao, PermissaoReposi
     public Optional<Permissao> buscarPorUsuarioETela(Usuario usuario, Tela tela) {
         return permissaoRepository.findByUsuarioAndTela(usuario, tela);
     }
+
 }

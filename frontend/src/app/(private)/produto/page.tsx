@@ -36,7 +36,7 @@ function Page() {
       {produtos ? (
         <DataTable columns={columns} data={produtos} />
       ) : (
-        <p>Carregando...</p>
+        <p>Sem resultados</p>
       )}
     </div>
   );

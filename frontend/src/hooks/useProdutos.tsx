@@ -14,14 +14,18 @@ export const useProdutoHook = () => {
             {
                 "id": "Carregando...",
                 "nome": "Carregando...",
+                "codigo": "Carregando...",
                 "valor": 0,
-                "codigo": 0
+                "custo": 0
             }
         ])
         try {
             const response = await axiosClient.get('/produtos/serial');
             if (response.data) {
-                setProdutos(response.data);
+                const res = response.data.sort((a: Produto, b: Produto) =>
+                    a.nome.localeCompare(b.nome)
+                );
+                setProdutos(res);
             }
         } catch (error) {
             console.error('Error fetching administrators:', error);
@@ -82,7 +86,7 @@ export const useProdutoHook = () => {
     }
 
     const atualizarBalanca = async (valor: number): Promise<null> => {
-        
+
         const data = {
             "valor": valor,
             "data": ISODateToDate(new Date)

@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { axiosClient } from "@/services/axiosClient";
 import EditTela from "./editTela";
 import { toast, Toaster } from "sonner";
+import { useSession } from "next-auth/react";
 
 interface DataTableProps<Tela, TValue> {
   columns: ColumnDef<Tela, TValue>[];
@@ -33,6 +34,7 @@ export function DataTable<Tela, TValue>({
   columns,
   data,
 }: DataTableProps<Tela, TValue>) {
+
   const table = useReactTable({
     data,
     columns,
@@ -42,7 +44,7 @@ export function DataTable<Tela, TValue>({
 
   function onDelete(id: string) {
     const confirmDelete = window.confirm(
-      "Tem certeza que deseja excluir este funcionario?"
+      "Tem certeza que deseja excluir este tela?"
     );
 
     if (confirmDelete) {
@@ -51,11 +53,11 @@ export function DataTable<Tela, TValue>({
           .delete(`/usuario/${id}`)
           .then(() => {
             window.location.reload(); // Atualiza a lista após excluir
-            toast.success("Funcionario excluido com sucesso!");
+            toast.success("Tela excluido com sucesso!");
           })
           .catch((error) => {
             console.error("Erro ao excluir:", error);
-            toast.error("Falha ao excluir o funcionario.");
+            toast.error("Falha ao excluir o tela.");
           });
       } catch (error) {
         console.error("Erro na requisição:", error);
@@ -78,9 +80,9 @@ export function DataTable<Tela, TValue>({
                   {column.isPlaceholder
                     ? null
                     : flexRender(
-                        column.column.columnDef.header,
-                        column.getContext()
-                      )}
+                      column.column.columnDef.header,
+                      column.getContext()
+                    )}
                 </TableHead>
               ))}
               <TableHead className="w-[96px]" />
@@ -109,14 +111,14 @@ export function DataTable<Tela, TValue>({
                     nome={row.original.nome}
                     rota={row.original.rota}
                   />
-                  <Button
+                  {/* <Button
                     className="button-table"
                     variant="outline"
                     size="icon"
                     onClick={() => onDelete(row.original.id)}
                   >
                     <Trash2 size={24} />
-                  </Button>
+                  </Button> */}
                 </TableCell>
               </TableRow>
             ))
@@ -132,11 +134,10 @@ export function DataTable<Tela, TValue>({
           {Array.from({ length: table.getPageCount() }, (_, i) => (
             <button
               key={i}
-              className={`px-3 py-1 border rounded cursor-pointer btn-hover-scale hover:bg-[var(--secondary-color)] hover:text-[var(--white-color)] ${
-                table.getState().pagination.pageIndex === i
+              className={`px-3 py-1 border rounded cursor-pointer btn-hover-scale hover:bg-[var(--secondary-color)] hover:text-[var(--white-color)] ${table.getState().pagination.pageIndex === i
                   ? "bg-[var(--primary-color)] text-[var(--white-color)]"
                   : ""
-              }`}
+                }`}
               onClick={() => table.setPageIndex(i)}
             >
               {i + 1}

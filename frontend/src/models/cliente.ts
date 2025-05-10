@@ -3,5 +3,8 @@ export interface Cliente{
     nome: string;
     telefone: string;
     email: string;
+    codigo: string;
+    saldo: number;
+    limite: number;
     nascimento: string;
 }

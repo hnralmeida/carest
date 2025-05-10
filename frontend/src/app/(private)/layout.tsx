@@ -13,13 +13,13 @@ export default function PrivateLayout({
 }) {
   return (
     <AuthProvider>
-      <SidebarProvider>
-        <AppSidebar />
-        <SidebarInset className="p-4">
-          <header className="flex shrink-0 items-center gap-2 px-4">
-            <SidebarTrigger />
+        <SidebarProvider>
+          <AppSidebar />
+          <SidebarInset className="p-4">
+            <header className="flex shrink-0 items-center gap-2 px-4">
+              <SidebarTrigger />
 
-            {/* <Breadcrumb>
+              {/* <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem className="hidden md:block">
                     <BreadcrumbLink href="#">
@@ -32,10 +32,10 @@ export default function PrivateLayout({
                   </BreadcrumbItem>
                 </BreadcrumbList>
               </Breadcrumb>*/}
-          </header>
-          {children}
-        </SidebarInset>
-      </SidebarProvider>
+            </header>
+            {children}
+          </SidebarInset>
+        </SidebarProvider>
     </AuthProvider>
   )
 }

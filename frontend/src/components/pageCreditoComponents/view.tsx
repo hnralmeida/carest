@@ -2,17 +2,18 @@
 
 import React from "react";
 import { Radio } from "lucide-react";
-import { useVendasHook } from "@/hooks/useVendas";
 import { formatarParaMoeda } from "@/lib/utils";
 import { toast, Toaster } from "sonner";
 import OptionButtonLimite from "./optionLimite";
 import OptionButtonSaldo from "./optionSaldo";
 import OptionButtonBloquear from "./optionBloquear";
 import { useCreditoHook } from "@/hooks/useCredito";
+import { Cliente } from "@/models/cliente";
 
 const CreditoView = () => {
 
-    const { buscarCliente, cliente } = useCreditoHook();
+    const { buscarCliente } = useCreditoHook();
+    const [ cliente, setCliente ] = React.useState({} as Cliente);  
 
     const [codigoLido, setCodigoLido] = React.useState("");
 
@@ -27,7 +28,7 @@ const CreditoView = () => {
                     console.log(codigoLido)
                     //retira tudo que não for numeros de codigoLido
                     const codigoLidoLimpo = codigoLido.replace(/\D/g, "");
-                    await buscarCliente(codigoLidoLimpo)
+                    setCliente(await buscarCliente(codigoLidoLimpo))
                 } catch (e: any) {
                     if (e.response.status == 404) {
                         toast.error("Cliente não encontrado")
@@ -102,9 +103,9 @@ const CreditoView = () => {
             <div className="rounded-md overflow-x-auto">
                 <h1 className="text-2xl">Gerenciar o Cartão</h1>
                 <div className="flex flex-row justify-around items-center w-full h-[128px] gap-[8px] mb-4 px-[64px]">
-                    <OptionButtonLimite />
-                    <OptionButtonSaldo />
-                    <OptionButtonBloquear />
+                    <OptionButtonLimite cliente={cliente}/>
+                    <OptionButtonSaldo cliente={cliente}/>
+                    <OptionButtonBloquear cliente={cliente}/>
                 </div>
             </div>
             <Toaster richColors position="top-center" />

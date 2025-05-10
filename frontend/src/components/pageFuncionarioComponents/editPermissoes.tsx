@@ -17,6 +17,7 @@ import { Permissao } from "@/models/permissao";
 
 interface EditPermissoesProps {
   id: string;
+
 }
 
 export default function EditPermissoes({ id }: EditPermissoesProps) {
@@ -44,6 +45,7 @@ export default function EditPermissoes({ id }: EditPermissoesProps) {
     if (localPermissoes) {
       const updatedPermissoes = localPermissoes.map((permissao, index) => ({
         ...permissao,
+        id: localPermissoes[index].id,
         usuario: UsuarioMock,
         create: localPermissoes[index].create,
         read: localPermissoes[index].read,
@@ -72,12 +74,11 @@ export default function EditPermissoes({ id }: EditPermissoesProps) {
         i === index ? { ...perm, [field]: !perm[field] } : perm
       )
     );
-    console.log("localPermissoes", localPermissoes);
   };
 
   return (
     <>
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={setOpen} >
         <DialogTrigger asChild>
           <Button
             className="button-table"
@@ -88,71 +89,74 @@ export default function EditPermissoes({ id }: EditPermissoesProps) {
             <Settings size={24} />
           </Button>
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent className="sm:max-w-[800px]">  
           <DialogHeader>
             <DialogTitle>Gerenciar Permissões</DialogTitle>
           </DialogHeader>
           <form onSubmit={onFormSubmit} className="flex flex-col gap-4">
-            {localPermissoes
-              ? localPermissoes.map((permissao, index) => (
-                <>
-                  {index==0&&<div className="grid grid-cols-5 gap-4 mb-2">
-                    <div className="font-semibold" /> {/* espaço para o nome da tela */}
-                    <p className="font-semibold">Criar</p>
-                    <p className="font-semibold">Editar</p>
-                    <p className="font-semibold">Visualizar</p>
-                    <p className="font-semibold">Excluir</p>
-                  </div>}
-                  <div
-                    className="grid grid-cols-5 items-center gap-4"
-                    key={permissao?.tela?.id}
-                  >
-                    <p className="font-medium">{permissao?.tela?.nome}</p>
+            <div className="max-h-[400px] overflow-y-auto pr-2">
+              {localPermissoes
+                ? localPermissoes.map((permissao, index) => (
+                  <>
 
-                    <Checkbox
-                      id={`create-${permissao.tela.id}`}
-                      className="cursor-pointer border-[var(--black-color)]"
-                      checked={localPermissoes[index].create}
-                      onCheckedChange={() =>
-                        handleCheckboxChange(index, "create")
-                      }
-                    />
-                    <Checkbox
-                      id={`read-${permissao.tela.id}`}
-                      className="cursor-pointer border-[var(--black-color)]"
-                      checked={localPermissoes[index].read}
-                      onCheckedChange={() =>
-                        handleCheckboxChange(index, "read")
-                      }
-                    />
-                    <Checkbox
-                      id={`update-${permissao.tela.id}`}
-                      className="cursor-pointer border-[var(--black-color)]"
-                      checked={localPermissoes[index].update}
-                      onCheckedChange={() =>
-                        handleCheckboxChange(index, "update")
-                      }
-                    />
-                    <Checkbox
-                      id={`delete-${permissao.tela.id}`}
-                      className="cursor-pointer border-[var(--black-color)]"
-                      checked={localPermissoes[index].delete}
-                      onCheckedChange={() =>
-                        handleCheckboxChange(index, "delete")
-                      }
-                    />
-                  </div>
-                </>
-              ))
-              : null}
+                    {index == 0 && <div className="grid grid-cols-5 gap-4 mb-2">
+                      <div className="font-semibold" /> {/* espaço para o nome da tela */}
+                      <p className="font-semibold">Criar</p>
+                      <p className="font-semibold">Visualizar</p>
+                      <p className="font-semibold">Editar</p>
+                      <p className="font-semibold">Excluir</p>
+                    </div>}
+                    <div
+                      className="grid grid-cols-5 items-center gap-4"
+                      key={permissao?.tela?.id}
+                    >
+                      <p className="font-medium">{permissao?.tela?.nome}</p>
 
-            <Button type="submit" className="mt-4 cursor-pointer" disabled={loading}>
-              {loading ? (
-                <span className="animate-pulse">Salvando...</span>
-              ) : (
-                "Salvar"
-              )}
-            </Button>
+                      <Checkbox
+                        id={`create-${permissao.tela.id}`}
+                        className="cursor-pointer border-[var(--black-color)]"
+                        checked={localPermissoes[index].create}
+                        onCheckedChange={() =>
+                          handleCheckboxChange(index, "create")
+                        }
+                      />
+                      <Checkbox
+                        id={`read-${permissao.tela.id}`}
+                        className="cursor-pointer border-[var(--black-color)]"
+                        checked={localPermissoes[index].read}
+                        onCheckedChange={() =>
+                          handleCheckboxChange(index, "read")
+                        }
+                      />
+                      <Checkbox
+                        id={`update-${permissao.tela.id}`}
+                        className="cursor-pointer border-[var(--black-color)]"
+                        checked={localPermissoes[index].update}
+                        onCheckedChange={() =>
+                          handleCheckboxChange(index, "update")
+                        }
+                      />
+                      <Checkbox
+                        id={`delete-${permissao.tela.id}`}
+                        className="cursor-pointer border-[var(--black-color)]"
+                        checked={localPermissoes[index].delete}
+                        onCheckedChange={() =>
+                          handleCheckboxChange(index, "delete")
+                        }
+                      />
+                    </div>
+                  </>
+                ))
+                : null}
+
+              <Button type="submit" className="mt-4 cursor-pointer" disabled={loading}>
+                {loading ? (
+                  <span className="animate-pulse">Salvando...</span>
+                ) : (
+                  "Salvar"
+                )}
+              </Button>
+            </div>
           </form>
         </DialogContent>
       </Dialog>

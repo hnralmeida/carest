@@ -109,6 +109,7 @@ export function DataTable<Produto, TValue>({
                     id={row.original.id}
                     nome={row.original.nome}
                     valor={row.original.valor}
+                    custo={row.original.custo}
                     codigo={row.original.codigo}
                   />
                   <Button

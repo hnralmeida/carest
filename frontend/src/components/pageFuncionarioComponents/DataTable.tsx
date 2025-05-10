@@ -79,9 +79,9 @@ export function DataTable<TData, TValue>({
                   {column.isPlaceholder
                     ? null
                     : flexRender(
-                        column.column.columnDef.header,
-                        column.getContext()
-                      )}
+                      column.column.columnDef.header,
+                      column.getContext()
+                    )}
                 </TableHead>
               ))}
               <TableHead className="w-[140px]" />
@@ -105,7 +105,9 @@ export function DataTable<TData, TValue>({
                   </TableCell>
                 ))}
                 <TableCell className="flex w-48 gap-2">
-                  <EditPermissoes id={row.original.id} />
+                  <EditPermissoes
+                    id={row.original.id}
+                  />
                   <EditFuncionario
                     id={row.original.id}
                     nome={row.original.nome}
@@ -134,11 +136,10 @@ export function DataTable<TData, TValue>({
           {Array.from({ length: table.getPageCount() }, (_, i) => (
             <button
               key={i}
-              className={`px-3 py-1 border rounded cursor-pointer btn-hover-scale hover:bg-[var(--secondary-color)] hover:text-[var(--white-color)] ${
-                table.getState().pagination.pageIndex === i
+              className={`px-3 py-1 border rounded cursor-pointer btn-hover-scale hover:bg-[var(--secondary-color)] hover:text-[var(--white-color)] ${table.getState().pagination.pageIndex === i
                   ? "bg-[var(--primary-color)] text-[var(--white-color)]"
                   : ""
-              }`}
+                }`}
               onClick={() => table.setPageIndex(i)}
             >
               {i + 1}

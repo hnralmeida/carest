@@ -16,6 +16,15 @@ public class Produto {
     private UUID id;
     protected String nome;
     protected double valor;
+    protected double custo;
+
+    public double getCusto() {
+        return custo;
+    }
+
+    public void setCusto(double custo) {
+        this.custo = custo;
+    }
 
     public Produto(UUID id, String nome, double valor) {
         this.id = id;

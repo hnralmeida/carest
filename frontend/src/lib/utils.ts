@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 
 
 export function dateToISO(date: Date) {
-  if(isNaN(date.getTime())) {
+  if (isNaN(date.getTime())) {
     return ""
   }
   return date.toISOString().split("T")[0]
@@ -30,7 +30,7 @@ export const formatarParaMoeda = (valor: string, formatado?: boolean) => {
   const numero = valor.replace(/\D/g, "");
 
   // Converte para número com 2 casas decimais
-  const valorNumerico = formatado ?  (Number(numero)).toFixed(2) : (Number(numero) / 100).toFixed(2);
+  const valorNumerico = formatado ? (Number(numero)).toFixed(2) : (Number(numero) / 100).toFixed(2);
 
   // Formata em BRL
   return new Intl.NumberFormat("pt-BR", {
@@ -41,12 +41,13 @@ export const formatarParaMoeda = (valor: string, formatado?: boolean) => {
 
 export const moedaParaNumero = (valor: string): number => {
   if (!valor) return 0;
+  console.log("valor", valor);
 
   const apenasNumeros = valor
     .replace(/\s/g, '')         // remove espaços
     .replace('R$', '')          // remove símbolo do real
-    .replace(/\./g, '')         // remove separador de milhar
     .replace(',', '.');         // troca vírgula decimal por ponto
 
-  return parseFloat(apenasNumeros) || 0;
+  console.log("apenasNumeros", apenasNumeros);
+  return parseFloat(apenasNumeros) * 100 || 0;
 };

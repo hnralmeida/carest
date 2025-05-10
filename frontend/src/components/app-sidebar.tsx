@@ -13,13 +13,12 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { GalleryVerticalEnd, LogOut, User } from "lucide-react";
+import { GalleryVerticalEnd, LogOut, Router, User } from "lucide-react";
 import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react"
-import { useUsuarioHook } from "@/hooks/useUsuario";
-import { Usuario } from "@/models/usuario";
+import { useRouter } from "next/navigation";
 
 interface SidebarType {
   versions: string[];
@@ -82,6 +81,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const { data: session } = useSession();
 
+  const router = useRouter();
+
   React.useEffect(() => {
     console.log("session ", session?.user);
     if (session) {
@@ -90,12 +91,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
       filteredData.navMain = filteredData.navMain.map((section, index) => {
         if (index === 1) {
-          const nomesIgnorados = ["Acesso", "Vendas", "Venda", "Produtos", "Produto", "Clientes", "Cliente", "Crédito"];
+          const nomesIgnorados = ["Acesso", "Vendas", "Produtos", "Clientes", "Crédito", "Dashboard"];
 
           return {
             ...section,
             items: session?.user.permissoes
-              ?.filter((item: any) => !nomesIgnorados.includes(item.tela.nome))
+              ?.filter((item: any) =>
+                item.read === true && !nomesIgnorados.includes(item.tela.nome)
+              )
               .map((item: any) => ({
                 title: item.tela.nome,
                 url: item.tela.rota,
@@ -111,6 +114,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const handleLogout = () => {
     signOut();
+    router.push("/login");
   }
 
   const handlePerfil = () => {

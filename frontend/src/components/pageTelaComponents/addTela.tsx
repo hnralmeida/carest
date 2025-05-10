@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { toast, Toaster } from "sonner";
 import { useTelaHook } from "@/hooks/useTela";
 import { Tela } from "@/models/tela";
+import { useSession } from "next-auth/react";
 
 export default function AddTela() {
   const [open, setOpen] = useState(false);
@@ -27,6 +28,9 @@ export default function AddTela() {
   const { criarTela } = useTelaHook();
 
   const [rotaTocada, setRotaTocada] = useState(false);
+
+  const { data: session, update } = useSession()
+  const usuario = session?.user;
 
   const onFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault(); // Evita que o formulário recarregue a página
@@ -46,7 +50,22 @@ export default function AddTela() {
     }
 
     try {
-      const response = await criarTela(data);
+      if (!usuario?.id) {
+        throw new Error("Usuário não encontrado.");
+      }
+      const response = await criarTela(usuario.id, data);
+
+      const permissoesAtualizadas = usuario.permissoes.map((permissao: any) => {
+        if (permissao.tela.nome === nome) {
+          return {
+            ...permissao,
+            read: true,
+          };
+        }
+        return permissao;
+      });
+
+      update({permissoes: permissoesAtualizadas})
 
       window.location.reload(); // Recarrega a página para exibir o novo Funcionario
 
@@ -90,9 +109,9 @@ export default function AddTela() {
               onChange={(e) => {
                 const novoNome = e.target.value;
                 setNome(novoNome);
-              
+
                 if (!rotaTocada) {
-                  setrota(novoNome.toLowerCase().replace(/\s+/g, "-"));
+                  setrota("/" + novoNome.toLowerCase().replace(/\s+/g, "-"));
                 }
               }}
               placeholder="Digite o nome"

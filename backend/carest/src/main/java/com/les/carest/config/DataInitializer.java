@@ -16,42 +16,31 @@ public class DataInitializer {
     CommandLineRunner initTelas(TelaRepository telaRepository) {
         return args -> {
             List<String> nomesTelas = Arrays.asList(
-                "dashboard", "acesso", "venda", "produto", "cliente",
-                "credito", "funcionarios", "em_aberto", "consumo_diario",
-                "clientes_diario", "aniversariantes", "ticket", "ultima_compra",
-                "relatorio", "fornecedores", "controle_saida", "dre", "tela"
+                    "Acesso", "Vendas", "Produtos", "Clientes",
+                    "Crédito", "Funcionários", "Em Aberto", "Consumo diário",
+                    "Clientes diário", "Aniversariantes", "Ticket", "Última compra",
+                    "Relatório", "Fornecedores", "Controle Saída", "DRE", "Tela"
             );
 
-            for (String nome : nomesTelas) {
+            List<String> rotasTelas = Arrays.asList(
+                    "acesso", "venda", "produto", "cliente",
+                    "credito", "funcionarios", "em_aberto", "consumo_diario",
+                    "clientes_diario", "aniversariantes", "ticket", "ultima_compra",
+                    "relatorio", "fornecedores", "controle_saida", "dre", "tela"
+            );
+
+            for (int i = 0; i < nomesTelas.size(); i++) {
+                String nome = nomesTelas.get(i);
+                String rota = rotasTelas.get(i);
+
                 if (telaRepository.findByNome(nome).isEmpty()) {
                     Tela novaTela = new Tela();
-                    
-                    novaTela.setNome(formatarNome(nome));
-                    novaTela.setRota("/" + nome); // exemplo, ajuste se necessário
+                    novaTela.setNome(nome);
+                    novaTela.setRota("/" + rota);
                     telaRepository.save(novaTela);
                 }
             }
         };
     }
 
-     public static String formatarNome(String input) {
-        if (input == null || input.isEmpty()) {
-            return input;
-        }
-
-        String[] palavras = input.toLowerCase().replace("_", " ").split(" ");
-        StringBuilder resultado = new StringBuilder();
-
-        for (String palavra : palavras) {
-            if (!palavra.isEmpty()) {
-                resultado.append(Character.toUpperCase(palavra.charAt(0)));
-                if (palavra.length() > 1) {
-                    resultado.append(palavra.substring(1));
-                }
-                resultado.append(" ");
-            }
-        }
-
-        return resultado.toString().trim();
-    }
 }

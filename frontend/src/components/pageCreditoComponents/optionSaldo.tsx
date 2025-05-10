@@ -13,13 +13,17 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Toaster } from "sonner";
 import { useCreditoHook } from "@/hooks/useCredito";
+import { Cliente } from "@/models/cliente";
 
-const OptionButtonSaldo = () => {
+interface OptionButtonSaldoProps {
+    cliente: Cliente;
+}
+const OptionButtonSaldo = ({cliente}: OptionButtonSaldoProps) => {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const [valor, setValor] = useState(0);
 
-    const { fazerRecarga, cliente } = useCreditoHook(); // Importando o hook de crédito
+    const { fazerRecarga } = useCreditoHook(); // Importando o hook de crédito
 
     const formatarParaBRL = (valor: number) => {
         return new Intl.NumberFormat("pt-BR", {
@@ -33,12 +37,13 @@ const OptionButtonSaldo = () => {
         setLoading(true);
         console.log("cliente: ", cliente);
         
-        await fazerRecarga(valor.toString(), Number(cliente.codigo)); // Chama a função de recarga com o valor formatado
+        await fazerRecarga(valor, cliente.codigo); // Chama a função de recarga com o valor formatado
 
         setTimeout(() => {
             setValor(0); // Limpa o valor após o envio
             setLoading(false);
             setOpen(false);
+            window.location.reload(); // Recarrega a página após 2 segundos
         }, 2000);
     }
 
@@ -48,6 +53,7 @@ const OptionButtonSaldo = () => {
                 <Button
                     className="button-alt items-center text-35px w-[180px]"
                     onClick={() => setOpen(true)}
+                    disabled={cliente.id==undefined}
                 >
                     Adicionar Saldo
                 </Button>

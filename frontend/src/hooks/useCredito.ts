@@ -1,6 +1,6 @@
-import { Cliente } from "@/components/pageClienteComponents/columns";
 import { useState } from "react";
 import { axiosClient } from "@/services/axiosClient";
+import { Cliente } from "@/models/cliente";
 
 
 export const useCreditoHook = () => {
@@ -13,13 +13,14 @@ export const useCreditoHook = () => {
             return Promise.reject("Cliente não encontrado");
         } else {
             setCliente(cliente);
+            return cliente;
         }
     }
 
-    async function fazerRecarga(valor: string, codigo: number) {
+    async function fazerRecarga(valor: number, codigoCliente: string) {
         const data = {
             valorRecarga: valor,
-            codigoCliente: codigo
+            codigoCliente: codigoCliente
         }
 
         console.log(data)
@@ -32,10 +33,27 @@ export const useCreditoHook = () => {
             setCliente(clienteRes);
         }
     }
+    
+    const alterarLimite = async (limite: number, cliente: Cliente) => {
+        const data = {
+            ...cliente,
+            limite: limite
+        }
 
-        
+        console.log("alterarLimite", data)
+        const response = await axiosClient.put(`/cliente/`+ cliente.id, data);
+        const clienteRes = response.data;
+
+        if (response.status > 205) {
+            return Promise.reject("Cliente não encontrado");
+        } else {
+            setCliente(clienteRes);
+        }
+    }
+
     return {
         cliente,
+        alterarLimite,
         buscarCliente,
         fazerRecarga
     };

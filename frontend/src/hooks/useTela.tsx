@@ -1,25 +1,23 @@
 import { useState } from "react";
 import { Tela } from "@/models/tela";
 import { axiosClient } from "@/services/axiosClient";
+import { useSession } from "next-auth/react";
 
 export const useTelaHook = () => {
     const [telas, setTelas] = useState<Tela[] | null>(null);
     const [tela, setTela] = useState<Tela | null>(null);
 
-    const listarTelas = async () => {
-        setTelas([
-            {
-                "id": "Carregando...",
-                "nome": "Carregando...",
-                "rota": "Carregando...",
-            }
-        ])
+    const listarTelas = async (id: string) => {
+
+        console.log("id", id);
+
         try {
-            const response = await axiosClient.get('/tela');
+            const response = await axiosClient.get('/tela/usuario/' + id);
             if (response.data) {
                 // ordenar resposta por ordem alfabética de nome
                 response.data.sort((a: Tela, b: Tela) => a.nome.localeCompare(b.nome));
                 setTelas(response.data);
+                console.log("telas", response.data);
             } else {
                 setTelas([]);
             }
@@ -61,13 +59,20 @@ export const useTelaHook = () => {
         }
     };
 
-    const criarTela = async (Tela: Tela): Promise<Tela | null> => {
+    const criarTela = async (userId: String, Tela: Tela): Promise<Tela | null> => {
+
+        const body = {
+            userId,
+            nomeTela: Tela.nome,
+            rotaTela: Tela.rota
+        }
         try {
-            await axiosClient.post('/tela', Tela);
-            await axiosClient.post('/tela/autoGenerate');
+            console.log("body", body);
+            await axiosClient.post('/usuario/permitir', body);
         } catch (error) {
             return Promise.reject(error);
         }
+
         return null;
     };
 

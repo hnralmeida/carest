@@ -1,6 +1,7 @@
 package com.les.carest.controller;
 
 import com.les.carest.DTO.PermissaoDTO;
+import com.les.carest.DTO.PermitirDTO;
 import com.les.carest.DTO.UsuarioDTO;
 import com.les.carest.model.Permissao;
 import com.les.carest.model.Usuario;
@@ -36,6 +37,20 @@ public class UsuarioController extends _GenericController<Usuario> {
         usuarioService.fazerPermissoes(id);
 
         return ResponseEntity.ok("Permissões criadas");
+    }
+
+    @PostMapping("/permitir")
+    public ResponseEntity<String> permitir(@RequestBody PermitirDTO permitirDTO) {
+        usuarioService.permitir(permitirDTO.getUserId(), permitirDTO.getNomeTela(), permitirDTO.getRotaTela());
+
+        return ResponseEntity.ok("Permissões criadas");
+    }
+
+    @PostMapping("/permitir/{id}")
+    public ResponseEntity<String> permitirPorId(@PathVariable UUID id, @RequestBody Permissao permissao) {
+        usuarioService.permitirTela(permissao, id);
+
+        return ResponseEntity.ok("Permissão atualizada");
     }
 
     @GetMapping("/email/{email}")

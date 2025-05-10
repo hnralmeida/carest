@@ -5,6 +5,7 @@ import { columns } from "../../../components/pageTelaComponents/columns";
 import AddTela from "@/components/pageTelaComponents/addTela";
 import { DataTable } from "@/components/pageTelaComponents/DataTable";
 import { useTelaHook } from "@/hooks/useTela";
+import { useSession } from "next-auth/react";
 
 // async function getData(): Promise<Tela[]> {
 //   const response = await axiosClient.get("/usuario");
@@ -15,10 +16,14 @@ import { useTelaHook } from "@/hooks/useTela";
 
 function Page() {
   const { telas, listarTelas } = useTelaHook();
+  const { data: session } = useSession();
+  const user = session?.user;
 
   useEffect(() => {
-    listarTelas();
-  }, []);
+    if (user?.id) {
+      listarTelas(user.id);
+    }
+  }, [user]);
 
   return (
     <div className="container rounded-md border mx-auto my-16 py-4 px-4 content-bg">
@@ -31,7 +36,7 @@ function Page() {
       {telas ? (
         <DataTable columns={columns} data={telas} />
       ) : (
-        <p>Carregando...</p>
+        <p>Sem resultados.</p>
       )}
     </div>
   );
