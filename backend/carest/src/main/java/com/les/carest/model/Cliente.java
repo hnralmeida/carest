@@ -1,12 +1,9 @@
 package com.les.carest.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
 import java.util.Date;
-import java.util.List;
-import jakarta.persistence.*;
-import lombok.*;
 import java.util.UUID;
 
 @Entity
@@ -16,7 +13,10 @@ public class Cliente {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String nome;
+
+    @Column(unique = true)
     private String codigo;
+
     @JsonFormat(pattern = "yyyy/MM/dd")
     private Date nascimento;
     private String telefone;
@@ -24,12 +24,15 @@ public class Cliente {
     private double limite;
     private double saldo;
     private boolean em_uso;
+
     @JsonFormat(pattern = "yyyy/MM/dd")
     private Date dividaData;
+    private boolean bloqueado;
 
     public Cliente(){}
 
-    public Cliente(UUID id, String nome, String codigo, Date nascimento, String telefone, String email, double limite, double saldo, boolean em_uso, Date dividaData) {
+
+    public Cliente(UUID id, String nome, String codigo, Date nascimento, String telefone, String email, double limite, double saldo, boolean em_uso, Date dividaData, boolean bloqueado) {
         this.id = id;
         this.nome = nome;
         this.codigo = codigo;
@@ -40,6 +43,7 @@ public class Cliente {
         this.saldo = saldo;
         this.em_uso = em_uso;
         this.dividaData = dividaData;
+        this.bloqueado = bloqueado;
     }
 
     public UUID getId() {
@@ -121,4 +125,10 @@ public class Cliente {
     public void setDividaData(Date dividaData) {
         this.dividaData = dividaData;
     }
+
+    public boolean getBloqueado() {return bloqueado;    }
+
+    public void setBloqueado(boolean bloqueado) { this.bloqueado = bloqueado; }
+
+
 }

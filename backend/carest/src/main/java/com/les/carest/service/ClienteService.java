@@ -1,7 +1,6 @@
 package com.les.carest.service;
 
 import com.les.carest.DTO.ClienteDTO;
-import com.les.carest.DTO.ClienteDiarioDTO;
 import com.les.carest.model.Cliente;
 import com.les.carest.model.ProdutoSerial;
 import com.les.carest.repository.ClienteRepository;
@@ -15,14 +14,12 @@ import java.time.Period;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Validated
 @Service
-@Tag(name = "ClienteService", description = "Acesso aos métodos de Cliente")
 public class ClienteService extends _GenericService<Cliente, ClienteRepository> {
+
 
     private final ClienteRepository clienteRepository;
 
@@ -67,6 +64,15 @@ public class ClienteService extends _GenericService<Cliente, ClienteRepository> 
 
     private ClienteDTO toDTO(Cliente cliente) {//para saldo
 
+
+    // Método principal para buscar clientes
+    public ClienteDTO acharCliente(String codigo) {
+        Cliente cliente = this.repositoryGenerics.findByCodigoCliente(codigo);
+        return toDTO(cliente); // Usa a versão com saldo/dívida
+    }
+
+    // Para operações financeiras (saldo/dívida)
+    public ClienteDTO toDTO(Cliente cliente) {
         return new ClienteDTO(
                 cliente.getId(),
                 cliente.getNome(),

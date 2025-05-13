@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 import java.util.UUID;
 
+
 @Entity
 @Table(name = "recarga")
 public class Recarga {
@@ -12,7 +13,7 @@ public class Recarga {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 

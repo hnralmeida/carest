@@ -1,31 +1,29 @@
 package com.les.carest.DTO;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Date;
+import java.util.UUID;
 
 public class RecargaDTO {
-    private String codigoCliente;
+    private UUID idCliente;
     private double valorRecarga;
+    private Date dataRecarga;
 
-    // Construtor padrão OBRIGATÓRIO
+
     public RecargaDTO() {}
 
-    // Construtor com parâmetros (opcional)
-    @JsonCreator
-    public RecargaDTO(
-            @JsonProperty("codigoCliente") String codigoCliente,
-            @JsonProperty("valorRecarga") double valorRecarga) {
-        this.codigoCliente = codigoCliente;
+    public RecargaDTO(UUID idCliente, double valorRecarga, Date dataRecarga) {
+        this.idCliente = idCliente;
         this.valorRecarga = valorRecarga;
+        this.dataRecarga = new Date();
     }
 
-    // Getters e Setters OBRIGATÓRIOS
-    public String getCodigoCliente() {
-        return codigoCliente;
+
+    public UUID getIdCliente() {
+        return idCliente;
     }
 
-    public void setCodigoCliente(String codigoCliente) {
-        this.codigoCliente = codigoCliente;
+    public void setIdCliente(UUID idCliente) {
+        this.idCliente = idCliente;
     }
 
     public double getValorRecarga() {
@@ -34,5 +32,13 @@ public class RecargaDTO {
 
     public void setValorRecarga(double valorRecarga) {
         this.valorRecarga = valorRecarga;
+    }
+
+    public Date getDataRecarga() {
+        return dataRecarga;
+    }
+
+    public void setDataRecarga(Date dataRecarga) {
+        this.dataRecarga = dataRecarga;
     }
 }
