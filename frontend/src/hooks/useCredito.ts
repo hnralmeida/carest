@@ -7,7 +7,7 @@ export const useCreditoHook = () => {
     const [cliente, setCliente] = useState({} as Cliente);
 
     async function buscarCliente(codigo: string) {
-        const response = await axiosClient.get(`/cliente/codigo/${codigo}`);
+        const response = await axiosClient.get(`/clientes/codigo/${codigo}`);
         const cliente = response.data;
         if (response.status > 205) {
             return Promise.reject("Cliente não encontrado");
@@ -24,7 +24,7 @@ export const useCreditoHook = () => {
         }
 
         console.log(data)
-        const response = await axiosClient.put(`/cliente/recarga`, data);
+        const response = await axiosClient.put(`/clientes/recarga`, data);
         const clienteRes = response.data;
 
         if (response.status > 205) {
@@ -41,7 +41,7 @@ export const useCreditoHook = () => {
         }
 
         console.log("alterarLimite", data)
-        const response = await axiosClient.put(`/cliente/`+ cliente.id, data);
+        const response = await axiosClient.put(`/clientes/`+ cliente.id, data);
         const clienteRes = response.data;
 
         if (response.status > 205) {

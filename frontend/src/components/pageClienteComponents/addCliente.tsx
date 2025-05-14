@@ -14,6 +14,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { axiosClient } from "@/services/axiosClient";
 import { toast, Toaster } from "sonner";
+import { useClienteHook } from "@/hooks/useCliente";
+import { Cliente } from "@/models/cliente";
 
 export default function AddCliente() {
   const [open, setOpen] = useState(false);
@@ -23,11 +25,13 @@ export default function AddCliente() {
   const [codigo, setCodigo] = useState("");
   const [nascimento, setNascimento] = useState("");
 
+  const { adicionarCliente } = useClienteHook();
+
   function ISODateToDate(d: Date): string {
     const dia = String(d.getDate()).padStart(2, '0');     // Dia do mês
     const mes = String(d.getMonth() + 1).padStart(2, '0'); // Mês (corrigido +1)
     const ano = d.getFullYear();
-  
+
     return `${ano}/${mes}/${dia}`;
   }
 
@@ -37,6 +41,7 @@ export default function AddCliente() {
     const nascimentoDate = new Date(`${nascimento}T12:00:00`)
 
     const data = {
+      id: "",
       nome: nome,
       nascimento: ISODateToDate(nascimentoDate),
       telefone: telefone,
@@ -45,22 +50,20 @@ export default function AddCliente() {
       saldo: 0,
       em_uso: false,
       codigo: codigo,
-      dividaData: ISODateToDate(new Date())
-    };
-    try {
-      const response = await axiosClient.post("/cliente", data);
+      dividaData: ISODateToDate(new Date()),
+    } as Cliente;
 
-      if (response.status < 205) {
-        toast.success("Cliente adicionado com sucesso!");
-        setOpen(false); // Fecha o modal após sucesso
-        setNome(""); // Limpa o campo do formulário
-        window.location.reload(); // Recarrega a página para exibir o novo cliente
-      } else {
-        toast.error("Erro ao adicionar cliente.");
-      }
-    } catch (error) {
+    try {
+      const response = await adicionarCliente(data);
+
+      toast.success("Cliente adicionado com sucesso!");
+      setOpen(false); // Fecha o modal após sucesso
+      setNome(""); // Limpa o campo do formulário
+      window.location.reload(); // Recarrega a página para exibir o novo cliente
+
+    } catch (error: any) {
       console.error("Erro na requisição:", error);
-      toast.error("Falha ao conectar com o servidor.");
+      toast.error(typeof error === "string" ? error : "Erro desconhecido");
     }
   };
 
@@ -136,7 +139,6 @@ export default function AddCliente() {
           </Button>
         </form>
       </DialogContent>
-      <Toaster position="bottom-center" richColors/>
     </Dialog>
   );
 }

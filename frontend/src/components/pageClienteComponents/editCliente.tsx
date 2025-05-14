@@ -13,9 +13,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { axiosClient } from "@/services/axiosClient";
-import { Cliente } from "./columns";
 import { dateToISO } from "@/lib/utils";
 import { toast } from "sonner";
+import { Cliente } from "@/models/cliente";
+import { useClienteHook } from "@/hooks/useCliente";
 
 interface EditClienteProps {
   id: string;
@@ -26,43 +27,47 @@ export default function EditCliente({ id, item }: EditClienteProps) {
   const [open, setOpen] = useState(false);
   const [formCliente, setFormCliente] = useState<Cliente>({} as Cliente);
 
+  const { editCliente } = useClienteHook();
+
   function ISODateToDate(d: Date): string {
     const dia = String(d.getDate()).padStart(2, '0');     // Dia do mês
     const mes = String(d.getMonth() + 1).padStart(2, '0'); // Mês (corrigido +1)
     const ano = d.getFullYear();
-  
+
     return `${ano}/${mes}/${dia}`;
   }
 
   useEffect(() => {
-    setFormCliente((prevData) => ({
+    setFormCliente((prevData: any) => ({
       ...prevData,
       nome: item.nome,
     }));
 
-    setFormCliente((prevData) => ({
+    setFormCliente((prevData: any) => ({
       ...prevData,
       email: item.email,
     }));
 
-    setFormCliente((prevData) => ({
+    setFormCliente((prevData: any) => ({
       ...prevData,
       telefone: item.telefone,
     }));
 
-    setFormCliente((prevData) => ({
+    setFormCliente((prevData: any) => ({
       ...prevData,
       codigo: item.codigo,
     }));
 
     setFormCliente((prevData) => ({
       ...prevData,
-      nascimento: item.nascimento,
-    }));
+      nascimento: dateToISO(new Date(item.nascimento)),
+    }))
   }, [item]);
 
   const onFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault(); // Evita que o formulário recarregue a página
+
+    console.log("nascimento", formCliente.nascimento);
 
     try {
       const data = {
@@ -71,22 +76,25 @@ export default function EditCliente({ id, item }: EditClienteProps) {
         email: formCliente.email,
         telefone: formCliente.telefone,
         codigo: formCliente.codigo,
-        nascimento: ISODateToDate(new Date(`${formCliente.nascimento}T12:00:00`)),
+        limite: item.limite,
+        saldo: item.saldo,
+        nascimento: ISODateToDate(new Date(`${formCliente.nascimento.replace('/', '-')}T12:00:00`)),
       };
+      console.log("data.nascimento", data.nascimento);
 
-      const response = await axiosClient.put("/cliente/" + id, data);
+      const response = await editCliente(data, id);
 
-      if (response.status < 205) {
-        toast.success("Cliente alterado com sucesso!");
-        setOpen(false); // Fecha o modal após sucesso
-        setFormCliente({} as Cliente); // Limpa o campo do formulário
-        window.location.reload(); // Recarrega a página para exibir o novo cliente
-      } else {
-        toast.error("Erro ao alterar cliente. " + response.statusText.toString());
-      }
+      setOpen(false); // Fecha o modal após sucesso
+      setFormCliente({} as Cliente); // Limpa o campo do formulário
+      toast.success("Cliente alterado com sucesso!");
+
+      // Aguarda 2 segundos antes de recarregar a página
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000); // Recarrega a página após 2 segundo
     } catch (error) {
       console.error("Erro na requisição:", error);
-      toast.error("Falha ao conectar com o servidor. ");
+      toast.error(typeof error === "string" ? error : "Erro desconhecido");
     }
   };
 
@@ -176,7 +184,11 @@ export default function EditCliente({ id, item }: EditClienteProps) {
             <Input
               id="nascimento"
               type="date"
-              value={dateToISO(new Date(formCliente.nascimento))}
+              value={
+                formCliente.nascimento
+                  ? dateToISO(new Date(formCliente.nascimento))
+                  : ""
+              }
               onChange={(e) =>
                 setFormCliente((prevData) => ({
                   ...prevData,

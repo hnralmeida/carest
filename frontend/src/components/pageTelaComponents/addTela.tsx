@@ -65,15 +65,17 @@ export default function AddTela() {
         return permissao;
       });
 
-      update({permissoes: permissoesAtualizadas})
-
-      window.location.reload(); // Recarrega a página para exibir o novo Funcionario
-
+      update({ permissoes: permissoesAtualizadas })
       toast.success("Tela " + response?.nome + " adicionada com sucesso!")
+
       setOpen(false); // Fecha o modal após sucesso
       setNome(""); // Limpa o campo do formulário
       setrota(""); // Limpa o campo do formulário
       setLoading(false); // Inicia o carregamento
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
 
     } catch (error) {
       setLoading(false); // Inicia o carregamento

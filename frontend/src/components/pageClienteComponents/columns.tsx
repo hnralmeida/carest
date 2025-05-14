@@ -1,20 +1,8 @@
 "use client"
 
 import { dateToReadable } from "@/lib/utils";
+import { Cliente } from "@/models/cliente";
 import { ColumnDef } from "@tanstack/react-table";
-
-export type Cliente = {
-    id: string;
-    nome: string;
-    saldo: string;
-    telefone: string;
-    email: string;
-    codigo: string;
-    limite: string;
-    em_uso: boolean;
-    nascimento: string;
-    dividaData: string;
-}
 
 export const columns: ColumnDef<Cliente>[] = [
     {

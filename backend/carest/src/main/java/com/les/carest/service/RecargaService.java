@@ -37,17 +37,13 @@ public class RecargaService extends _GenericService<Recarga, RecargaRepository> 
                 cliente.getId(),
                 cliente.getNome(),
                 cliente.getEmail(),
+                cliente.getLimite(),
                 cliente.getTelefone(),
                 cliente.getSaldo(),
                 cliente.getDividaData(),
                 cliente.getCodigo()
         );
     }
-
-
-
-
-
 
     public ClienteDTO adicionarCredito(UUID codigoCliente, double valorRecarga) {
         // Busca o cliente pelo código - corrigido para usar o repositório genérico
@@ -118,8 +114,6 @@ public class RecargaService extends _GenericService<Recarga, RecargaRepository> 
         return toDTO(cliente);
     }
 
-
-
     // -- Métodos auxiliares -- //
     private RecargaDTO toRecargaDTO(Recarga recarga) {
         return new RecargaDTO(
@@ -129,15 +123,4 @@ public class RecargaService extends _GenericService<Recarga, RecargaRepository> 
         );
     }
 
-    private ClienteDTO toClienteDTO(Cliente cliente) {
-        return new ClienteDTO(
-                cliente.getId(),
-                cliente.getNome(),
-                cliente.getEmail(),
-                cliente.getTelefone(),
-                cliente.getSaldo(),
-                cliente.getDividaData(),
-                cliente.getCodigo()
-        );
-    }
 }

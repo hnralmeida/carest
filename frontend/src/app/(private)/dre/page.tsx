@@ -3,13 +3,13 @@
 import React, { useEffect } from "react";
 import { columns } from "../../../components/pageAniversariantesComponents/columns";
 import { DataTable } from "@/components/pageAniversariantesComponents/DataTable";
-import { useAniversariantesHook } from "@/hooks/useAniversariantes";
+import { useDreHook } from "@/hooks/useDre";
 
 function Page() {
-  const { aniversariantes, listarAniversariantes } = useAniversariantesHook();
+  const { dre, listarDre, loading } = useDreHook();
 
   useEffect(() => {
-    listarAniversariantes();
+    listarDre();
   }, []);
 
   return (
@@ -17,10 +17,10 @@ function Page() {
       <div className="flex justify-between items-center w-full mb-4">
         <h1 className="text-2xl font-bold">Aniversariantes</h1>
       </div>
-      {aniversariantes ? (
-        <DataTable columns={columns} data={aniversariantes} />
+      {dre ? (
+        <DataTable columns={columns} data={dre} />
       ) : (
-        <p>Carregando...</p>
+        loading? <p>Carregando...</p> : <p>Sem resultados.</p>
       )}
     </div>
   );

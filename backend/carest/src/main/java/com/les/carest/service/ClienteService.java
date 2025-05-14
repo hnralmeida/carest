@@ -3,6 +3,7 @@ package com.les.carest.service;
 import com.les.carest.DTO.ClienteDTO;
 import com.les.carest.model.Cliente;
 import com.les.carest.model.ProdutoSerial;
+import com.les.carest.relatoriosDTO.ClienteDiarioDTO;
 import com.les.carest.repository.ClienteRepository;
 import com.les.carest.repository.ProdutoSerialRepository;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -64,9 +65,6 @@ public class ClienteService extends _GenericService<Cliente, ClienteRepository> 
         );
     }
 
-    private ClienteDTO toDTO(Cliente cliente) {//para saldo
-
-
     // Método principal para buscar clientes
     public ClienteDTO acharCliente(String codigo) {
         Cliente cliente = this.repositoryGenerics.findByCodigoCliente(codigo);
@@ -90,11 +88,6 @@ public class ClienteService extends _GenericService<Cliente, ClienteRepository> 
     public List<ClienteDTO> listarEndividados() {
         List<Cliente> clientes = this.repositoryGenerics.findEndividados();
         return toDTO(clientes);
-    }
-
-    public ClienteDTO acharCliente(String codigo) {
-        Cliente cliente = this.repositoryGenerics.findByCodigoCliente(codigo);
-        return toDTO(cliente);
     }
 
 
@@ -151,7 +144,5 @@ public class ClienteService extends _GenericService<Cliente, ClienteRepository> 
 //        return clienteRepository.findClientesDiariosPorData(data);
 //
 //    }
-
-
 
 }
