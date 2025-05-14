@@ -45,11 +45,6 @@ public class RecargaService extends _GenericService<Recarga, RecargaRepository> 
         );
     }
 
-
-
-
-
-
     public ClienteDTO adicionarCredito(UUID codigoCliente, double valorRecarga) {
         // Busca o cliente pelo código - corrigido para usar o repositório genérico
         Cliente cliente = recargaRepository.findClienteById(codigoCliente);

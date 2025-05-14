@@ -65,6 +65,12 @@ public class ClienteService extends _GenericService<Cliente, ClienteRepository> 
         );
     }
 
+    // Método principal para buscar clientes
+    public ClienteDTO acharCliente(String codigo) {
+        Cliente cliente = this.repositoryGenerics.findByCodigoCliente(codigo);
+        return toDTO(cliente); // Usa a versão com saldo/dívida
+    }
+
     // Para operações financeiras (saldo/dívida)
     public ClienteDTO toDTO(Cliente cliente) {
         return new ClienteDTO(
@@ -82,11 +88,6 @@ public class ClienteService extends _GenericService<Cliente, ClienteRepository> 
     public List<ClienteDTO> listarEndividados() {
         List<Cliente> clientes = this.repositoryGenerics.findEndividados();
         return toDTO(clientes);
-    }
-
-    public ClienteDTO acharCliente(String codigo) {
-        Cliente cliente = this.repositoryGenerics.findByCodigoCliente(codigo);
-        return toDTO(cliente);
     }
 
 

@@ -3,17 +3,17 @@ import { axiosClient } from "@/services/axiosClient";
 import { Cliente } from "@/models/cliente";
 
 
-export const useAniversariantesHook = () => {
-    const [aniversariantes, setAniversariantes] = useState<Cliente[] | null>(null);
+export const useDreHook = () => {
+    const [dre, setDre] = useState<Cliente[] | null>(null);
     const [loading, setLoading] = useState(true);
 
-    const listarAniversariantes = async () => {
+    const listarDre = async () => {
         setLoading(true);
         try {
             const hoje = new Date();
             const response = await axiosClient.get(`/aniversariantes/mes?mes=${hoje.getMonth()+1}`);
             if (response.data) {
-                setAniversariantes(response.data);
+                setDre(response.data);
             }
             setLoading(false);
         } catch (error) {
@@ -24,8 +24,8 @@ export const useAniversariantesHook = () => {
     };
 
     return { 
-        loading,
-        aniversariantes,
-        listarAniversariantes
+        dre,
+        listarDre,
+        loading
     };
 };
