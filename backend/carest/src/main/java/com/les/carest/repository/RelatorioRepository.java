@@ -53,8 +53,8 @@ public interface RelatorioRepository extends JpaRepository<Venda,UUID> {//mudar 
     """, nativeQuery = true)
     List<Object[]> findUltimasVendasNativo();
 
-    @Query("SELECT c FROM Cliente c WHERE EXTRACT(MONTH FROM c.nascimento) = EXTRACT(MONTH FROM CURRENT_DATE) AND EXTRACT(DAY FROM c.nascimento) = EXTRACT(DAY FROM CURRENT_DATE)")
-    List<Cliente> findAniversariantesDoDia();
+    @Query("SELECT c FROM Cliente c WHERE EXTRACT(MONTH FROM c.nascimento) = :mes")
+    List<Cliente> findAniversariantesDoMes(@Param("mes") int mes);
 
     @Query("SELECT c FROM Cliente c WHERE EXTRACT(MONTH FROM c.nascimento) = :mes AND EXTRACT(DAY FROM c.nascimento) = :dia")
     List<Cliente> findAniversariantesPorData(@Param("mes") int mes, @Param("dia") int dia);

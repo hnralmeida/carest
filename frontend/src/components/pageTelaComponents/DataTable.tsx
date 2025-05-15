@@ -130,21 +130,23 @@ export function DataTable<Tela, TValue>({
             </TableRow>
           )}
         </TableBody>
-        <TableFooter className="flex justify-end gap-2 p-4">
+        <TableFooter>
           {Array.from({ length: table.getPageCount() }, (_, i) => (
-            <button
-              key={i}
-              className={`px-3 py-1 border rounded cursor-pointer btn-hover-scale hover:bg-[var(--secondary-color)] hover:text-[var(--white-color)] ${table.getState().pagination.pageIndex === i
-                  ? "bg-[var(--primary-color)] text-[var(--white-color)]"
-                  : ""
-                }`}
-              onClick={() => table.setPageIndex(i)}
-            >
-              {i + 1}
-            </button>
+            <tr key={i}>
+              <td>
+                <button
+                  className={`px-3 py-1 border rounded cursor-pointer btn-hover-scale hover:bg-[var(--secondary-color)] hover:text-[var(--white-color)] ${table.getState().pagination.pageIndex === i
+                      ? "bg-[var(--primary-color)] text-[var(--white-color)]"
+                      : ""
+                    }`}
+                  onClick={() => table.setPageIndex(i)}
+                >
+                  {i + 1}
+                </button>
+              </td>
+            </tr>
           ))}
         </TableFooter>
-        <Toaster richColors position="bottom-center" closeButton />
       </Table>
     </div>
   );

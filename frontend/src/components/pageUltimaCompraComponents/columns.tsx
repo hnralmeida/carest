@@ -1,7 +1,7 @@
 "use client";
 
-import { dateToReadable } from "@/lib/utils";
 import { Cliente } from "@/models/cliente";
+import { dateToReadable, formatarParaMoeda } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 
 export const columns: ColumnDef<Cliente>[] = [
@@ -10,12 +10,18 @@ export const columns: ColumnDef<Cliente>[] = [
     header: "Nome",
   },
   {
-    accessorKey: "nascimento",
-    header: "Data",
+    accessorKey: "valor",
+    header: "Valor",
+  },
+  {
+    accessorKey: 'dataVenda',
+    header: 'Última Compra',
     cell: ({ row }) => {
-      const date = new Date(row.getValue('nascimento') as string)
+      const date = new Date(row.getValue('dataVenda') as string)
       const formated = dateToReadable(date)
       return <div className='text-right'>{formated}</div>
     },
-  }
+  },
+
+
 ];

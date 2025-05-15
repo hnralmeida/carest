@@ -66,7 +66,7 @@ export default function AddTela() {
       });
 
       update({ permissoes: permissoesAtualizadas })
-      toast.success("Tela " + response?.nome + " adicionada com sucesso!")
+      toast.success("Tela adicionada com sucesso!")
 
       setOpen(false); // Fecha o modal após sucesso
       setNome(""); // Limpa o campo do formulário
@@ -77,13 +77,13 @@ export default function AddTela() {
         window.location.reload();
       }, 2000);
 
-    } catch (error) {
+    } catch (error:any) {
       setLoading(false); // Inicia o carregamento
       setOpen(false); // Fecha o modal após sucesso
       setLoading(false); // Inicia o carregamento
       console.error("Erro na requisição:", error);
 
-      toast.error("Erro na requisição:" + error);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -113,7 +113,7 @@ export default function AddTela() {
                 setNome(novoNome);
 
                 if (!rotaTocada) {
-                  setrota("/" + novoNome.toLowerCase().replace(/\s+/g, "-"));
+                  setrota("/" + novoNome.toLowerCase().replace(/\s+/g, "_").normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
                 }
               }}
               placeholder="Digite o nome"

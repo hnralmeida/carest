@@ -24,15 +24,15 @@ import EditFornecedor from "./editFornecedor";
 import { axiosClient } from "@/services/axiosClient";
 import { Fornecedor } from "./columns";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+interface DataTableProps<Fornecedor, TValue> {
+  columns: ColumnDef<Fornecedor, TValue>[];
+  data: Fornecedor[];
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<Fornecedor, TValue>({
   columns,
   data,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<Fornecedor, TValue>) {
   const table = useReactTable({
     data,
     columns,
@@ -78,9 +78,9 @@ export function DataTable<TData, TValue>({
                   {column.isPlaceholder
                     ? null
                     : flexRender(
-                        column.column.columnDef.header,
-                        column.getContext()
-                      )}
+                      column.column.columnDef.header,
+                      column.getContext()
+                    )}
                 </TableHead>
               ))}
               <TableHead className="w-[96px]" />
@@ -127,19 +127,21 @@ export function DataTable<TData, TValue>({
             </TableRow>
           )}
         </TableBody>
-        <TableFooter className="flex justify-end gap-2 p-4">
+        <TableFooter>
           {Array.from({ length: table.getPageCount() }, (_, i) => (
-            <button
-              key={i}
-              className={`px-3 py-1 border rounded cursor-pointer btn-hover-scale hover:bg-[var(--secondary-color)] hover:text-[var(--white-color)] ${
-                table.getState().pagination.pageIndex === i
-                  ? "bg-[var(--primary-color)] text-[var(--white-color)]"
-                  : ""
-              }`}
-              onClick={() => table.setPageIndex(i)}
-            >
-              {i + 1}
-            </button>
+            <tr key={i}>
+              <td>
+                <button
+                  className={`px-3 py-1 border rounded cursor-pointer btn-hover-scale hover:bg-[var(--secondary-color)] hover:text-[var(--white-color)] ${table.getState().pagination.pageIndex === i
+                      ? "bg-[var(--primary-color)] text-[var(--white-color)]"
+                      : ""
+                    }`}
+                  onClick={() => table.setPageIndex(i)}
+                >
+                  {i + 1}
+                </button>
+              </td>
+            </tr>
           ))}
         </TableFooter>
       </Table>

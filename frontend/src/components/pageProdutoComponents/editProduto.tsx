@@ -40,6 +40,21 @@ export default function EditProduto({ id, nome, valor, codigo, custo }: EditProd
     setFormCodigo(codigo);
   }, [nome, valor, codigo, custo]);
 
+  useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+
+      // Impede Ctrl+J de abrir a aba de downloads
+      if (e.ctrlKey && e.key.toLowerCase() === "j") {
+        e.preventDefault();
+        return; // se quiser ignorar completamente essa combinação
+      }
+    };
+    window.addEventListener("keydown", handleKeyPress);
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, []);
+
   const onFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault(); // Evita que o formulário recarregue a página
 
@@ -76,7 +91,7 @@ export default function EditProduto({ id, nome, valor, codigo, custo }: EditProd
     setFormValor(valorFormatado);
   };
 
-   const handleChangeCusto = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeCusto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const valorFormatado = formatarParaMoeda(e.target.value);
     setFormCusto(valorFormatado);
   };

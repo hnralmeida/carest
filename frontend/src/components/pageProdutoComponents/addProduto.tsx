@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -51,7 +51,7 @@ export default function AddProduto() {
     try {
       const response = await criarProduto(data);
 
-     window.location.reload(); // Recarrega a página para exibir o novo Funcionario
+      window.location.reload(); // Recarrega a página para exibir o novo Funcionario
 
       toast.success("Produto " + response?.nome + " adicionada com sucesso!")
       setOpen(false); // Fecha o modal após sucesso
@@ -77,6 +77,21 @@ export default function AddProduto() {
     const valorFormatado = formatarParaMoeda(e.target.value);
     setCusto(valorFormatado);
   };
+
+  React.useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+
+      // Impede Ctrl+J de abrir a aba de downloads
+      if (e.ctrlKey && e.key.toLowerCase() === "j") {
+        e.preventDefault();
+        return; // se quiser ignorar completamente essa combinação
+      }
+    };
+    window.addEventListener("keydown", handleKeyPress);
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, []);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

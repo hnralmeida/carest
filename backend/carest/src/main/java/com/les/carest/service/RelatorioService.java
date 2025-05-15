@@ -1,7 +1,7 @@
 package com.les.carest.service;
 
 
-import com.les.carest.DTO.AniversarianteDTO;
+import com.les.carest.relatoriosDTO.AniversarianteDTO;
 import com.les.carest.model.Cliente;
 import com.les.carest.relatoriosDTO.ClienteDiarioDTO;
 import com.les.carest.relatoriosDTO.TicketMedioDTO;
@@ -52,17 +52,17 @@ public class RelatorioService {
 
 
     // ---- RELATÓRIOS DE CLIENTES ---- //
-    public List<AniversarianteDTO> getAniversariantesDoDia() {
-        return relatorioRepository.findAniversariantesDoDia()
+    public List<AniversarianteDTO> listarAniversariantesPorMes(int mes) {
+        return relatorioRepository.findAniversariantesDoMes(mes)
                 .stream()
-                .map(com.les.carest.DTO.AniversarianteDTO::new)
+                .map(com.les.carest.relatoriosDTO.AniversarianteDTO::new)
                 .collect(Collectors.toList());
     }
 
     public List<AniversarianteDTO> getAniversariantesPorData(int mes, int dia) {
         return relatorioRepository.findAniversariantesPorData(mes, dia)
                 .stream()
-                .map(com.les.carest.DTO.AniversarianteDTO::new)
+                .map(com.les.carest.relatoriosDTO.AniversarianteDTO::new)
                 .collect(Collectors.toList());
     }
 

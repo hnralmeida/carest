@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { axiosClient } from "@/services/axiosClient";
 import { dateToISO } from "@/lib/utils";
 import { toast } from "sonner";
 import { Cliente } from "@/models/cliente";

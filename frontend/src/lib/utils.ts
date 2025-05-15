@@ -51,3 +51,31 @@ export const moedaParaNumero = (valor: string): number => {
   console.log("apenasNumeros", apenasNumeros);
   return parseFloat(apenasNumeros) * 100 || 0;
 };
+
+export const formatTelefone = (value: string) => {
+  // Remove tudo que não for número
+  const cleaned = value.replace(/\D/g, '');
+
+  // Aplica a máscara com base no tamanho
+  if (cleaned.length <= 10) {
+    // Ex: (11) 2345-6789
+    return cleaned.replace(/(\d{0,2})(\d{0,4})(\d{0,4})/, function (_, ddd, parte1, parte2) {
+      let result = '';
+      if (ddd) result += `(${ddd}`;
+      if (ddd && ddd.length === 2) result += `) `;
+      if (parte1) result += parte1;
+      if (parte2) result += `-${parte2}`;
+      return result;
+    });
+  } else {
+    // Ex: (11) 91234-5678
+    return cleaned.replace(/(\d{0,2})(\d{0,5})(\d{0,4})/, function (_, ddd, parte1, parte2) {
+      let result = '';
+      if (ddd) result += `(${ddd}`;
+      if (ddd.length === 2) result += `) `;
+      if (parte1) result += parte1;
+      if (parte2) result += `-${parte2}`;
+      return result;
+    });
+  }
+};

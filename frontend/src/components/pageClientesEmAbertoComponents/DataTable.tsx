@@ -18,12 +18,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import EditCliente from "./editCliente";
-import { axiosClient } from "@/services/axiosClient";
-import { toast, Toaster } from "sonner";
-
 interface DataTableProps<Cliente, TValue> {
   columns: ColumnDef<Cliente, TValue>[];
   data: Cliente[];
@@ -39,30 +33,6 @@ export function DataTable<Cliente, TValue>({
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
-
-  function onDelete(id: string) {
-    const confirmDelete = window.confirm(
-      "Tem certeza que deseja excluir este Cliente?"
-    );
-
-    if (confirmDelete) {
-      try {
-        axiosClient
-          .delete(`/cliente/${id}`)
-          .then(() => {
-            toast.success("Cliente excluído com sucesso!");
-            window.location.reload(); // Atualiza a lista após excluir
-          })
-          .catch((error) => {
-            console.error("Erro ao excluir:", error);
-            toast.error("Falha ao excluir o Cliente.");
-          });
-      } catch (error) {
-        console.error("Erro na requisição:", error);
-        toast.error("Erro ao conectar com o servidor.");
-      }
-    }
-  }
 
   return (
     <div className="rounded-md border overflow-x-auto">
@@ -83,7 +53,6 @@ export function DataTable<Cliente, TValue>({
                     )}
                 </TableHead>
               ))}
-              <TableHead className="w-[96px]" />
             </TableRow>
           ))}
         </TableHeader>
@@ -103,20 +72,6 @@ export function DataTable<Cliente, TValue>({
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
-                <TableCell className="flex w-32 gap-2">
-                  <EditCliente
-                    id={row.original.id}
-                    item={row.original}
-                  />
-                  <Button
-                    className="button-table"
-                    variant="outline"
-                    size="icon"
-                    onClick={() => onDelete(row.original.id)}
-                  >
-                    <Trash2 size={24} />
-                  </Button>
-                </TableCell>
               </TableRow>
             ))
           ) : (
@@ -146,7 +101,6 @@ export function DataTable<Cliente, TValue>({
         </TableFooter>
 
       </Table>
-      <Toaster richColors position="top-center" />
     </div>
   );
 }

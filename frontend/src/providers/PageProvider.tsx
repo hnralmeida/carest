@@ -22,11 +22,18 @@ export const PageProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
         setCurrentPage(window.location.pathname);
 
-        if (session.status === 'authenticated'||user) {
+        const token = localStorage.getItem('next-auth.session-token') ||localStorage.getItem('next-auth.session-token.0');
+
+        if (session.status === 'authenticated'||token) {
             if (currentPage === '/login' || currentPage === '/register') {
                 router.push('/');
             }
-        } 
+        }else{
+            if (currentPage != '/login' && currentPage != '/register') {
+                router.push('/login');
+            }
+        }
+
         if (session.status === 'unauthenticated') {
             if (currentPage !== '/login' && currentPage !== '/register') {
                 router.push('/login');

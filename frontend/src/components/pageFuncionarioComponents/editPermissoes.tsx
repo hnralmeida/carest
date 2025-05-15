@@ -14,6 +14,7 @@ import {
 import { usePermissaoHook } from "@/hooks/usePermissoes";
 import { UsuarioMock } from "@/models/usuario";
 import { Permissao } from "@/models/permissao";
+import { toast } from "sonner";
 
 interface EditPermissoesProps {
   id: string;
@@ -31,7 +32,7 @@ export default function EditPermissoes({ id }: EditPermissoesProps) {
 
   useEffect(() => {
     async function fetchPermissoes() {
-      await selecionarpermissao(id);
+      await id!="carregando..." && selecionarpermissao(id);
       setLocalPermissoes(permissoes || []);
     }
 
@@ -54,16 +55,16 @@ export default function EditPermissoes({ id }: EditPermissoesProps) {
       }));
 
       try {
-        const response = await editarpermissao(updatedPermissoes, id);
+        await editarpermissao(updatedPermissoes, id).then((res) => {
+          toast.success(res);
+        }).catch((error) => {
+          toast.error(error);
+        });
         setLoading(false); // Finaliza o carregamento
-
-        if (!response) {
-          throw new Error("Erro ao atualizar permissões");
-        }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Erro na requisição:", error);
         setLoading(false); // Finaliza o carregamento
-        alert("Falha ao conectar com o servidor. ");
+        toast.error(error.message || error.response.data.message || error.response.data || "Falha ao conectar com o servidor");
       }
     }
   };
@@ -89,7 +90,7 @@ export default function EditPermissoes({ id }: EditPermissoesProps) {
             <Settings size={24} />
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[800px]">  
+        <DialogContent className="sm:max-w-[800px]">
           <DialogHeader>
             <DialogTitle>Gerenciar Permissões</DialogTitle>
           </DialogHeader>
@@ -97,8 +98,7 @@ export default function EditPermissoes({ id }: EditPermissoesProps) {
             <div className="max-h-[400px] overflow-y-auto pr-2">
               {localPermissoes
                 ? localPermissoes.map((permissao, index) => (
-                  <>
-
+                  <div key={index}>
                     {index == 0 && <div className="grid grid-cols-5 gap-4 mb-2">
                       <div className="font-semibold" /> {/* espaço para o nome da tela */}
                       <p className="font-semibold">Criar</p>
@@ -145,7 +145,7 @@ export default function EditPermissoes({ id }: EditPermissoesProps) {
                         }
                       />
                     </div>
-                  </>
+                  </div>
                 ))
                 : null}
 

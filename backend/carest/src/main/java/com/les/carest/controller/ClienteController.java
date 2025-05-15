@@ -41,7 +41,7 @@ public class ClienteController extends _GenericController<Cliente>{
 
     // Buscar
     @GetMapping("/codigo/{codigo}")//devia usar os DTO provavelmente
-    @Operation(summary = "Busca um Cliente pelo ID")
+    @Operation(summary = "Busca um Cliente pelo código cadastrado")
     public ResponseEntity<ClienteDTO> buscarPorCodigo(@PathVariable String codigo) {
         ClienteDTO cliente = clienteService.acharCliente(codigo);
         return ResponseEntity.ok(cliente);

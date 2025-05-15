@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { Cliente } from "@/components/pageClienteComponents/columns";
 import { Produto } from "@/models/produto";
 import { axiosClient } from "@/services/axiosClient";
+import { Cliente } from "@/models/cliente";
 
 interface VendaItem {
     produto: Produto;
@@ -49,7 +49,7 @@ export const useVendasHook = () => {
     }
 
     async function buscarCliente(codigo: string) {
-        const response = await axiosClient.get(`/cliente/codigo/${codigo}`);
+        const response = await axiosClient.get(`/clientes/codigo/${codigo}`);
         const cliente = response.data;
         if (response.status > 205) {
             return Promise.reject("Cliente não encontrado");

@@ -53,6 +53,13 @@ public class UsuarioController extends _GenericController<Usuario> {
         return ResponseEntity.ok("Permissão atualizada");
     }
 
+    @PostMapping("/atualizarPermissoes/{id}")
+    public ResponseEntity<String>  atualizarPermissoes(@PathVariable UUID id, @RequestBody List<Permissao> permissao) {
+        usuarioService.atualizarPermissoes(id, permissao);
+
+        return ResponseEntity.ok("Permissão atualizada");
+    }
+
     @GetMapping("/email/{email}")
     public ResponseEntity<Usuario> usuarioPorEmail(@PathVariable String email) {
         Usuario user = usuarioService.buscarUsuarioPorEmail(email);

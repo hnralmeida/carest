@@ -61,11 +61,12 @@
 }
 
 .login-bg {
-    background-image: url('../../public/images/bg.svg');
-    background-size: cover; /* ou "contain" dependendo do efeito desejado */
-    background-repeat: no-repeat;
-    background-position: center;
-    background-color: var(--bg-color);
+  background-image: url('../../public/images/bg.svg');
+  background-size: cover;
+  /* ou "contain" dependendo do efeito desejado */
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: var(--bg-color);
 }
 
 .white-box {
@@ -74,19 +75,19 @@
 }
 
 .button-class {
-    background-color: var(--primary-color);
-    color: var(--on-primary-color);
-    border-radius: 16px;
-    padding: 8px;
-    width: 180px;
-    height: 64px;
-    margin: 0;
+  background-color: var(--primary-color);
+  color: var(--on-primary-color);
+  border-radius: 16px;
+  padding: 8px;
+  width: 180px;
+  height: 64px;
+  margin: 0;
 }
 
 .button-class:hover {
-    background-color: var(--secondary-color);
-    cursor: pointer;
-    transform: scale(1.05);
+  background-color: var(--secondary-color);
+  cursor: pointer;
+  transform: scale(1.05);
 }
 
 .button-table {
@@ -108,6 +109,34 @@
   background-color: var(--secondary-color);
   color: var(--on-primary-color);
   cursor: pointer;
+}
+
+.button-print {
+  background-color: var(--primary-color);
+  color: var(--on-primary-color);
+  border-radius: 16px;
+  padding: 0 16px;
+  height: 32px;
+  width: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  gap: 8px;
+  border: none;
+  white-space: nowrap;
+}
+
+.button-print:hover {
+  background-color: var(--secondary-color);
+  color: var(--on-primary-color);
+  cursor: pointer;
+}
+
+.input-search{
+  border: 1px solid var(--neutral-color);
+  border-radius: 8px;
+  padding: 4 8px;
 }
 
 @layer utilities {
@@ -194,6 +223,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }

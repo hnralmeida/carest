@@ -1,5 +1,6 @@
-package com.les.carest.DTO;
+package com.les.carest.relatoriosDTO;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.les.carest.model.Cliente;
 
 import java.time.LocalDate;
@@ -12,7 +13,29 @@ public class AniversarianteDTO {
     private String nome;
     private String email;
     private String telefone;
+    @JsonFormat(pattern = "yyyy/MM/dd")
+    private Date nascimento;
     private int idade;
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public void setIdade(int idade) {
+        this.idade = idade;
+    }
 
     // Construtor a partir da entidade Cliente (com cálculo da idade)
     public AniversarianteDTO(Cliente cliente) {
@@ -20,6 +43,7 @@ public class AniversarianteDTO {
         this.nome = cliente.getNome();
         this.email = cliente.getEmail();
         this.telefone = cliente.getTelefone();
+        this.nascimento = cliente.getNascimento();
         this.idade = calcularIdade(cliente.getNascimento());
     }
 
@@ -44,6 +68,14 @@ public class AniversarianteDTO {
 
     public String getTelefone() {
         return telefone;
+    }
+
+    public Date getNascimento() {
+        return nascimento;
+    }
+
+    public void setNascimento(Date nascimento) {
+        this.nascimento = nascimento;
     }
 
     public int getIdade() {

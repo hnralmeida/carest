@@ -12,10 +12,10 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { axiosClient } from "@/services/axiosClient";
 import { toast, Toaster } from "sonner";
 import { useClienteHook } from "@/hooks/useCliente";
 import { Cliente } from "@/models/cliente";
+import { formatTelefone } from "@/lib/utils";
 
 export default function AddCliente() {
   const [open, setOpen] = useState(false);
@@ -98,7 +98,7 @@ export default function AddCliente() {
             <Input
               id="telefone"
               value={telefone}
-              onChange={(e) => setTelefone(e.target.value)}
+              onChange={(e) => setTelefone(formatTelefone(e.target.value))}
               placeholder="Digite o telefone do cliente"
               required
             />

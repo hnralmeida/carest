@@ -7,33 +7,29 @@ export const usePermissaoHook = () => {
   const [permissoes, setPermissoes] = useState<Permissao[] | null>(null);
 
   const selecionarpermissao = async (userId: string) => {
-
     try {
       const response = await axiosClient.get(`/usuario/${userId}/permissoes`);
       if (response.data) {
         setPermissoes(response.data);
       }
-    } catch (error) {
-      console.error("Error fetching permissoes:", error);
+    } catch (error: any) {
+      return Promise.reject(error.response?.data.message || error.response?.data || "Erro ao buscar permissões");
     }
   };
 
   const editarpermissao = async (
     updatedPermissoes: PermissaoDTO[],
-    id: string,
+    personId: string,
   ): Promise<string> => {
-    const body = {
-      permissoes: updatedPermissoes,
-    }
 
     try {
-      for (const permissao of updatedPermissoes) {
-        axiosClient.post("/usuario/permitir/" + { id }, permissao);
-      }
-    } catch (error) {
-      return "Erro ao atualizar permissões";
+      axiosClient.post("/usuario/atualizarPermissoes/" + personId, updatedPermissoes).catch((error) => {
+        return Promise.reject(error.response?.data.message || error.response?.data || "Erro ao atualizar permissões");
+      });
+    } catch (error: any) {
+      return Promise.reject(error.response?.data.message || error.response?.data || "Erro ao atualizar permissões");
     }
-    return "Permissões atualizadas com sucesso";
+    return Promise.resolve("Permissões atualizadas com sucesso");
   };
 
   const deletarpermissao = async (permissaoId: string): Promise<void> => {

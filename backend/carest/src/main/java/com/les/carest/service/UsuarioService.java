@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -128,8 +130,15 @@ public class UsuarioService extends _GenericService<Usuario, UsuarioRepository> 
         }
 
         try {
-            permissaoService.buscarPorId(permissao.getId());
-            permissaoService.atualizar(permissao.getId(), permissao); // ou salvar direto, se for o mesmo método
+            Permissao permissaoExistente = permissaoService.buscarPorId(permissao.getId());
+
+            permissaoExistente.setCreate(permissao.isCreate());
+            permissaoExistente.setRead(permissao.isRead());
+            permissaoExistente.setUpdate(permissao.isUpdate());
+            permissaoExistente.setDelete(permissao.isDelete());
+
+            permissaoService.atualizar(permissaoExistente.getId(), permissaoExistente);
+
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Permissão não encontrado");
         }
@@ -137,5 +146,33 @@ public class UsuarioService extends _GenericService<Usuario, UsuarioRepository> 
 
     }
 
+    public Usuario atualizarPermissoes(UUID id, List<Permissao> permissoes) {
+        Usuario usuarioExistente = this.buscarPorId(id);
+
+        // Atualizar permissões
+        if (permissoes != null && !permissoes.isEmpty()) {
+            for (Permissao permissaoAtualizada : permissoes) {
+                Optional<Permissao> permissaoExistenteOpt = permissaoService
+                        .buscarPorUsuarioETela(usuarioExistente, permissaoAtualizada.getTela());
+
+                if (permissaoExistenteOpt.isPresent()) {
+                    Permissao permissaoExistente = permissaoExistenteOpt.get();
+
+                    permissaoExistente.setCreate(permissaoAtualizada.isCreate());
+                    permissaoExistente.setRead(permissaoAtualizada.isRead());
+                    permissaoExistente.setUpdate(permissaoAtualizada.isUpdate());
+                    permissaoExistente.setDelete(permissaoAtualizada.isDelete());
+
+                    permissaoService.atualizar(permissaoExistente.getId(), permissaoExistente);
+                } else {
+                    // Se não existir, cria nova permissão
+                    permissaoAtualizada.setUsuario(usuarioExistente);
+                    permissaoService.criar(permissaoAtualizada);
+                }
+            }
+        }
+
+        return super.atualizar(id, usuarioExistente);
+    }
 
 }

@@ -20,7 +20,7 @@ function Page() {
       {aniversariantes ? (
         <DataTable columns={columns} data={aniversariantes} />
       ) : (
-        <p>Carregando...</p>
+        <p>Sem resultados</p>
       )}
     </div>
   );

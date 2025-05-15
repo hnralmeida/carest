@@ -18,7 +18,6 @@ const VendasView = () => {
     React.useEffect(() => {
         const fetch = async () => {
             await new Promise(resolve => setTimeout(resolve, 1000));
-            console.log(codigoLido.trim())
             if (codigoLido.trim() == "123456") {
                 resetarVenda();
                 setCodigoLido("");
@@ -61,10 +60,21 @@ const VendasView = () => {
 
         const handleKeyPress = (e: KeyboardEvent) => {
 
-            if (e.key === "Enter") fetch();
+            // Impede Ctrl+J de abrir a aba de downloads
+            if (e.ctrlKey && e.key.toLowerCase() === "j") {
+                e.preventDefault();
+                return; // se quiser ignorar completamente essa combinação
+            }
 
-            // Adiciona o caractere à string
-            setCodigoLido((prev) => prev + e.key);
+            // Só adiciona à leitura se não for uma tecla ignorada
+            const ignoredKeys = ["Control", "j"];
+            if (!ignoredKeys.includes(e.key)) {
+                setCodigoLido((prev) => prev + e.key);
+            }
+            
+            if (e.key === "Enter") {
+                fetch();
+            }
 
             // Limpa o código caso o usuário pare de digitar por mais de 1s
             if (timeoutRef.current) {

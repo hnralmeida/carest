@@ -1,6 +1,6 @@
 package com.les.carest.controller;
 
-import com.les.carest.DTO.AniversarianteDTO;
+import com.les.carest.relatoriosDTO.AniversarianteDTO;
 import com.les.carest.relatoriosDTO.ClienteDiarioDTO;
 import com.les.carest.relatoriosDTO.TicketMedioDTO;
 import com.les.carest.relatoriosDTO.UltimaVendaDTO;
@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -17,6 +18,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/relatorios")  // Prefixo para todos os endpoints
+@Validated
 public class RelatorioController {//modificar os Resquest params para igual do aniversariamente
 
     private final RelatorioService relatorioService;
@@ -56,11 +58,10 @@ public class RelatorioController {//modificar os Resquest params para igual do a
         );
     }
 
-    // Endpoint 5: Aniversariantes do dia
-    @GetMapping("/aniversariantes/hoje")
-    public ResponseEntity<List<AniversarianteDTO>> getAniversariantesDoDia() {
-        List<AniversarianteDTO> aniversariantes = relatorioService.getAniversariantesDoDia();
-        return ResponseEntity.ok(aniversariantes);
+    @GetMapping("/aniversariantes")
+    public ResponseEntity<List<AniversarianteDTO>> listarAniversariantesPorData(
+            @RequestParam @Min(1) @Max(12) int mes) {
+        return ResponseEntity.ok(relatorioService.listarAniversariantesPorMes(mes));
     }
 
     // Endpoint 6: Aniversariantes por data

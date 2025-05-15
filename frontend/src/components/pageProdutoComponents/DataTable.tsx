@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { toast, Toaster } from "sonner";
 import EditProduto from "./editProduto";
 import { useProdutoHook } from "@/hooks/useProdutos";
+import { Produto } from "@/models/produto";
 
 interface DataTableProps<Produto, TValue> {
   columns: ColumnDef<Produto, TValue>[];
@@ -40,7 +41,7 @@ export function DataTable<Produto, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
   });
 
-  const {deletarProduto} = useProdutoHook();
+  const { deletarProduto } = useProdutoHook();
 
   async function onDelete(id: string) {
     const confirmDelete = window.confirm(
@@ -52,10 +53,10 @@ export function DataTable<Produto, TValue>({
 
         const response = await deletarProduto(id);
 
-        if(response){
+        if (response) {
           window.location.reload(); // Atualiza a lista após excluir
           toast.success("Funcionario excluido com sucesso!");
-        }else{
+        } else {
           toast.error("Falha ao excluir o funcionario.");
         }
       } catch (error) {
@@ -79,9 +80,9 @@ export function DataTable<Produto, TValue>({
                   {column.isPlaceholder
                     ? null
                     : flexRender(
-                        column.column.columnDef.header,
-                        column.getContext()
-                      )}
+                      column.column.columnDef.header,
+                      column.getContext()
+                    )}
                 </TableHead>
               ))}
               <TableHead className="w-[96px]" />
@@ -131,23 +132,25 @@ export function DataTable<Produto, TValue>({
             </TableRow>
           )}
         </TableBody>
-        <TableFooter className="flex justify-end gap-2 p-4">
+        <TableFooter>
           {Array.from({ length: table.getPageCount() }, (_, i) => (
-            <button
-              key={i}
-              className={`px-3 py-1 border rounded cursor-pointer btn-hover-scale hover:bg-[var(--secondary-color)] hover:text-[var(--white-color)] ${
-                table.getState().pagination.pageIndex === i
-                  ? "bg-[var(--primary-color)] text-[var(--white-color)]"
-                  : ""
-              }`}
-              onClick={() => table.setPageIndex(i)}
-            >
-              {i + 1}
-            </button>
+            <tr key={i}>
+              <td>
+                <button
+                  className={`px-3 py-1 border rounded cursor-pointer btn-hover-scale hover:bg-[var(--secondary-color)] hover:text-[var(--white-color)] ${table.getState().pagination.pageIndex === i
+                      ? "bg-[var(--primary-color)] text-[var(--white-color)]"
+                      : ""
+                    }`}
+                  onClick={() => table.setPageIndex(i)}
+                >
+                  {i + 1}
+                </button>
+              </td>
+            </tr>
           ))}
         </TableFooter>
-        <Toaster richColors position="bottom-center" closeButton />
       </Table>
+      <Toaster richColors position="bottom-center" closeButton />
     </div>
   );
 }

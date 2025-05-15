@@ -7,4 +7,5 @@ export interface Cliente{
     saldo: number;
     limite: number;
     nascimento: string;
+    valor?: number;
 }
