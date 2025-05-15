@@ -1,23 +1,21 @@
-import React from "react";
+'use client';
+
+import React, { useEffect } from "react";
 import {
   columns,
-  Cliente,
-} from "../../../components/clienteComponents/columns";
-import { axiosClient } from "@/services/axiosClient";
-import AddCliente from "@/components/clienteComponents/addCliente";
-import { DataTable } from "@/components/clienteComponents/DataTable";
+} from "../../../components/pageClienteComponents/columns";
+import AddCliente from "@/components/pageClienteComponents/addCliente";
+import { DataTable } from "@/components/pageClienteComponents/DataTable";
+import { useClienteHook } from "@/hooks/useCliente";
 
-async function getData(): Promise<Cliente[]> {
-  const response = await axiosClient.get("/cliente");
-  return response.data.sort((a: Cliente, b: Cliente) =>
-    a.nome.localeCompare(b.nome)
-  );
-}
+const page = () => {
 
-const page = async () => {
+  const { cliente, listarCliente, loading } = useClienteHook();
 
-  const data = await getData();
-  
+  useEffect(() => {
+    listarCliente();
+  }, []);
+
   return (
     <div className="container rounded-md border mx-auto my-16 py-4 px-4 content-bg">
       <div className="flex justify-between items-center w-full mb-4">
@@ -26,7 +24,11 @@ const page = async () => {
           <AddCliente />
         </div>
       </div>
-      <DataTable columns={columns} data={data} />
+      {cliente ? (
+        <DataTable columns={columns} data={cliente} />
+      ) : (
+        loading ? <p>Carregando...</p> : <p>Sem resultados.</p>
+      )}
     </div>
   );
 };

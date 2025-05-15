@@ -14,7 +14,8 @@ import java.util.UUID;
 public interface TelaRepository extends JpaRepository<Tela, UUID> {
 
     // Busca tela por nome exato
-    Optional<Tela> findByNome(String nome);
+    @Query("SELECT t FROM Tela t WHERE t.nome= :nome")
+    Optional<Tela> findByNome(@Param("nome") String nome);
 
     // Busca telas que contenham parte do nome (case insensitive)
     @Query("SELECT t FROM Tela t WHERE LOWER(t.nome) LIKE LOWER(CONCAT('%', :nome, '%'))")

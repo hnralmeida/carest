@@ -30,27 +30,14 @@ export default function LoginForm() {
     const res = await signIn("credentials", {
       ...data,
       redirect: false,
+      // callbackUrl: "/",
     });
-    
-    if(res?.status==401){
-      toast("Problema com a conexão", {
-        description: res.error,
-        action: {
-          label: "Tente Novamente",
-          onClick: () => console.log("Undo"),
-        },
-      }); 
-    }
 
     if (res?.error) {
-      toast("Oooops...", {
-        description: res.error,
-        action: {
-          label: "Tente Novamente",
-          onClick: () => console.log("Undo"),
-        },
-      }); // Toast
+      toast.error(res.error)
+      console.log(res.error);
     } else {
+      console.log("Login successful", res);
       router.push("/");
     }
     setIsLoading(false);

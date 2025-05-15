@@ -5,37 +5,39 @@
 
 package com.les.carest.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @Table(
-    name = "usuario"
+        name = "usuario"
 )
 public class Usuario implements UserDetails {
     @Id
     @GeneratedValue(
-        strategy = GenerationType.UUID
+            strategy = GenerationType.UUID
     )
     private UUID id;
     private String nome;
     private String email;
     private String senha;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
     private List<Permissao> permissoes = new ArrayList<>();
 

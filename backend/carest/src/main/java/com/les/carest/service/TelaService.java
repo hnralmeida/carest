@@ -14,4 +14,9 @@ public class TelaService extends _GenericService<Tela, TelaRepository> {
     protected TelaService(TelaRepository TelaRepository) {
         super(TelaRepository);
     }
+
+    public Tela buscarPorNome(String nome){
+        return this.repositoryGenerics.findByNome(nome)
+                .orElseThrow(() -> new RuntimeException("Tela com nome '" + nome + "' não encontrada"));
+    }
 }

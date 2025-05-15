@@ -1,7 +1,9 @@
 package com.les.carest.controller;
 
 import com.les.carest.DTO.VendaDTO;
+import com.les.carest.model.Cliente;
 import com.les.carest.model.Venda;
+import com.les.carest.service.ClienteService;
 import com.les.carest.service.VendaService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -20,13 +22,24 @@ public class VendaController {
 
     @Autowired
     private VendaService vendaService;
+    private ClienteService clienteService;
 
-    // Criar nova venda
     @PostMapping
     @Operation(summary = "Cria uma nova venda")  // Swagger
     public ResponseEntity<Venda> criarVenda(@RequestBody VendaDTO vendaDTO) {
         Venda venda = vendaService.criarVenda(vendaDTO);
-        return ResponseEntity.status(HttpStatus.CREATED).body(venda);
+        Cliente cliente = venda.getCliente();
+
+
+        if(venda.getValorTotal() > (cliente.getSaldo() + cliente.getLimite())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(venda);
+        }
+
+        else{
+            vendaService.diminuirSaldo(venda.getCliente().getId(),venda.getValorTotal());
+            return ResponseEntity.status(HttpStatus.CREATED).body(venda);
+        }
+
     }
 
     // Buscar venda por ID

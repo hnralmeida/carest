@@ -2,7 +2,7 @@ package com.les.carest.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+
 import java.util.UUID;
 
 @Entity
@@ -11,6 +11,14 @@ public class Permissao {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
@@ -107,4 +115,5 @@ public class Permissao {
                 (update ? "U" : "") +
                 (delete ? "D" : "");
     }
+
 }

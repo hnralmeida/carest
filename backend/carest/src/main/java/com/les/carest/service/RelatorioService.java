@@ -28,8 +28,8 @@ public class RelatorioService {
         return relatorioRepository.getTicketMedio(clienteId);
     }
 
-    public List<TicketMedioDTO> getTicketMedioMultiplosClientes() {
-        return relatorioRepository.getTicketMedioMultiplosClientes()
+    public List<TicketMedioDTO> getTicketMedioMultiplosClientes(Date dataInicio, Date dataFim) {
+        return relatorioRepository.getTicketMedioMultiplosClientes(dataInicio, dataFim)
                 .stream()
                 .map(result -> new TicketMedioDTO((UUID) result[0], (Double) result[1]))
                 .collect(Collectors.toList());
@@ -45,7 +45,7 @@ public class RelatorioService {
 
     // Versão alternativa (nativa)
     public List<UltimaVendaDTO> getUltimasVendasComClientesNativo() {
-        return relatorioRepository.findUltimasVendasNativo().stream()
+        return relatorioRepository.findUltimaVendaCadaCliente().stream()
                 .map(UltimaVendaDTO::new)
                 .collect(Collectors.toList());
     }
@@ -59,8 +59,8 @@ public class RelatorioService {
                 .collect(Collectors.toList());
     }
 
-    public List<AniversarianteDTO> getAniversariantesPorData(int mes, int dia) {
-        return relatorioRepository.findAniversariantesPorData(mes, dia)
+    public List<AniversarianteDTO> getAniversariantesPorData(int mes) {
+        return relatorioRepository.findAniversarianteMes(mes)
                 .stream()
                 .map(com.les.carest.DTO.AniversarianteDTO::new)
                 .collect(Collectors.toList());
@@ -68,7 +68,7 @@ public class RelatorioService {
 
 
     public List<ClienteDiarioDTO> findClientesDiariosComGasto() {
-        List<Object[]> results = relatorioRepository.findClientesDiariosComGastoRaw();
+        List<Object[]> results = relatorioRepository.findClientesDoDia();
 
         return results.stream()
                 .map(arr -> new ClienteDiarioDTO(
@@ -82,7 +82,7 @@ public class RelatorioService {
 
 
     public List<ClienteDiarioDTO> findClientesDiariosData(Date data) {
-        List<Object[]> results = relatorioRepository.findClientesDiariosPorData(data);
+        List<Object[]> results = relatorioRepository.findClientesNoDia(data);
 
         return results.stream()
                 .map(arr -> new ClienteDiarioDTO(

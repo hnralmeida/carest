@@ -8,14 +8,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class ClienteService extends _GenericService<Cliente, ClienteRepository> {
 
-
     private final ClienteRepository clienteRepository;
 
     public ClienteService(ClienteRepository clienteRepository) {
         super(clienteRepository);
         this.clienteRepository = clienteRepository;
     }
-
 
 
     // Método principal para buscar clientes
@@ -36,4 +34,5 @@ public class ClienteService extends _GenericService<Cliente, ClienteRepository> 
                 cliente.getCodigo()
         );
     }
+
 }

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Usuario } from "@/app/models/usuario";
+import { Usuario } from "@/models/usuario";
 import { axiosClient } from "@/services/axiosClient";
 
 export const useFuncionarioHook = () => {
@@ -9,18 +9,20 @@ export const useFuncionarioHook = () => {
     const listarFuncionarios = async () => {
         setFuncionarios([
             {
-                "id": "string",
-                "nome": "string",
-                "email": "string",
+                "id": "carregando...",
+                "nome": "carregando...",
+                "email": "carregando...",
             }
         ])
         try {
             const response = await axiosClient.get('/usuario');
             if (response.data) {
-                setFuncionarios(response.data);
+                const formated = response.data.sort((a: Usuario, b: Usuario) => a.nome.localeCompare(b.nome));
+                setFuncionarios(formated);
             }
         } catch (error) {
             console.error('Error fetching administrators:', error);
+            setFuncionarios([]);
         }
     };
 
@@ -43,7 +45,7 @@ export const useFuncionarioHook = () => {
                 return response.data;
             }
         } catch (error) {
-            console.error('Error updating usuario:', error);
+            return Promise.reject((error as Error).message);
         }
         return null;
     };
