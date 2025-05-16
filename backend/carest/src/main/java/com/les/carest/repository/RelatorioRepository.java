@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface RelatorioRepository extends JpaRepository<Venda,UUID> {//mudar isso porque fica estranho precisa colocar jdbcTemplate ou algo do genero para fazer as consultas
+public interface RelatorioRepository extends JpaRepository<Venda, UUID> {
 
     @Query("SELECT AVG(v.valorTotal) FROM Venda v WHERE v.cliente.id = :clienteId")
     Double getTicketMedio(@Param("clienteId") UUID clienteId);
@@ -56,39 +56,52 @@ public interface RelatorioRepository extends JpaRepository<Venda,UUID> {//mudar 
     @Query("SELECT c FROM Cliente c WHERE EXTRACT(MONTH FROM c.nascimento) = :mes")
     List<Cliente> findAniversariantesDoMes(@Param("mes") int mes);
 
-    @Query("SELECT c FROM Cliente c WHERE EXTRACT(MONTH FROM c.nascimento) = :mes")
+    // ANIVERSARIANTES DO MÊS (PostgreSQL compatible)
+    @Query("SELECT c FROM Cliente c " +
+            "WHERE EXTRACT(MONTH FROM c.nascimento) = :mes")
     List<Cliente> findAniversarianteMes(@Param("mes") int mes);
 
-    // Relatório de clientes endividados
+    // TICKET MÉDIO POR PERÍODO (PostgreSQL compatible)
+    @Query("SELECT v.cliente.id, AVG(v.valorTotal) " +
+            "FROM Venda v " +
+            "WHERE CAST(v.dataVenda AS date) BETWEEN CAST(:dataInicio AS date) AND CAST(:dataFim AS date) " +
+            "GROUP BY v.cliente.id")
+    List<Object[]> getTicketMedioMultiplosClientes(
+            @Param("dataInicio") Date dataInicio,
+            @Param("dataFim") Date dataFim);
+
+    // VENDAS POR DIA (PostgreSQL compatible)
+    @Query("SELECT c.nome, SUM(v.valorTotal), CAST(v.dataVenda AS date) " +
+            "FROM Venda v JOIN v.cliente c " +
+            "WHERE CAST(v.dataVenda AS date) = CAST(:data AS date) " +
+            "GROUP BY c.nome, CAST(v.dataVenda AS date)")
+    List<Object[]> findVendasPorDia(@Param("data") Date data);
+
+    // ÚLTIMA VENDA POR CLIENTE (PostgreSQL compatible)
+    @Query(value = "SELECT v.id, v.cliente_id, v.data_venda, v.valor_total " +
+            "FROM venda v " +
+            "WHERE v.cliente_id = :idCliente " +
+            "ORDER BY v.data_venda DESC LIMIT 1",
+            nativeQuery = true)
+    Object[] getUltimaVenda(@Param("idCliente") UUID idCliente);
+
+    // CLIENTES ENDIVIDADOS (mantido)
     @Query("SELECT c FROM Cliente c WHERE c.saldo < 0")
     List<Cliente> findClientesEndividados();
 
-    // Relatório de gastos diários (com DTO no service)
-    @Query("SELECT c.nome, SUM(v.valorTotal), FUNCTION('TO_CHAR', v.dataVenda, 'HH24:MI') " +
-            "FROM Venda v JOIN v.cliente c " +
-            "WHERE CAST(v.dataVenda AS date) = :data " +
-            "GROUP BY c.nome, FUNCTION('TO_CHAR', v.dataVenda, 'HH24:MI') " +
-            "ORDER BY SUM(v.valorTotal) DESC")
-    List<Object[]> findClientesNoDia(@Param("data") Date data);
+    // Consulta nativa otimizada para última venda por cliente
+    @Query(value = """
+        SELECT v.id as venda_id, v.cliente_id, c.nome as cliente_nome, 
+               v.data_venda, v.valor_total
+        FROM venda v
+        JOIN cliente c ON v.cliente_id = c.id
+        WHERE (v.cliente_id, v.data_venda) IN (
+            SELECT cliente_id, MAX(data_venda) 
+            FROM venda
+            GROUP BY cliente_id
+        )
+        ORDER BY c.nome
+        """, nativeQuery = true)
+    List<Object[]> findUltimaVendaTodosClientes();
 
-    @Query("SELECT " +
-            "c.nome, " +
-            "SUM(v.valorTotal), " +
-            "FUNCTION('TO_CHAR', v.dataVenda, 'HH24:MI') " +
-            "FROM Venda v " +
-            "JOIN v.cliente c " +
-            "WHERE CAST(v.dataVenda AS date) = CURRENT_DATE " +
-            "GROUP BY c.nome, FUNCTION('TO_CHAR', v.dataVenda, 'HH24:MI') " +
-            "ORDER BY SUM(v.valorTotal) DESC")
-    List<Object[]> findClientesDoDia();
-/*
-    @Query("")
-    List<Object[]> calcDREmes(@Param("mes")int mes);
-
-    @Query("")
-    Object calcDREdiario(@Param("data")Date data);
-
-
- */
 }
-

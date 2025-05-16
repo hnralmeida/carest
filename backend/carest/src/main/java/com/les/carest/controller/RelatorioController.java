@@ -1,5 +1,7 @@
 package com.les.carest.controller;
 
+import com.les.carest.DTO.AniversarianteDTO;
+import com.les.carest.model.Cliente;
 import com.les.carest.pdfGenerator.GenericPDF;
 import com.les.carest.relatoriosDTO.AniversarianteDTO;
 import com.les.carest.relatoriosDTO.ClienteDiarioDTO;
@@ -12,78 +14,179 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
-@RequestMapping("/relatorios")  // Prefixo para todos os endpoints
+@RequestMapping("/relatorios")
 @Validated
-public class RelatorioController {//modificar os Resquest params para igual do aniversariamente
+@Tag(name = "Relatórios", description = "Endpoints para geração de relatórios")
+public class RelatorioController {
 
     private final RelatorioService relatorioService;
 
-    // Injeção de dependência via construtor
     @Autowired
     public RelatorioController(RelatorioService relatorioService) {
         this.relatorioService = relatorioService;
     }
 
-//    // Endpoint 1: Ticket médio de um cliente específico
-//    @GetMapping("/ticket-medio/{clienteId}")
-//    public ResponseEntity<Double> getTicketMedio(@PathVariable UUID clienteId) {
-//        Double ticketMedio = relatorioService.getTicketMedio(clienteId);
-//        return ResponseEntity.ok(ticketMedio);
-//    }
+    // Ticket médio - PDF e JSON
+    @Operation(summary = "Ticket médio por período (PDF)")
+    @GetMapping(value = "/pdf/ticketMedio", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getTicketMedioMultiplosClientesPDF(
+            @Parameter(description = "Data inicial (yyyy-MM-dd)", example = "2023-05-01")
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataInicio,
+            @Parameter(description = "Data final (yyyy-MM-dd)", example = "2023-05-31")
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataFim) {
 
-    // Endpoint 2 (GET): Ticket médio para múltiplos clientes
-    @GetMapping("/ticketMedio")
-    public ResponseEntity<byte[]> getTicketMedioMultiplosClientes(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim
-    ) {  // Requisição: ?clientesIds=id1,id2,id3
         List<TicketMedioDTO> resultados = relatorioService.getTicketMedioMultiplosClientes(dataInicio, dataFim);
-        return ResponseEntity.ok(GenericPDF.gerarRelatorioBytes(resultados,"Ticket Medio"));
+        return ResponseEntity.ok(GenericPDF.gerarRelatorioBytes(resultados, "Ticket Médio"));
     }
 
-//    // Endpoint 3: Última venda de um cliente específico
-//    @GetMapping("/ultima-vendas/{clienteId}")
-//    public ResponseEntity<UltimaVendaDTO> getUltimaVenda(@PathVariable UUID clienteId) {
-//        UltimaVendaDTO ultimaVenda = relatorioService.getUltimaVenda(clienteId);
-//        return ResponseEntity.ok(ultimaVenda);
+    @Operation(summary = "Ticket médio por período (JSON)")
+    @GetMapping(value = "/ticketMedio", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<TicketMedioDTO>> getTicketMedioMultiplosClientesJSON(
+            @Parameter(description = "Data inicial (yyyy-MM-dd)", example = "2023-05-01")
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataInicio,
+            @Parameter(description = "Data final (yyyy-MM-dd)", example = "2023-05-31")
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataFim) {
+
+        List<TicketMedioDTO> resultados = relatorioService.getTicketMedioMultiplosClientes(dataInicio, dataFim);
+        return ResponseEntity.ok(resultados);
+    }
+
+    // Última venda por cliente - PDF e JSON
+    @Operation(summary = "Última venda por cliente (PDF)")
+    @GetMapping(value = "/pdf/ultimasVendas/{clienteId}", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getUltimaVendaPDF(
+            @Parameter(description = "ID do cliente")
+            @PathVariable UUID clienteId) {
+
+        UltimaVendaDTO resultado = relatorioService.getUltimaVenda(clienteId);
+        return ResponseEntity.ok(GenericPDF.gerarRelatorioBytes(List.of(resultado), "Última Venda"));
+    }
+
+    @Operation(summary = "Última venda por cliente (JSON)")
+    @GetMapping(value = "/ultimasVendas/{clienteId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UltimaVendaDTO> getUltimaVendaJSON(
+            @Parameter(description = "ID do cliente")
+            @PathVariable UUID clienteId) {
+
+        UltimaVendaDTO resultado = relatorioService.getUltimaVenda(clienteId);
+        return ResponseEntity.ok(resultado);
+    }
+
+    // Últimas vendas de todos clientes - PDF e JSON
+    @Operation(summary = "Última venda de cada cliente (PDF)",
+            description = "Retorna a última venda registrada para cada cliente em PDF")
+    @GetMapping(value = "/pdf/ultimasVendas", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getUltimasVendasTodosClientesPDF() {
+        List<UltimaVendaDTO> resultados = relatorioService.getUltimasVendasTodosClientes();
+        return ResponseEntity.ok(GenericPDF.gerarRelatorioBytes(resultados, "Últimas Vendas por Cliente"));
+    }
+
+    @Operation(summary = "Última venda de cada cliente (JSON)",
+            description = "Retorna a última venda registrada para cada cliente em JSON")
+    @GetMapping(value = "/ultimasVendas", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UltimaVendaDTO>> getUltimasVendasTodosClientesJSON() {
+        List<UltimaVendaDTO> resultados = relatorioService.getUltimasVendasTodosClientes();
+        return ResponseEntity.ok(resultados);
+    }
+
+    // Vendas diárias - PDF e JSON
+    @Operation(summary = "Vendas por data específica (PDF)")
+    @GetMapping(value = "/pdf/diario/{data}", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getVendasDiariasPDF(
+            @Parameter(description = "Data no formato yyyy-MM-dd", example = "2023-05-15")
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date data) {
+
+        List<ClienteDiarioDTO> resultados = relatorioService.getVendasPorData(data);
+        return ResponseEntity.ok(GenericPDF.gerarRelatorioBytes(resultados, "Vendas Diárias"));
+    }
+
+    @Operation(summary = "Vendas por data específica (JSON)")
+    @GetMapping(value = "/diario/{data}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<ClienteDiarioDTO>> getVendasDiariasJSON(
+            @Parameter(description = "Data no formato yyyy-MM-dd", example = "2023-05-15")
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date data) {
+
+        List<ClienteDiarioDTO> resultados = relatorioService.getVendasPorData(data);
+        return ResponseEntity.ok(resultados);
+    }
+
+    // Vendas do dia atual - PDF e JSON
+    @Operation(summary = "Vendas do dia atual (PDF)")
+    @GetMapping(value = "/pdf/diario", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getVendasDoDiaAtualPDF() {
+        List<ClienteDiarioDTO> resultados = relatorioService.getVendasDoDia();
+        return ResponseEntity.ok(GenericPDF.gerarRelatorioBytes(resultados, "Vendas Hoje"));
+    }
+
+    @Operation(summary = "Vendas do dia atual (JSON)")
+    @GetMapping(value = "/diario", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<ClienteDiarioDTO>> getVendasDoDiaAtualJSON() {
+        List<ClienteDiarioDTO> resultados = relatorioService.getVendasDoDia();
+        return ResponseEntity.ok(resultados);
+    }
+
+//    // Aniversariantes do dia - PDF e JSON
+//    @Operation(summary = "Aniversariantes do dia (PDF)")
+//    @GetMapping(value = "/pdf/aniversariantesdia", produces = MediaType.APPLICATION_PDF_VALUE)
+//    public ResponseEntity<byte[]> getAniversariantesDoDiaPDF() {
+//        List<AniversarianteDTO> resultados = relatorioService.getAniversariantesDoDia();
+//        return ResponseEntity.ok(GenericPDF.gerarRelatorioBytes(resultados, "Aniversariantes do Dia"));
+//    }
+//
+//    @Operation(summary = "Aniversariantes do dia (JSON)")
+//    @GetMapping(value = "/aniversariantesdia", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<List<AniversarianteDTO>> getAniversariantesDoDiaJSON() {
+//        List<AniversarianteDTO> resultados = relatorioService.getAniversariantesDoDia();
+//        return ResponseEntity.ok(resultados);
 //    }
 
-    @GetMapping("/ultimasVendas")
-    public ResponseEntity<byte[]> getUltimasVendas() {
-        List<UltimaVendaDTO> resultados = relatorioService.getUltimasVendasComClientesNativo();
-        return ResponseEntity.ok(GenericPDF.gerarRelatorioBytes(resultados, "Ultimas Vendas"));
+    // Aniversariantes do mês - PDF e JSON
+    @Operation(summary = "Aniversariantes do mês (PDF)")
+    @GetMapping(value = "/pdf/aniversariantes", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getAniversariantesDoMesPDF(
+            @Parameter(description = "Mês (1-12)", example = "5")
+            @RequestParam int mes) {
+
+        List<AniversarianteDTO> resultados = relatorioService.getAniversariantesDoMes(mes);
+        return ResponseEntity.ok(GenericPDF.gerarRelatorioBytes(resultados, "Aniversariantes do Mês"));
     }
 
-    @GetMapping("/ultimas-vendas")
-    public ResponseEntity<List<UltimaVendaDTO>> getUltimasVendasTable() {
-        return ResponseEntity.ok(
-                relatorioService.getUltimasVendasComClientesNativo()
-        );
+    @Operation(summary = "Aniversariantes do mês (JSON)")
+    @GetMapping(value = "/aniversariantes", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<AniversarianteDTO>> getAniversariantesDoMesJSON(
+            @Parameter(description = "Mês (1-12)", example = "5")
+            @RequestParam int mes) {
+
+        List<AniversarianteDTO> resultados = relatorioService.getAniversariantesDoMes(mes);
+        return ResponseEntity.ok(resultados);
     }
 
-    @GetMapping("/aniversariantes")
-    public ResponseEntity<List<AniversarianteDTO>> listarAniversariantesPorData(
-            @RequestParam @Min(1) @Max(12) int mes) {
-        return ResponseEntity.ok(relatorioService.listarAniversariantesPorMes(mes));
+    // Clientes endividados - PDF e JSON
+    @Operation(summary = "Clientes endividados (PDF)")
+    @GetMapping(value = "/pdf/clientesEmAberto", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getClientesEndividadosPDF() {
+        List<Cliente> resultados = relatorioService.getClientesEndividados();
+        return ResponseEntity.ok(GenericPDF.gerarRelatorioBytes(resultados, "Clientes Endividados"));
     }
 
-    @GetMapping("/diario/{data}")
-    public ResponseEntity<byte[]> getDiario(@PathVariable Date data) {
-        List<ClienteDiarioDTO> resultados = relatorioService.findClientesDiariosData(data);
-
-        return ResponseEntity.ok(GenericPDF.gerarRelatorioBytes(resultados, "Ultimas Vendas"));
+    @Operation(summary = "Clientes endividados (JSON)")
+    @GetMapping(value = "/clientesEmAberto", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Cliente>> getClientesEndividadosJSON() {
+        List<Cliente> resultados = relatorioService.getClientesEndividados();
+        return ResponseEntity.ok(resultados);
     }
-
-    @GetMapping("/diario")
-    public ResponseEntity<byte[]> getClientesDiariosComGasto() {//revisar
-        List<ClienteDiarioDTO> resultados = relatorioService.findClientesDiariosComGasto();
-        return ResponseEntity.ok(GenericPDF.gerarRelatorioBytes(resultados, "Ultimas Vendas"));
-    }
-
 }

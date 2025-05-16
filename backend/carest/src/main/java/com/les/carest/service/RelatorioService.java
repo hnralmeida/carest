@@ -1,7 +1,6 @@
 package com.les.carest.service;
 
-
-import com.les.carest.relatoriosDTO.AniversarianteDTO;
+import com.les.carest.DTO.AniversarianteDTO;
 import com.les.carest.model.Cliente;
 import com.les.carest.relatoriosDTO.ClienteDiarioDTO;
 import com.les.carest.relatoriosDTO.TicketMedioDTO;
@@ -9,6 +8,9 @@ import com.les.carest.relatoriosDTO.UltimaVendaDTO;
 import com.les.carest.repository.RelatorioRepository;
 import org.springframework.stereotype.Service;
 
+
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -18,98 +20,104 @@ import java.util.stream.Collectors;
 public class RelatorioService {
 
     private final RelatorioRepository relatorioRepository;
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
     public RelatorioService(RelatorioRepository relatorioRepository) {
         this.relatorioRepository = relatorioRepository;
     }
 
-    // ---- RELATÓRIOS DE VENDAS ---- //
-    public Double getTicketMedio(UUID clienteId) {
-        return relatorioRepository.getTicketMedio(clienteId);
-    }
-
     public List<TicketMedioDTO> getTicketMedioMultiplosClientes(Date dataInicio, Date dataFim) {
-        return relatorioRepository.getTicketMedioMultiplosClientes(dataInicio, dataFim)
+        return relatorioRepository.getTicketMedioMultiplosClientes(dataInicio, dataFim)  // ← Nome corrigido
                 .stream()
                 .map(result -> new TicketMedioDTO((UUID) result[0], (Double) result[1]))
                 .collect(Collectors.toList());
     }
 
-    public UltimaVendaDTO getUltimaVenda(UUID clienteId) {
-        return new UltimaVendaDTO(relatorioRepository.getUltimaVenda(clienteId));
-    }
-
-    public List<Cliente> clientesEndividados() {
-        return relatorioRepository.findClientesEndividados();
-    }
-
-    // Versão alternativa (nativa)
-    public List<UltimaVendaDTO> getUltimasVendasComClientesNativo() {
-        return relatorioRepository.findUltimaVendaCadaCliente().stream()
-                .map(UltimaVendaDTO::new)
+    public List<TicketMedioDTO> getTicketMedioPeriodo(Date dataInicio, Date dataFim) {
+        return relatorioRepository.getTicketMedioMultiplosClientes(
+                        parseDate(dataInicio),
+                        parseDate(dataFim)
+                ).stream()
+                .map(result -> new TicketMedioDTO(
+                        (UUID) result[0],
+                        (Double) result[1]
+                ))
                 .collect(Collectors.toList());
     }
+
+    public UltimaVendaDTO getUltimaVenda(UUID clienteId) {
+        Object[] result = relatorioRepository.getUltimaVenda(clienteId);
+        return result != null ? new UltimaVendaDTO(result) : null;
+    }
+    public List<UltimaVendaDTO> getUltimasVendasTodosClientes() {
+        return relatorioRepository.findUltimaVendaTodosClientes().stream()
+                .map(this::mapToUltimaVendaDTO)
+                .collect(Collectors.toList());
+    }
+
+    private UltimaVendaDTO mapToUltimaVendaDTO(Object[] resultado) {
+        return new UltimaVendaDTO(
+                (UUID) resultado[0],     // vendaId
+                (UUID) resultado[1],     // clienteId
+                (String) resultado[2],   // clienteNome
+                ((LocalDateTime) resultado[3]),  // dataVenda
+                ((Number) resultado[4]).doubleValue()          // valor
+        );
+    }
+
 
 
     // ---- RELATÓRIOS DE CLIENTES ---- //
     public List<AniversarianteDTO> listarAniversariantesPorMes(int mes) {
         return relatorioRepository.findAniversariantesDoMes(mes)
                 .stream()
-                .map(com.les.carest.relatoriosDTO.AniversarianteDTO::new)
+                .map(AniversarianteDTO::new)
                 .collect(Collectors.toList());
     }
 
-    public List<AniversarianteDTO> getAniversariantesPorData(int mes) {
+    public List<AniversarianteDTO> getAniversariantesDoMes(int mes) {
         return relatorioRepository.findAniversarianteMes(mes)
                 .stream()
-                .map(com.les.carest.relatoriosDTO.AniversarianteDTO::new)
+                .map(AniversarianteDTO::new)
                 .collect(Collectors.toList());
     }
 
-
-    public List<ClienteDiarioDTO> findClientesDiariosComGasto() {
-        List<Object[]> results = relatorioRepository.findClientesDoDia();
-
-        return results.stream()
-                .map(arr -> new ClienteDiarioDTO(
-                        (String) arr[0],       // nome
-                        (Double) arr[1],       // valorTotal
-                        (String) arr[2]        // horaVenda
-                ))
+    public List<ClienteDiarioDTO> getVendasDoDia() {
+        return relatorioRepository.findVendasPorDia(new Date())
+                .stream()
+                .map(this::mapToClienteDiarioDTO)
                 .collect(Collectors.toList());
     }
 
-
-
-    public List<ClienteDiarioDTO> findClientesDiariosData(Date data) {
-        List<Object[]> results = relatorioRepository.findClientesNoDia(data);
-
-        return results.stream()
-                .map(arr -> new ClienteDiarioDTO(
-                        (String) arr[0],       // nome
-                        (Double) arr[1],       // valorTotal
-                        (String) arr[2]        // horaVenda
-                ))
+    public List<ClienteDiarioDTO> getVendasPorData(Date data) {
+        return relatorioRepository.findVendasPorDia(parseDate(data))
+                .stream()
+                .map(this::mapToClienteDiarioDTO)
                 .collect(Collectors.toList());
     }
 
-
-
-
-
-
-    public void relatorioProtudo(){//relatorio de fornecedor nao de produto
-        //Tela de relatório de Relatório de produto, apresenta os valores gasto pelos clientes em um produto selecionado para o fornecedor.
+    public List<Cliente> getClientesEndividados() {
+        return relatorioRepository.findClientesEndividados();
     }
 
-
-    public void diarioDRE(){
-        //Tela de relatório de Demonstração do Resultado do Exercício, mostrando os valores iniciais, de entrada e saída diário e final do caixa do restaurante.
-        //entrada de dinheiro no dia e o numero de clientes.
+    // ---- MÉTODOS AUXILIARES ---- //
+    private Date parseDate(Date date) {
+        try {
+            return date != null ? dateFormat.parse(dateFormat.format(date)) : null;
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao formatar data", e);
+        }
     }
 
-    public void historicoRegargas(){
-        //retorna o histico de regarcas do usuario
+    private ClienteDiarioDTO mapToClienteDiarioDTO(Object[] result) {
+        return new ClienteDiarioDTO(
+                (String) result[0],  // nome
+                (Double) result[1],  // valorTotal
+                formatarData((Date) result[2])  // data formatada
+        );
+    }
 
+    private String formatarData(Date data) {
+        return data != null ? dateFormat.format(data) : "N/A";
     }
 }

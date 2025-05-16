@@ -1,40 +1,96 @@
 package com.les.carest.service;
 
-
 import com.les.carest.model.Acesso;
 import com.les.carest.model.Cliente;
 import com.les.carest.repository.AcessoRepository;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import com.les.carest.repository.ClienteRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.UUID;
 
-@Validated
 @Service
-@Tag(name = "AcessoService", description = "Entrada e saida")
 public class AcessoService extends _GenericService<Acesso, AcessoRepository> {
-    private AcessoRepository acessoRepository;
 
-    public AcessoService(AcessoRepository repository) {
-        super(repository);
-        this.acessoRepository = repository;
+    private final AcessoRepository acessoRepository;
+    private final ClienteRepository clienteRepository;
+
+    public AcessoService(AcessoRepository acessoRepository, ClienteRepository clienteRepository) {
+        super(acessoRepository);
+        this.acessoRepository = acessoRepository;
+        this.clienteRepository = clienteRepository;
     }
 
-    public Cliente findByCodigo(String codigo) {
-        return acessoRepository.findClienteByCodigo(codigo);
+    @Transactional(readOnly = true)
+    public Cliente findClienteByCodigo(String codigo) {
+        return clienteRepository.findByCodigo(codigo);
     }
 
-    public void criarAcesso(Acesso acesso) {
-        acessoRepository.save(acesso);
+    @Transactional
+    public Acesso registrarAcesso(Acesso acesso) {
+        return acessoRepository.save(acesso);
     }
 
-    public Acesso findUltimoAcesso(String codigo) {
-        return acessoRepository.findUltimoAcesso(codigo);
+    @Transactional(readOnly = true)
+    public Acesso findUltimoAcessoAtivo(String codigoCliente) {
+        return acessoRepository.findUltimoAcessoAtivo(codigoCliente);
     }
 
-    public void sessao(UUID clienteId, boolean uso) {
-        acessoRepository.estadoDeAcesso(clienteId, uso);
+    @Transactional
+    public void atualizarEstadoUsoCliente(UUID clienteId, boolean emUso) {
+        clienteRepository.updateEstadoUso(clienteId, emUso);
+
 
     }
+
+
+    @Transactional
+    public Acesso registrarEntrada(String codigo) {
+        Cliente cliente = findClienteByCodigo(codigo);
+
+        if (cliente.isEm_uso()) {
+            throw new RuntimeException("Cliente já está em uso");
+        }
+
+        if (cliente.getBloqueado()) {
+            throw new RuntimeException("Cliente bloqueado");
+        }
+
+        atualizarEstadoUsoCliente(cliente.getId(), true);
+
+        Acesso acesso = new Acesso();
+        acesso.setCliente(cliente);
+        acesso.setEntrada(new Date());
+        return registrarAcesso(acesso);
+    }
+
+    @Transactional
+    public Acesso atualizarAcesso(Acesso acesso) {
+        return acessoRepository.save(acesso); // Ou use o método update da sua classe genérica
+    }
+
+    @Transactional
+    public Acesso registrarSaida(UUID acessoId) {
+        Acesso acesso = buscarPorId(acessoId); // Método herdado da classe genérica
+        acesso.setSaida(new Date());
+        atualizarEstadoUsoCliente(acesso.getCliente().getId(), false);
+        return atualizarAcesso(acesso); // Agora este método existe
+    }
+
+
+    @Transactional
+    public Acesso registrarSaidaPorCodigoCliente(String codigoCliente) {
+        // Busca o último acesso ativo do cliente
+        Acesso acesso = acessoRepository.findUltimoAcessoAtivo(codigoCliente);
+
+        if (acesso == null) {
+            throw new RuntimeException("Nenhum acesso ativo encontrado para este cliente");
+        }
+
+        acesso.setSaida(new Date());
+        atualizarEstadoUsoCliente(acesso.getCliente().getId(), false);
+        return atualizarAcesso(acesso);
+    }
+
 }
