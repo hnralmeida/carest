@@ -1,6 +1,5 @@
 package com.les.carest.controller;
 
-import com.les.carest.DTO.AniversarianteDTO;
 import com.les.carest.model.Cliente;
 import com.les.carest.pdfGenerator.GenericPDF;
 import com.les.carest.relatoriosDTO.AniversarianteDTO;

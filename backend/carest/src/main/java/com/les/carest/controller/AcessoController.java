@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/acesso")
-public class AcessoController extends GenericController<Acesso> {
+public class AcessoController extends _GenericController<Acesso> {
 
     private final AcessoService acessoService;
 

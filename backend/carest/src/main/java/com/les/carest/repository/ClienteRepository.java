@@ -55,6 +55,11 @@ public interface ClienteRepository extends JpaRepository<Cliente, UUID> {
             "ORDER BY SUM(v.valorTotal) DESC")
     List<Object[]> findClientesDiariosComGastoRaw();
 
+    @Modifying
+    @Transactional
+    @Query("UPDATE Cliente c SET c.em_uso = :uso WHERE c.id = :id")
+    void updateEstadoUso(@Param("id") UUID id, @Param("uso") boolean uso);
+
 //    // Consulta para data específica
 //    @Query("SELECT NEW com.les.carest.DTO.ClienteDiarioDTO(" +
 //            "c.nome, " +

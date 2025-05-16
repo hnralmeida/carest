@@ -1,5 +1,6 @@
 "use client";
 
+import { formatarParaMoeda } from "@/lib/utils";
 import { Cliente } from "@/models/cliente";
 import { ColumnDef } from "@tanstack/react-table";
 
@@ -9,8 +10,12 @@ export const columns: ColumnDef<Cliente>[] = [
     header: "Nome",
   },
   {
-    accessorKey: "valor",
-    header: "Valor",
+    accessorKey: "saldo",
+    header: "Valor da Dívida",
+    cell: ({ row }) => {
+          const formated = formatarParaMoeda(`${row.getValue('saldo')}`)
+          return <div className='text-right'>{formated}</div>
+        },
   }
 
 ];

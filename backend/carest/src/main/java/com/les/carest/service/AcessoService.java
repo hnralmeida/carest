@@ -24,7 +24,7 @@ public class AcessoService extends _GenericService<Acesso, AcessoRepository> {
 
     @Transactional(readOnly = true)
     public Cliente findClienteByCodigo(String codigo) {
-        return clienteRepository.findByCodigo(codigo);
+        return clienteRepository.findByCodigoCliente(codigo);
     }
 
     @Transactional

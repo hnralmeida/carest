@@ -14,47 +14,11 @@ import java.util.UUID;
 @Repository
 public interface RelatorioRepository extends JpaRepository<Venda, UUID> {
 
-    @Query("SELECT AVG(v.valorTotal) FROM Venda v WHERE v.cliente.id = :clienteId")
-    Double getTicketMedio(@Param("clienteId") UUID clienteId);
-
-    // Ticket Médio para múltiplos clientes - retorna List<Object[]>
-    // Onde Object[0] = clienteId, Object[1] = valorMedio
-    @Query("SELECT v.cliente.id, AVG(v.valorTotal) " +
-            "FROM Venda v " +
-            "WHERE v.dataVenda BETWEEN :dataInicio AND :dataFim " +
-            "GROUP BY v.cliente.id")
-    List<Object[]> getTicketMedioMultiplosClientes(@Param("dataInicio")Date dataInicio,@Param("dataFim") Date dataFim);
-
-
-
-    // Última venda para um cliente - retorna Object[]
-    // Onde Object[0] = vendaId, Object[1] = clienteId, Object[2] = dataVenda, Object[3] = valorTotal
-    @Query("SELECT v.id, v.cliente.id, v.dataVenda, v.valorTotal " +
-            "FROM Venda v " +
-            "WHERE v.cliente.id = :idCliente " +
-            "ORDER BY v.dataVenda DESC LIMIT 1")
-    Object[] getUltimaVenda(@Param("idCliente") UUID idCliente);
-
-//    @Query("SELECT DISTINCT ON (v.cliente.id)  FROM Venda v ORDER BY v.cliente.id, v.dataVenda DESC")
-//    List<Object[]> getUltimaVendaMultiplosClientes();
-
-
-    @Query(value = """
-    SELECT 
-        v.id as venda_id,
-        c.id as cliente_id,
-        c.nome as cliente_nome,
-        CAST(v.data_venda AS timestamp) as data_venda,
-        v.valor_total
-    FROM venda v JOIN cliente c ON v.cliente_id = c.id WHERE (c.id, v.data_venda) IN (
-    SELECT cliente_id, MAX(data_venda) FROM venda
-    GROUP BY cliente_id
-    )
-    """, nativeQuery = true)
-    List<Object[]> findUltimaVendaCadaCliente();
-
-    @Query("SELECT c FROM Cliente c WHERE EXTRACT(MONTH FROM c.nascimento) = :mes")
-    List<Cliente> findAniversariantesDoMes(@Param("mes") int mes);
+    // ANIVERSARIANTES DO DIA (PostgreSQL compatible)
+    @Query("SELECT c FROM Cliente c " +
+            "WHERE EXTRACT(DAY FROM c.nascimento) = EXTRACT(DAY FROM CURRENT_DATE) " +
+            "AND EXTRACT(MONTH FROM c.nascimento) = EXTRACT(MONTH FROM CURRENT_DATE)")
+    List<Cliente> findAniversariantesDoDia();
 
     // ANIVERSARIANTES DO MÊS (PostgreSQL compatible)
     @Query("SELECT c FROM Cliente c " +
@@ -103,5 +67,8 @@ public interface RelatorioRepository extends JpaRepository<Venda, UUID> {
         ORDER BY c.nome
         """, nativeQuery = true)
     List<Object[]> findUltimaVendaTodosClientes();
+
+    @Query("SELECT c FROM Cliente c WHERE EXTRACT(MONTH FROM c.nascimento) = :mes")
+    List<Cliente> findAniversariantesDoMes(@Param("mes") int mes);
 
 }

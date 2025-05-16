@@ -12,7 +12,7 @@ export const useTicketMedioHook = () => {
     const listarTicketMedio = async () => {
         setLoading(true);
         try {
-            const response = await axiosClient.get(`/relatorios/ticket`);
+            const response = await axiosClient.get(`/relatorios/ticketMedio?dataInicio=2000/01/01&dataFim=${dataFim}`);
             if (response.data) {
                 setTicketMedio(response.data);
             }

@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { columns } from "../../../components/pageClientesDiarioComponents/columns";
-import { DataTable } from "@/components/pageClientesDiarioComponents/DataTable";
+import { columns } from "../../../components/pageUltimaCompraComponents/columns";
+import { DataTable } from "@/components/pageUltimaCompraComponents/DataTable";
 import { Printer, Search } from "lucide-react";
 import { toast, Toaster } from "sonner";
 import { ButtonVariant } from "@/components/button-variant";
@@ -43,7 +43,7 @@ function Page() {
     <div className="container rounded-md border mx-auto my-16 py-4 px-4 content-bg">
       <Toaster richColors position="top-center" />
       <div className="flex justify-between items-center w-full mb-4">
-        <h1 className="text-2xl font-bold">Ticket Médio de Clientes</h1>
+        <h1 className="text-2xl font-bold">Última Compra</h1>
         <button
           className="button-print"
           onClick={() => handlePrint()}

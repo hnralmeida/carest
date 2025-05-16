@@ -10,7 +10,7 @@ export const useClientesEmAbertoHook = () => {
     const listarClientesEmAberto = async () => {
         setLoading(true);
         try {
-            const response = await axiosClient.get(`/relatorios/emaberto`);
+            const response = await axiosClient.get(`/relatorios/clientesEmAberto`);
             if (response.data) {
                 setClientesEmAberto(response.data);
             }
@@ -25,7 +25,7 @@ export const useClientesEmAbertoHook = () => {
         setLoading(true);
 
         try {
-            const response = await axiosClient.get(`/relatorios/emaberto/pdf`, {
+            const response = await axiosClient.get(`/relatorios/pdf/clientesEmAberto`, {
                 responseType: 'blob', // importante para receber os dados como blob
             });
 

@@ -1,10 +1,9 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { columns } from "../../../components/pageClientesDiarioComponents/columns";
-import { useClientesDiarioHook } from "@/hooks/useClientesDiario";
-import { DataTable } from "@/components/pageClientesDiarioComponents/DataTable";
-import { FileDown, Printer, Search } from "lucide-react";
+import { columns } from "../../../components/pageTicketMedioComponents/columns";
+import { DataTable } from "@/components/pageTicketMedioComponents/DataTable";
+import { Printer, Search } from "lucide-react";
 import { toast, Toaster } from "sonner";
 import { useTicketMedioHook } from "@/hooks/useTicketMedio";
 import { ButtonVariant } from "@/components/button-variant";

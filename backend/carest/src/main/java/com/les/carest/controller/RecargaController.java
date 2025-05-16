@@ -36,8 +36,8 @@ public class RecargaController {
     // Ajusta limite do cliente
     @PutMapping("/limite")
     @Operation(summary = "Ajusta o limite de crédito")
-    public ResponseEntity<ClienteDTO> ajustarLimite(@RequestBody UUID clienteId, @RequestBody double valorRecarga) {
-        ClienteDTO cliente = recargaService.adicionarLimite(clienteId,valorRecarga);
+    public ResponseEntity<ClienteDTO> ajustarLimite(@RequestParam UUID clienteId, @RequestParam double limite) {
+        ClienteDTO cliente = recargaService.adicionarLimite(clienteId,limite);
         return ResponseEntity.ok(cliente);
     }
 

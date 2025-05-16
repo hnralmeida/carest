@@ -30,12 +30,9 @@ export const useCreditoHook = () => {
     }
 
     const alterarLimite = async (limite: number, cliente: Cliente) => {
-        const data = {
-            ...cliente,
-            limite: limite
-        }
+        const data = `clienteId=${cliente.id}&limite=${limite}`;
 
-        const response = await axiosClient.put(`/clientes/` + cliente.id, data);
+        const response = await axiosClient.put(`/recargas/limite?` + data);
         const clienteRes = response.data;
 
         if (response.status > 205) {
