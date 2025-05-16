@@ -29,20 +29,21 @@ public class VendaController {
     public ResponseEntity<Venda> criarVenda(@RequestBody VendaDTO vendaDTO) {
         Venda venda = vendaService.criarVenda(vendaDTO);
         Cliente cliente = venda.getCliente();
-
-
-        if(venda.getValorTotal() > (cliente.getSaldo() + cliente.getLimite())){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(venda);
-        }
-
-        else{
-            vendaService.diminuirSaldo(venda.getCliente().getId(),venda.getValorTotal());
-            return ResponseEntity.status(HttpStatus.CREATED).body(venda);
-        }
-
+        return ResponseEntity.status(HttpStatus.CREATED).body(venda);
+//
     }
+//
+//        if(venda.getValorTotal() > (cliente.getSaldo() + cliente.getLimite())){
+//            return ResponseEntity.status(HttpStatus.CONFLICT).body(venda);
+//        }
+//
+//        else{
+//            vendaService.diminuirSaldo(venda.getCliente().getId(),venda.getValorTotal());
+//            return ResponseEntity.status(HttpStatus.CREATED).body(venda);
+//        }
 
-    // Buscar venda por ID
+
+// Buscar venda por ID
     @GetMapping("/{id}")
     @Operation(summary = "Busca uma venda pelo ID")
     public ResponseEntity<Venda> buscarPorId(@PathVariable UUID id) {
