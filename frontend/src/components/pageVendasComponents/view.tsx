@@ -27,7 +27,19 @@ const VendasView = () => {
             if (codigoLido.trim() == "9000") {
                 registrarVenda().then(() => {
                     toast.success("Venda registrada com sucesso")
-                })
+                }).catch((e: any) => {
+                    if (e.response.status == 404) {
+                        toast.error("Cliente não encontrado")
+                    } else if (e.response.status == 409) {
+                        toast.error("Cliente não possui saldo suficiente")
+                        produtos.pop();     
+                    } else if (e.response.status == 500) {
+                        toast.error("Erro interno do servidor")
+                    } else {
+                        toast.error(e.response.status) 
+                    }
+                });
+
                 setCodigoLido("");
                 return;
             }
@@ -113,6 +125,14 @@ const VendasView = () => {
         )
     }
 
+    function calcular() {
+        let total = 0;
+        produtos.forEach((item) => {
+            total += item.valor * item.quantidade;
+        });
+        return formatarParaMoeda(String(total), true);
+    }
+
     return (
         <>
             <div className="rounded-md overflow-x-auto">
@@ -138,6 +158,9 @@ const VendasView = () => {
                             <p className="flex flex-col justify-center items-center w-full h-[48px] mb-4 border rounded-md p-4 border-[var(--color-black)] bg-[var(--color-white)]" />
                         </div>
                     )}
+                    <div className="flex flex-row gap-[16px] justify-end">
+                        <p>TOTAL: {calcular()}</p>
+                    </div>
                 </div>
             </div>
             <Toaster richColors position="top-center" />

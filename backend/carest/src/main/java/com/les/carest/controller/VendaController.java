@@ -36,7 +36,7 @@ public class VendaController {
         }
 
         else{
-            vendaService.diminuirSaldo(venda.getCliente().getId(),venda.getValorTotal());
+            // vendaService.diminuirSaldo(venda.getCliente().getId(),venda.getValorTotal());
             return ResponseEntity.status(HttpStatus.CREATED).body(venda);
         }
 

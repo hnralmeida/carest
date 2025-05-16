@@ -6,17 +6,23 @@ import AddProduto from "@/components/pageProdutoComponents/addProduto";
 import { DataTable } from "@/components/pageProdutoComponents/DataTable";
 import { useProdutoHook } from "@/hooks/useProdutos";
 import ButtonEditBalanca from "@/components/editBalanca";
+import { toast, Toaster } from "sonner";
 
 function Page() {
   const { produtos, listarProdutos, balanca, obterBalanca } = useProdutoHook();
 
   useEffect(() => {
-    listarProdutos();
-    obterBalanca();
+    listarProdutos().catch((res: any) => {
+      toast.error(res);
+    });
+    obterBalanca().catch((res: any) => {
+      toast.error(res);
+    });
   }, []);
 
   return (
     <div className="container rounded-md border mx-auto my-16 py-4 px-4 content-bg">
+      <Toaster richColors position="top-center" />
       <h1 className="text-2xl font-bold">Self-Service</h1>
       <div className="flex w-full justify-center gap-x-4 items-center mb-[16px]">
         <p className="border border-[var(--black-color)] rounded-[16px] px-[32px] py-[16px] font-bold">

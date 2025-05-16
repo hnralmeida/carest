@@ -53,7 +53,17 @@ export default function AddTela() {
       if (!usuario?.id) {
         throw new Error("Usuário não encontrado.");
       }
-      const response = await criarTela(usuario.id, data);
+      await criarTela(usuario.id, data).catch((error: any) => {
+        setLoading(false); // Inicia o carregamento
+
+        if (error.response.status === 404) {
+          toast.error(error.response.data.message);
+          return
+        } else {
+          toast.error("Erro ao criar tela");
+          return
+        }
+      });
 
       const permissoesAtualizadas = usuario.permissoes.map((permissao: any) => {
         if (permissao.tela.nome === nome) {
@@ -63,7 +73,7 @@ export default function AddTela() {
           };
         }
         return permissao;
-      });
+      })
 
       update({ permissoes: permissoesAtualizadas })
       toast.success("Tela adicionada com sucesso!")
@@ -73,16 +83,12 @@ export default function AddTela() {
       setrota(""); // Limpa o campo do formulário
       setLoading(false); // Inicia o carregamento
 
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 2000);
 
-    } catch (error:any) {
+    } catch (error: any) {
       setLoading(false); // Inicia o carregamento
-      setOpen(false); // Fecha o modal após sucesso
-      setLoading(false); // Inicia o carregamento
-      console.error("Erro na requisição:", error);
-
       toast.error(error.response.data.message);
     }
   };

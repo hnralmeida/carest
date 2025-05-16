@@ -35,9 +35,8 @@ const OptionButtonSaldo = ({cliente}: OptionButtonSaldoProps) => {
     async function onFormSubmit(event: React.FormEvent) {
         event.preventDefault(); // Adicionado para evitar reload  
         setLoading(true);
-        console.log("cliente: ", cliente);
-        
-        await fazerRecarga(valor, cliente.codigo); // Chama a função de recarga com o valor formatado
+
+        await fazerRecarga(valor, cliente.id); // Chama a função de recarga com o valor formatado
 
         setTimeout(() => {
             setValor(0); // Limpa o valor após o envio

@@ -26,7 +26,7 @@ export const useUltimaCompraHook = () => {
         setLoading(true);
 
         try {
-            const response = await axiosClient.get(`/relatorios/ultimaCompra/pdf`, {
+            const response = await axiosClient.get(`/relatorios/ultimasVendas`, {
                 responseType: 'blob', // importante para receber os dados como blob
             });
 

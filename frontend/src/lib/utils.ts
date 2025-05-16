@@ -48,8 +48,7 @@ export const moedaParaNumero = (valor: string): number => {
     .replace('R$', '')          // remove símbolo do real
     .replace(',', '.');         // troca vírgula decimal por ponto
 
-  console.log("apenasNumeros", apenasNumeros);
-  return parseFloat(apenasNumeros) * 100 || 0;
+  return parseFloat(apenasNumeros) || 0;
 };
 
 export const formatTelefone = (value: string) => {

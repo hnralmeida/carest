@@ -25,7 +25,7 @@ export const useClientesDiarioHook = () => {
         setLoading(true);
 
         try {
-            const response = await axiosClient.get(`/relatorios/diario/pdf`, {
+            const response = await axiosClient.get(`/relatorios/diario`, {
                 responseType: 'blob', // importante para receber os dados como blob
             });
 

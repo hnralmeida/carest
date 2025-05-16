@@ -64,13 +64,16 @@ export const useVendasHook = () => {
     }
 
     const registrarVenda = async () => {
-        const response = await axiosClient.post("/vendas", {
+        const body = {
             clienteId: cliente.id,
             itens: produtos.map(item => ({
                 produtoId: item.produto.id,
                 quantidade: item.quantidade
             }))
-        });
+        }
+        console.log(body);
+        
+        const response = await axiosClient.post("/vendas", body);
         if (response.status > 205) {
             return Promise.reject("Erro ao registrar venda");
         } else {

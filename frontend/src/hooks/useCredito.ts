@@ -17,14 +17,9 @@ export const useCreditoHook = () => {
         }
     }
 
-    async function fazerRecarga(valor: number, codigoCliente: string) {
-        const data = {
-            valorRecarga: valor,
-            codigoCliente: codigoCliente
-        }
+    async function fazerRecarga(valor: number, clienteId: string) {
 
-        console.log(data)
-        const response = await axiosClient.put(`/clientes/recarga`, data);
+        const response = await axiosClient.post(`/recargas/` + clienteId, valor.toFixed(2));
         const clienteRes = response.data;
 
         if (response.status > 205) {
@@ -33,15 +28,14 @@ export const useCreditoHook = () => {
             setCliente(clienteRes);
         }
     }
-    
+
     const alterarLimite = async (limite: number, cliente: Cliente) => {
         const data = {
             ...cliente,
             limite: limite
         }
 
-        console.log("alterarLimite", data)
-        const response = await axiosClient.put(`/clientes/`+ cliente.id, data);
+        const response = await axiosClient.put(`/clientes/` + cliente.id, data);
         const clienteRes = response.data;
 
         if (response.status > 205) {

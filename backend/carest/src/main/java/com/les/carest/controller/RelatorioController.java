@@ -9,6 +9,7 @@ import com.les.carest.service.RelatorioService;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +39,10 @@ public class RelatorioController {//modificar os Resquest params para igual do a
 
     // Endpoint 2 (GET): Ticket médio para múltiplos clientes
     @GetMapping("/ticketMedio")
-    public ResponseEntity<byte[]> getTicketMedioMultiplosClientes(Date dataInicio, Date dataFim) {  // Requisição: ?clientesIds=id1,id2,id3
+    public ResponseEntity<byte[]> getTicketMedioMultiplosClientes(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataInicio,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dataFim
+    ) {  // Requisição: ?clientesIds=id1,id2,id3
         List<TicketMedioDTO> resultados = relatorioService.getTicketMedioMultiplosClientes(dataInicio, dataFim);
         return ResponseEntity.ok(GenericPDF.gerarRelatorioBytes(resultados,"Ticket Medio"));
     }

@@ -9,8 +9,6 @@ export const useTelaHook = () => {
 
     const listarTelas = async (id: string) => {
 
-        console.log("id", id);
-
         try {
             const response = await axiosClient.get('/tela/usuario/' + id);
             if (response.data) {
@@ -59,21 +57,16 @@ export const useTelaHook = () => {
         }
     };
 
-    const criarTela = async (userId: String, Tela: Tela): Promise<Tela | null> => {
+    const criarTela = async (userId: String, Tela: Tela): Promise<void> => {
 
         const body = {
             userId,
             nomeTela: Tela.nome,
             rotaTela: Tela.rota
         }
-        try {
-            console.log("body", body);
-            await axiosClient.post('/usuario/permitir', body);
-        } catch (error) {
+        await axiosClient.post('/usuario/permitir', body).catch((error: any) => {
             return Promise.reject(error);
-        }
-
-        return null;
+        })
     };
 
     return {
