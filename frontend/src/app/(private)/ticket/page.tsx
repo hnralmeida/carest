@@ -9,7 +9,7 @@ import { useTicketMedioHook } from "@/hooks/useTicketMedio";
 import { ButtonVariant } from "@/components/button-variant";
 
 function Page() {
-  const { loading, ticketMedio, listarTicketMedio, relatoriosTicketMedio, setDataInicio, setDataFim, ticketPorData } = useTicketMedioHook();
+  const { loading, ticketMedio, listarTicketMedio, relatoriosTicketMedio, ticketPorData } = useTicketMedioHook();
   const [dataInicioForm, setDataInicioForm] = React.useState<string>('');
   const [dataFimForm, setDataFimForm] = React.useState<string>('');
 
@@ -23,7 +23,7 @@ function Page() {
   }, []);
 
   const handlePrint = async () => {
-    relatoriosTicketMedio().then(() => {
+    relatoriosTicketMedio(new Date(dataInicioForm), new Date(dataFimForm)).then(() => {
       toast.success("Relatório gerado com sucesso!");
     }).catch((res: any) => {
       toast.error(res);
@@ -32,23 +32,17 @@ function Page() {
 
   const handleDataInicio = (data: string) => {
     setDataInicioForm(data)
-    const partes = data.split('/');
-    if (partes.length === 3) {
-      const [dia, mes, ano] = partes;
-      setDataInicio(`${ano}-${mes}-${dia}`); // Se for enviar ao backend no padrão ISO
-    }
-    setDataInicio('');
   };
 
   const handleDataFim = (data: string) => {
     setDataFimForm(data)
-    const partes = data.split('/');
-    if (partes.length === 3) {
-      const [dia, mes, ano] = partes;
-      setDataFim(`${ano}-${mes}-${dia}`); // Se for enviar ao backend no padrão ISO
-    }
-    setDataFim('');
-  };
+  }
+
+  const pressSearch = async () => {
+    ticketPorData(new Date(dataInicioForm), new Date(dataFimForm)).catch((res: any) => {
+      toast.error(res);
+    });
+  }
 
   return (
     <div className="container rounded-md border mx-auto my-16 py-4 px-4 content-bg">
@@ -84,7 +78,7 @@ function Page() {
           />
         </div>
         <ButtonVariant
-          handlePress={() => ticketPorData()}
+          handlePress={pressSearch}
           loading={loading}
           text="Buscar"
           Img={Search}

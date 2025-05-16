@@ -71,4 +71,7 @@ public interface RelatorioRepository extends JpaRepository<Venda, UUID> {
     @Query("SELECT c FROM Cliente c WHERE EXTRACT(MONTH FROM c.nascimento) = :mes")
     List<Cliente> findAniversariantesDoMes(@Param("mes") int mes);
 
+    @Query("SELECT c FROM Cliente c WHERE c.id = :id")
+    Cliente findClienteById(@Param("id") UUID id);
+
 }

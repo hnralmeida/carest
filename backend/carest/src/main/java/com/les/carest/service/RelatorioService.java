@@ -9,6 +9,7 @@ import com.les.carest.repository.RelatorioRepository;
 import org.springframework.stereotype.Service;
 
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -27,9 +28,14 @@ public class RelatorioService {
     }
 
     public List<TicketMedioDTO> getTicketMedioMultiplosClientes(Date dataInicio, Date dataFim) {
-        return relatorioRepository.getTicketMedioMultiplosClientes(dataInicio, dataFim)  // ← Nome corrigido
+        return relatorioRepository.getTicketMedioMultiplosClientes(dataInicio, dataFim)
                 .stream()
-                .map(result -> new TicketMedioDTO((UUID) result[0], (Double) result[1]))
+                .map(result -> {
+                    UUID clienteId = (UUID) result[0];
+                    Double ticketMedio = ((Number) result[1]).doubleValue();
+                    Cliente cliente = relatorioRepository.findClienteById(clienteId);
+                    return new TicketMedioDTO(cliente, ticketMedio);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -39,7 +45,7 @@ public class RelatorioService {
                         parseDate(dataFim)
                 ).stream()
                 .map(result -> new TicketMedioDTO(
-                        (UUID) result[0],
+                        (Cliente) result[0],
                         (Double) result[1]
                 ))
                 .collect(Collectors.toList());
@@ -56,11 +62,14 @@ public class RelatorioService {
     }
 
     private UltimaVendaDTO mapToUltimaVendaDTO(Object[] resultado) {
+        Timestamp timestamp = (Timestamp) resultado[3];
+        LocalDateTime dataVenda = timestamp.toLocalDateTime();
+
         return new UltimaVendaDTO(
                 (UUID) resultado[0],     // vendaId
                 (UUID) resultado[1],     // clienteId
                 (String) resultado[2],   // clienteNome
-                ((LocalDateTime) resultado[3]),  // dataVenda
+                dataVenda,  // dataVenda
                 ((Number) resultado[4]).doubleValue()          // valor
         );
     }

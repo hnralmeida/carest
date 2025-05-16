@@ -1,18 +1,17 @@
 import { useState } from "react";
 import { axiosClient } from "@/services/axiosClient";
 import { Cliente } from "@/models/cliente";
+import { dateToISO } from "@/lib/utils";
 
 
 export const useTicketMedioHook = () => {
     const [ticketMedio, setTicketMedio] = useState<Cliente[] | null>(null);
     const [loading, setLoading] = useState(false);
-    const [dataInicio, setDataInicio] = useState<string>('');
-    const [dataFim, setDataFim] = useState<string>('');
 
     const listarTicketMedio = async () => {
         setLoading(true);
         try {
-            const response = await axiosClient.get(`/relatorios/ticketMedio?dataInicio=2000/01/01&dataFim=${dataFim}`);
+            const response = await axiosClient.get(`/relatorios/ticketMedio?dataInicio=2000-01-01&dataFim=${dateToISO(new Date())}`);
             if (response.data) {
                 setTicketMedio(response.data);
             }
@@ -23,11 +22,11 @@ export const useTicketMedioHook = () => {
         }
     };
 
-    const relatoriosTicketMedio = async () => {
+    const relatoriosTicketMedio = async (dataInicio: Date, dataFim: Date) => {
         setLoading(true);
 
         try {
-            const response = await axiosClient.get(`/relatorios/ticket/pdf`, {
+            const response = await axiosClient.get(`/relatorios/pdf/ticketMedio?dataInicio=${dateToISO(dataInicio)}&dataFim=${dateToISO(dataFim)}`, {
                 responseType: 'blob', // importante para receber os dados como blob
             });
 
@@ -51,10 +50,10 @@ export const useTicketMedioHook = () => {
         }
     };
 
-    const ticketPorData = async () => {
+    const ticketPorData = async (dataInicio: Date, dataFim: Date) => {
         setLoading(true);
         try {
-            const response = await axiosClient.get(`/relatorios/ticket/${dataInicio}/${dataFim}`);
+            const response = await axiosClient.get(`/relatorios/ticketMedio?dataInicio=${dateToISO(dataInicio)}&dataFim=${dateToISO(dataFim)}`);
             if (response.data) {
                 setTicketMedio(response.data);
             }
@@ -70,8 +69,6 @@ export const useTicketMedioHook = () => {
         ticketMedio,
         listarTicketMedio,
         relatoriosTicketMedio,
-        setDataInicio,
-        setDataFim,
         ticketPorData,
     };
 };

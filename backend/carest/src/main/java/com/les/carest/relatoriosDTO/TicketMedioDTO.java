@@ -1,21 +1,21 @@
 package com.les.carest.relatoriosDTO;
 
-import java.util.UUID;
+import com.les.carest.model.Cliente;
 
 public class TicketMedioDTO {
-    private UUID clienteId;
-    private Double valorMedio;
+    private Cliente cliente;
+    private Double valor;
 
     // Construtor, Getters e Setters
-    public TicketMedioDTO(UUID clienteId, Double valorMedio) {
-        this.clienteId = clienteId;
-        this.valorMedio = valorMedio;
+    public TicketMedioDTO(Cliente cliente, Double valorMedio) {
+        this.cliente = cliente;
+        this.valor = valorMedio;
     }
 
     // Getters e Setters (gerados via IDE ou Lombok, se preferir)
-    public UUID getClienteId() { return clienteId; }
-    public Double getValorMedio() { return valorMedio; }
-    public void setClienteId(UUID clienteId) { this.clienteId = clienteId; }
-    public void setValorMedio(Double valorMedio) { this.valorMedio = valorMedio; }
+    public Cliente getCliente() { return cliente; }
+    public Double getValorMedio() { return valor; }
+    public void setCliente(Cliente cliente) { this.cliente = cliente; }
+    public void setValorMedio(Double valorMedio) { this.valor = valorMedio; }
 
 }

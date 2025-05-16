@@ -6,12 +6,16 @@ import { ColumnDef } from "@tanstack/react-table";
 
 export const columns: ColumnDef<Cliente>[] = [
   {
-    accessorKey: "nome",
+    accessorKey: "clienteNome",
     header: "Nome",
   },
   {
     accessorKey: "valor",
     header: "Valor",
+    cell: ({ row }) => {
+      const formated = formatarParaMoeda(`${row.getValue('valor')}`, true)
+      return <div className='text-right'>{formated}</div>
+    },
   },
   {
     accessorKey: 'dataVenda',
