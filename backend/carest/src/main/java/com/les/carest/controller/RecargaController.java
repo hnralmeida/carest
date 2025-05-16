@@ -52,6 +52,16 @@ public class RecargaController {
         return ResponseEntity.ok("Estado de bloqueio alterado");
     }
 
+    @PostMapping("/quitarDivida")
+    @Operation(summary = "Registra uma recarga")
+    public ResponseEntity<ClienteDTO> pagamentoDivida(UUID clienteId, double divida) {//modificar
+        ClienteDTO recarga = recargaService.adicionarCredito(clienteId,divida);
+
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(recarga);
+    }
+
+
 
     @PutMapping("/estadoUso")
     @Operation(summary = "Altera o estado de uso")

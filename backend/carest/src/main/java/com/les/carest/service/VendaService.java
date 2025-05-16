@@ -64,6 +64,12 @@ public class VendaService {
     }
 
 
+    public void diminuirSaldo(UUID id, double desconto) {
+        vendaRepository.diminuirSaldo(id,desconto);
+    }
+
+
+
     public Venda buscarPorId(UUID id) {
         return vendaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Venda não encontrada"));

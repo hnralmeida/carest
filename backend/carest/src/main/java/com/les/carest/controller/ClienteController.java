@@ -15,17 +15,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
-
 @Validated
 @RestController
 @RequestMapping("/clientes")
 @Tag(name = "Clientes", description = "Gestão de clientes")
 public class ClienteController extends _GenericController<Cliente>{
+public class ClienteController extends _GenericController<Cliente>{
 
     private final ClienteService clienteService;
 
     @Autowired
+    public ClienteController(ClienteService clienteService)  {
+        super(clienteService);
     public ClienteController(ClienteService clienteService)  {
         super(clienteService);
         this.clienteService = clienteService;
@@ -38,10 +39,20 @@ public class ClienteController extends _GenericController<Cliente>{
 //        ClienteDTO cliente = clienteService.toDTO(clienteService.buscarPorId(id));
 //        return ResponseEntity.ok(cliente);
 //    }
+//    // Busca cliente por ID (usando DTO)
+//    @GetMapping("/{id}")
+//    @Operation(summary = "Busca cliente por ID")
+//    public ResponseEntity<ClienteDTO> buscarPorId(@PathVariable UUID id) {
+//        ClienteDTO cliente = clienteService.toDTO(clienteService.buscarPorId(id));
+//        return ResponseEntity.ok(cliente);
+//    }
 
     // Buscar
     @GetMapping("/codigo/{codigo}")//devia usar os DTO provavelmente
     @Operation(summary = "Busca um Cliente pelo código cadastrado")
+    // Buscar
+    @GetMapping("/codigo/{codigo}")//devia usar os DTO provavelmente
+    @Operation(summary = "Busca um Cliente pelo ID")
     public ResponseEntity<ClienteDTO> buscarPorCodigo(@PathVariable String codigo) {
         ClienteDTO cliente = clienteService.acharCliente(codigo);
         return ResponseEntity.ok(cliente);

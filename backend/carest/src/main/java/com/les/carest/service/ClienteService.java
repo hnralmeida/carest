@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 @Service
 public class ClienteService extends _GenericService<Cliente, ClienteRepository> {
 
-
     private final ClienteRepository clienteRepository;
 
     public ClienteService(ClienteRepository clienteRepository) {

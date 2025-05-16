@@ -18,16 +18,18 @@ import java.util.UUID;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.server.ResponseStatusException;
 
 @Validated
 @Service
 @Tag(
-    name = "UsuarioService",
-    description = "Acesso aos métodos do Usuario"
+        name = "UsuarioService",
+        description = "Acesso aos métodos do Usuario"
 )
 public class UsuarioService extends _GenericService<Usuario, UsuarioRepository> {
     private final PasswordEncoder passwordEncoder;
@@ -68,6 +70,11 @@ public class UsuarioService extends _GenericService<Usuario, UsuarioRepository> 
     public List<Permissao> buscarPermissoesPorUsuarioId(UUID usuarioId) {
         Usuario usuario = this.buscarPorId(usuarioId);
         return usuario.getPermissoes();
+    }
+
+    public Usuario buscarUsuarioPorEmail(String email) {
+        Usuario usuario = this.repositoryGenerics.findByEmail(email);
+        return usuario;
     }
 
     public Usuario buscarUsuarioPorEmail(String email) {

@@ -2,6 +2,7 @@ package com.les.carest.controller;
 
 import com.les.carest.DTO.PermissaoDTO;
 import com.les.carest.DTO.PermitirDTO;
+import com.les.carest.DTO.PermitirDTO;
 import com.les.carest.DTO.UsuarioDTO;
 import com.les.carest.model.Permissao;
 import com.les.carest.model.Usuario;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Validated
 @RestController
-    @RequestMapping({"/usuario"})
+@RequestMapping({"/usuario"})
 public class UsuarioController extends _GenericController<Usuario> {
     private final UsuarioService usuarioService;
 

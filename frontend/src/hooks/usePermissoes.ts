@@ -21,6 +21,9 @@ export const usePermissaoHook = () => {
     updatedPermissoes: PermissaoDTO[],
     personId: string,
   ): Promise<string> => {
+    const body = {
+      permissoes: updatedPermissoes,
+    }
 
     try {
       axiosClient.post("/usuario/atualizarPermissoes/" + personId, updatedPermissoes).catch((error) => {
