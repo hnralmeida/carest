@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Date;
 import java.util.UUID;
 
-public class AcessoController extends GenericController<Acesso> {
+public class AcessoController extends _GenericController<Acesso> {
     private AcessoService acessoService;
 
     public AcessoController(AcessoService service) {

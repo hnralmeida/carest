@@ -6,13 +6,12 @@ import com.les.carest.relatoriosDTO.ClienteDiarioDTO;
 import com.les.carest.relatoriosDTO.TicketMedioDTO;
 import com.les.carest.relatoriosDTO.UltimaVendaDTO;
 import com.les.carest.service.RelatorioService;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
@@ -55,8 +54,10 @@ public class RelatorioController {//modificar os Resquest params para igual do a
     public ResponseEntity<byte[]> getUltimasVendas() {
         List<UltimaVendaDTO> resultados = relatorioService.getUltimasVendasComClientesNativo();
         return ResponseEntity.ok(GenericPDF.gerarRelatorioBytes(resultados, "Ultimas Vendas"));
+    }
+
     @GetMapping("/ultimas-vendas")
-    public ResponseEntity<List<UltimaVendaDTO>> getUltimasVendas() {
+    public ResponseEntity<List<UltimaVendaDTO>> getUltimasVendasTable() {
         return ResponseEntity.ok(
                 relatorioService.getUltimasVendasComClientesNativo()
         );
@@ -66,15 +67,6 @@ public class RelatorioController {//modificar os Resquest params para igual do a
     public ResponseEntity<List<AniversarianteDTO>> listarAniversariantesPorData(
             @RequestParam @Min(1) @Max(12) int mes) {
         return ResponseEntity.ok(relatorioService.listarAniversariantesPorMes(mes));
-    }
-
-    // Endpoint 6: Aniversariantes por data
-    @GetMapping("/aniversariantes/por-data")
-    public ResponseEntity<List<AniversarianteDTO>> getAniversariantesPorData(
-            @RequestParam @Min(1) @Max(12) int mes,
-            @RequestParam @Min(1) @Max(31) int dia) {
-        List<AniversarianteDTO> aniversariantes = relatorioService.getAniversariantesPorData(mes, dia);
-        return ResponseEntity.ok(aniversariantes);
     }
 
     @GetMapping("/diario/{data}")

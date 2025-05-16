@@ -34,11 +34,6 @@ public class TelaController extends _GenericController<Tela> {
     UsuarioService usuarioService;
 
     public TelaController(TelaService telaService, UsuarioService usuarioService) {
-
-    @Autowired
-    UsuarioService usuarioService;
-
-    public TelaController(TelaService telaService, UsuarioService usuarioService) {
         super(telaService);
         this.usuarioService = usuarioService;
     }
@@ -67,31 +62,5 @@ public class TelaController extends _GenericController<Tela> {
 
         return ResponseEntity.ok(telasPermitidas);
     }
-        this.usuarioService = usuarioService;
-    }
 
-    @GetMapping("/autoGenerate")
-    public void AutoGerarTelas(){
-        List<Usuario> l = usuarioService.listar();
-        for (Usuario user : l ) {
-            usuarioService.fazerPermissoes(user.getId());
-        }
-    }
-
-    @GetMapping("/usuario/{id}")
-    public ResponseEntity<List<Tela>> telasPorUsuario(@PathVariable UUID id) {
-        Usuario usuario = usuarioService.buscarPorId(id);
-
-        if (usuario == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        // Supondo que usuario.getPermissoes() retorna uma lista de Permissao
-        List<Tela> telasPermitidas = usuario.getPermissoes().stream()
-                .filter(Permissao::isRead) // ou permissao -> permissao.getRead() == true
-                .map(Permissao::getTela)
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(telasPermitidas);
-    }
 }

@@ -39,7 +39,6 @@ public class Usuario implements UserDetails {
     private String senha;
 
     @JsonIgnore
-    @JsonIgnore
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY)
     private List<Permissao> permissoes = new ArrayList<>();
 

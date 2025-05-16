@@ -77,11 +77,6 @@ public class UsuarioService extends _GenericService<Usuario, UsuarioRepository> 
         return usuario;
     }
 
-    public Usuario buscarUsuarioPorEmail(String email) {
-        Usuario usuario = this.repositoryGenerics.findByEmail(email);
-        return usuario;
-    }
-
     public void fazerPermissoes(UUID usuarioId) {
         Usuario usuario = this.buscarPorId(usuarioId);
         List<Tela> telas = telaService.listar();

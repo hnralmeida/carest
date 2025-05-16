@@ -20,13 +20,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/clientes")
 @Tag(name = "Clientes", description = "Gestão de clientes")
 public class ClienteController extends _GenericController<Cliente>{
-public class ClienteController extends _GenericController<Cliente>{
 
     private final ClienteService clienteService;
 
     @Autowired
-    public ClienteController(ClienteService clienteService)  {
-        super(clienteService);
     public ClienteController(ClienteService clienteService)  {
         super(clienteService);
         this.clienteService = clienteService;
@@ -50,9 +47,6 @@ public class ClienteController extends _GenericController<Cliente>{
     // Buscar
     @GetMapping("/codigo/{codigo}")//devia usar os DTO provavelmente
     @Operation(summary = "Busca um Cliente pelo código cadastrado")
-    // Buscar
-    @GetMapping("/codigo/{codigo}")//devia usar os DTO provavelmente
-    @Operation(summary = "Busca um Cliente pelo ID")
     public ResponseEntity<ClienteDTO> buscarPorCodigo(@PathVariable String codigo) {
         ClienteDTO cliente = clienteService.acharCliente(codigo);
         return ResponseEntity.ok(cliente);
