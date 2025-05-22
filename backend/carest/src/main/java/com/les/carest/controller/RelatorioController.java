@@ -3,7 +3,9 @@ package com.les.carest.controller;
 import com.les.carest.DTO.AniversarianteDTO;
 import com.les.carest.model.Cliente;
 import com.les.carest.pdfGenerator.GenericPDF;
+import com.les.carest.pdfGenerator.PlotUtils;
 import com.les.carest.relatoriosDTO.ClienteDiarioDTO;
+import com.les.carest.relatoriosDTO.ProdutoRelatorioDTO;
 import com.les.carest.relatoriosDTO.TicketMedioDTO;
 import com.les.carest.relatoriosDTO.UltimaVendaDTO;
 import com.les.carest.service.RelatorioService;
@@ -16,6 +18,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -180,5 +186,75 @@ public class RelatorioController {
     public ResponseEntity<List<Cliente>> getClientesEndividadosJSON() {
         List<Cliente> resultados = relatorioService.getClientesEndividados();
         return ResponseEntity.ok(resultados);
+    }
+
+    // Produtos Serial Vendidos por Período - PDF e JSON
+    @Operation(summary = "Produtos Serial Vendidos por Período (PDF)")
+    @GetMapping(value = "/pdf/produtosSerial", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getProdutosSerialVendidosPDF(
+            @Parameter(description = "Data inicial (yyyy-MM-dd)", example = "2023-01-01", required = true)
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataInicio,
+
+            @Parameter(description = "Data final (yyyy-MM-dd)", example = "2023-12-31", required = true)
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataFim) {
+
+        List<ProdutoRelatorioDTO> resultados = relatorioService.getRelatorioProdutos(dataInicio, dataFim);
+        return ResponseEntity.ok(GenericPDF.gerarRelatorioBytes(resultados, "Produtos Serial Vendidos"));
+    }
+
+    @Operation(summary = "Produtos Serial Vendidos por Período (JSON)")
+    @GetMapping(value = "/produtosSerial", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<ProdutoRelatorioDTO>> getProdutosSerialVendidosJSON(
+            @Parameter(description = "Data inicial (yyyy-MM-dd)", example = "2023-01-01", required = true)
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataInicio,
+
+            @Parameter(description = "Data final (yyyy-MM-dd)", example = "2023-12-31", required = true)
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataFim) {
+
+        List<ProdutoRelatorioDTO> resultados = relatorioService.getRelatorioProdutos(dataInicio, dataFim);
+        return ResponseEntity.ok(resultados);
+    }
+
+    @GetMapping(value = "/pdf/clienteDiario", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getClienteDiarioPdf(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataInicio,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataFim) {
+
+        // Gera o gráfico como imagem
+        BufferedImage imagemGerada = PlotUtils.generateConsumoDiarioChart(
+                relatorioService.getConsumoDiarioParaGrafico(dataInicio, dataFim),
+                "Relatório Cliente Diário");
+
+        // Converte BufferedImage em byte[]
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try {
+            ImageIO.write(imagemGerada, "png", byteArrayOutputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+
+        byte[] imagemBytes = byteArrayOutputStream.toByteArray();
+
+        // Gera o PDF com a imagem
+        byte[] pdf = GenericPDF.gerarRelatorioImagem(imagemBytes, "Relatório Cliente Diário");
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
+    }
+
+    @GetMapping(value = "/clienteDiario", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<BufferedImage> getClienteDiario(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataInicio,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataFim) {
+
+        // Gera o gráfico como imagem
+        BufferedImage imagemGerada = PlotUtils.generateConsumoDiarioChart(
+                relatorioService.getConsumoDiarioParaGrafico(dataInicio, dataFim),
+                "Relatório Cliente Diário");
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .body(imagemGerada);
     }
 }

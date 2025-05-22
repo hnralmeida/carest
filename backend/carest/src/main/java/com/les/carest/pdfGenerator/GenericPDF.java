@@ -71,4 +71,39 @@ public class GenericPDF {
             }
         }
     }
+
+    public static byte[] gerarRelatorioImagem(byte[] imagemBytes, String nomeRelatorio) {
+        Document doc = new Document();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        try {
+            PdfWriter.getInstance(doc, byteArrayOutputStream);
+            doc.open();
+
+            // Título
+            doc.add(new Paragraph(nomeRelatorio,
+                    FontFactory.getFont(FontFactory.HELVETICA_BOLD, 18)));
+            doc.add(Chunk.NEWLINE);
+
+            // Adiciona a imagem ao PDF
+            Image img = Image.getInstance(imagemBytes);
+            img.scaleToFit(500, 500); // redimensiona se necessário
+            img.setAlignment(Image.ALIGN_CENTER);
+            doc.add(img);
+
+            doc.close();
+            return byteArrayOutputStream.toByteArray();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new byte[0];
+        } finally {
+            try {
+                if (doc.isOpen()) doc.close();
+                byteArrayOutputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

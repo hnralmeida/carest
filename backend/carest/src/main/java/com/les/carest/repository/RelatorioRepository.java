@@ -68,4 +68,38 @@ public interface RelatorioRepository extends JpaRepository<Venda, UUID> {
         """, nativeQuery = true)
     List<Object[]> findUltimaVendaTodosClientes();
 
+
+
+    @Query("""
+    SELECT p.codigo, p.nome, p.valor, SUM(iv.quantidade)
+    FROM ItemVenda iv
+    JOIN iv.produto p
+    JOIN iv.venda v
+    WHERE TYPE(p) = ProdutoSerial
+    AND CAST(v.dataVenda AS date) BETWEEN CAST(:dataInicio AS date) AND CAST(:dataFim AS date)
+    GROUP BY p.codigo, p.nome, p.valor
+    """)
+    List<Object[]> findProdutosSerialVendidosPorPeriodo(
+            @Param("dataInicio") Date dataInicio,
+            @Param("dataFim") Date dataFim);
+
+
+    @Query(nativeQuery = true, value = """
+    WITH dias AS (
+        SELECT generate_series(
+            CAST(:dataInicio AS date),
+            CAST(:dataFim AS date),
+            '1 day'::interval
+        )::date as dia
+    )
+    SELECT COALESCE(SUM(v.valor_total), 0.0)
+    FROM dias d
+    LEFT JOIN venda v ON CAST(v.data_venda AS date) = d.dia
+    GROUP BY d.dia
+    ORDER BY d.dia
+    """)
+    List<Double> findConsumoDiario(
+            @Param("dataInicio") Date dataInicio,
+            @Param("dataFim") Date dataFim);
+
 }
