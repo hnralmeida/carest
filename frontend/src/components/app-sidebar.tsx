@@ -13,7 +13,9 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import { GalleryVerticalEnd, LogOut, Router, User } from "lucide-react";
+import Image from "next/image";
+import group_login from "../../public/images/logo.png";
+import { LogOut, User } from "lucide-react";
 import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
 import { signOut } from "next-auth/react";
@@ -129,7 +131,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground "
         >
           <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-            <GalleryVerticalEnd className="size-4" />
+            <Image
+              src={group_login}
+              alt="Create Next App"
+              className="mx-auto hover:scale-105 hover:drop-shadow-[0_0_10px_rgba(62,62,255,0.1)] transition-transform duration-200 ease-in-out"
+              width={256}
+              height={256}
+              placeholder="empty"
+            />
           </div>
           <div className="flex flex-col gap-0.5 leading-none">
             <span className="font-medium">Carest</span>

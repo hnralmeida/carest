@@ -8,9 +8,10 @@ import { useAcessoHook } from "@/hooks/useAcesso";
 
 const AcessoView = () => {
 
-    const { buscarAcesso, cliente } = useAcessoHook();
+    const { buscarAcesso, cliente, saidaCliente } = useAcessoHook();
 
     const [codigoLido, setCodigoLido] = React.useState("");
+    const [ perform, setPerform] = React.useState("ENTRADA");
 
     const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
@@ -24,6 +25,7 @@ const AcessoView = () => {
                     //retira tudo que não for numeros de codigoLido
                     const codigoLidoLimpo = codigoLido.replace(/\D/g, "");
                     await buscarAcesso(codigoLidoLimpo)
+                    setPerform("ENTRADA")
                 } catch (e: any) {
                     if (e.response.status == 404) {
                         toast.error("Cliente não encontrado")
@@ -31,11 +33,15 @@ const AcessoView = () => {
                     else if (e.response.status == 500) {
                         toast.error("Erro interno do servidor")
                     }
-                    else if (e.response.status == 400) {
-                        toast.error("Código inválido")
-                    }
                     else if (e.response.status == 401) {
                         toast.error("Código já utilizado")
+                    }
+                    else if (e.response.status == 400) {
+                        await saidaCliente(codigoLido)
+                        setPerform("SAÍDA")
+                    }
+                    else {
+                        toast.error(e.response.data)
                     }
                 }
             }
@@ -87,11 +93,12 @@ const AcessoView = () => {
         )
     }
 
+
     return (
         <>
             <div className="rounded-md overflow-x-auto h-[256px]">
                 {!cliente?.id && <h1 className="text-2xl">Aproxime o cartão da leitora</h1>}
-                {cliente?.id && <h1 className="text-2xl">Cliente</h1>}
+                {cliente?.id && <h1 className="text-2xl">{perform}</h1>}
                 {cliente?.id ? <ClienteView /> : <PulseView />}
             </div>
 

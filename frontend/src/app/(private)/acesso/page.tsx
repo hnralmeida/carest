@@ -1,15 +1,12 @@
 'use client'
 
-import { getServerSession } from "next-auth";
+import AcessoView from "@/components/pageAcessoComponents/view";
 
-export default async function Home() {
+export default function Home() {
 
-    const session = await getServerSession();
-
-    return (
-      <main>
-        <h1>Acesso {session?.user?.email || ''}</h1>
-      </main>
-    );
-  }
-  
+  return (
+    <div className="container flex items-center justify-center rounded-md border mx-auto py-[16px] px-[64px] content-bg h-full">
+      <AcessoView />
+    </div>
+  );
+}

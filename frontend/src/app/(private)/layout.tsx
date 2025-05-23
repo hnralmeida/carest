@@ -18,20 +18,6 @@ export default function PrivateLayout({
           <SidebarInset className="p-4">
             <header className="flex shrink-0 items-center gap-2 px-4">
               <SidebarTrigger />
-
-              {/* <Breadcrumb>
-                <BreadcrumbList>
-                  <BreadcrumbItem className="hidden md:block">
-                    <BreadcrumbLink href="#">
-                      Building Your Application
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator className="hidden md:block" />
-                  <BreadcrumbItem>
-                    <BreadcrumbPage>Data Fetching</BreadcrumbPage>
-                  </BreadcrumbItem>
-                </BreadcrumbList>
-              </Breadcrumb>*/}
             </header>
             {children}
           </SidebarInset>
