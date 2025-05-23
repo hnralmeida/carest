@@ -61,21 +61,6 @@ public class RelatorioService {
                 .collect(Collectors.toList());
     }
 
-    private UltimaVendaDTO mapToUltimaVendaDTO(Object[] resultado) {
-        Timestamp timestamp = (Timestamp) resultado[3];
-        LocalDateTime dataVenda = timestamp.toLocalDateTime();
-
-        return new UltimaVendaDTO(
-                (UUID) resultado[0],     // vendaId
-                (UUID) resultado[1],     // clienteId
-                (String) resultado[2],   // clienteNome
-                dataVenda,  // dataVenda
-                ((Number) resultado[4]).doubleValue()          // valor
-        );
-    }
-
-
-
     // ---- RELATÓRIOS DE CLIENTES ---- //
     public List<AniversarianteDTO> listarAniversariantesPorMes(int mes) {
         return relatorioRepository.findAniversariantesDoMes(mes)
@@ -154,16 +139,19 @@ public class RelatorioService {
         );
     }
 
-
     private UltimaVendaDTO mapToUltimaVendaDTO(Object[] resultado) {
+        Timestamp timestamp = (Timestamp) resultado[3];
+        LocalDateTime dataVenda = timestamp.toLocalDateTime();
+
         return new UltimaVendaDTO(
                 (UUID) resultado[0],     // vendaId
                 (UUID) resultado[1],     // clienteId
                 (String) resultado[2],   // clienteNome
-                ((LocalDateTime) resultado[3]),  // dataVenda
+                dataVenda,  // dataVenda
                 ((Number) resultado[4]).doubleValue()          // valor
         );
     }
+
 
     private String formatarData(Date data) {
         return data != null ? dateFormat.format(data) : "N/A";

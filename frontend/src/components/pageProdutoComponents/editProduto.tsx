@@ -62,8 +62,8 @@ export default function EditProduto({ id, nome, valor, codigo, custo }: EditProd
       const data = {
         "id": id,
         "nome": formNome,
-        "valor": moedaParaNumero(formValor),
-        "custo": moedaParaNumero(formCusto),
+        "valor": Number(moedaParaNumero(formValor).toFixed(2)),
+        "custo": Number(moedaParaNumero(formCusto).toFixed(2)),
         "codigo": formCodigo
       };
 

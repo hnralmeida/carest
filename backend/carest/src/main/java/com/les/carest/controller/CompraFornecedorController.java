@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/compra-fornecedor")
-public class CompraFornecedorController extends GenericController<CompraFornecedor> {
+public class CompraFornecedorController extends _GenericController<CompraFornecedor> {
 
     private final CompraFornecedorService service;
 

@@ -31,10 +31,10 @@ public class AcessoController extends _GenericController<Acesso> {
         }
     }
 
-    @PutMapping("/saida")
-    public ResponseEntity<?> registrarSaida(@RequestParam String codigoCliente) {
+    @PostMapping("/saida")
+    public ResponseEntity<?> registrarSaida(@RequestParam String codigo) {
         try {
-            Acesso acesso = acessoService.registrarSaidaPorCodigoCliente(codigoCliente);
+            Acesso acesso = acessoService.registrarSaidaPorCodigoCliente(codigo);
             return ResponseEntity.ok(acesso);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());

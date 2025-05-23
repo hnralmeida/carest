@@ -55,9 +55,9 @@ export function DataTable<Produto, TValue>({
 
         if (response) {
           window.location.reload(); // Atualiza a lista após excluir
-          toast.success("Funcionario excluido com sucesso!");
+          toast.success("Produto excluido com sucesso!");
         } else {
-          toast.error("Falha ao excluir o funcionario.");
+          toast.error("Falha ao excluir o Produto.");
         }
       } catch (error) {
         console.error("Erro na requisição:", error);

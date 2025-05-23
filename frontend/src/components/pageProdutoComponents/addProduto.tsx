@@ -38,8 +38,8 @@ export default function AddProduto() {
       id: "",
       nome,
       codigo,
-      valor: moedaParaNumero(valor),
-      custo: moedaParaNumero(custo),
+      valor: Number(moedaParaNumero(valor).toFixed(2)),
+      custo: Number(moedaParaNumero(custo).toFixed(2)),
     };
 
     if (!nome || !valor || !codigo) {
