@@ -35,8 +35,8 @@ export default function EditProduto({ id, nome, valor, codigo, custo }: EditProd
 
   useEffect(() => {
     setFormNome(nome);
-    setFormValor(formatarParaMoeda(valor.toString()));
-    setFormCusto(formatarParaMoeda(custo.toString()));
+    setFormValor(formatarParaMoeda(valor.toFixed(2)));
+    setFormCusto(formatarParaMoeda(custo.toFixed(2)));
     setFormCodigo(codigo);
   }, [nome, valor, codigo, custo]);
 
