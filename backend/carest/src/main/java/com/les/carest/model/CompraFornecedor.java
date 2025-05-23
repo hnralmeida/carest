@@ -1,8 +1,8 @@
 package com.les.carest.model;
 
-import java.util.Date;
 import jakarta.persistence.*;
-import lombok.*;
+
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -19,6 +19,8 @@ public class CompraFornecedor {
     private double valor;
     private Date vencimento;
     private String descricao;
+
+    public CompraFornecedor() {}
 
     public CompraFornecedor(UUID id, Fornecedor fornecedor, double valor, Date vencimento, String descricao) {
         this.id = id;

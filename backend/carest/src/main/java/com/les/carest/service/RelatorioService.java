@@ -3,11 +3,11 @@ package com.les.carest.service;
 import com.les.carest.model.Cliente;
 import com.les.carest.relatoriosDTO.AniversarianteDTO;
 import com.les.carest.relatoriosDTO.ClienteDiarioDTO;
+import com.les.carest.relatoriosDTO.ProdutoRelatorioDTO;
 import com.les.carest.relatoriosDTO.TicketMedioDTO;
 import com.les.carest.relatoriosDTO.UltimaVendaDTO;
 import com.les.carest.repository.RelatorioRepository;
 import org.springframework.stereotype.Service;
-
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -109,6 +109,34 @@ public class RelatorioService {
         return relatorioRepository.findClientesEndividados();
     }
 
+
+    public List<ProdutoRelatorioDTO> getRelatorioProdutos(Date dataInicio, Date dataFim) {
+        List<Object[]> resultados = relatorioRepository.findProdutosSerialVendidosPorPeriodo(dataInicio, dataFim);
+
+        return resultados.stream()
+                .map(r -> new ProdutoRelatorioDTO(
+                        (String) r[0],  // codigo
+                        (String) r[1],  // nome
+                        (Double) r[2],  // valor
+                        ((Number) r[3]).intValue()  // quantidade
+                ))
+                .collect(Collectors.toList());
+    }
+
+    public List<Double> getConsumoDiarioParaGrafico(Date dataInicio, Date dataFim) {
+        // Validação básica
+        if (dataInicio == null || dataFim == null) {
+            throw new IllegalArgumentException("Datas não podem ser nulas");
+        }
+        if (dataFim.before(dataInicio)) {
+            throw new IllegalArgumentException("Data final deve ser após data inicial");
+        }
+
+        return relatorioRepository.findConsumoDiario(dataInicio, dataFim);
+    }
+
+
+
     // ---- MÉTODOS AUXILIARES ---- //
     private Date parseDate(Date date) {
         try {
@@ -123,6 +151,17 @@ public class RelatorioService {
                 (String) result[0],  // nome
                 (Double) result[1],  // valorTotal
                 formatarData((Date) result[2])  // data formatada
+        );
+    }
+
+
+    private UltimaVendaDTO mapToUltimaVendaDTO(Object[] resultado) {
+        return new UltimaVendaDTO(
+                (UUID) resultado[0],     // vendaId
+                (UUID) resultado[1],     // clienteId
+                (String) resultado[2],   // clienteNome
+                ((LocalDateTime) resultado[3]),  // dataVenda
+                ((Number) resultado[4]).doubleValue()          // valor
         );
     }
 

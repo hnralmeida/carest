@@ -40,6 +40,4 @@ public class AcessoController extends _GenericController<Acesso> {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
-
-
 }

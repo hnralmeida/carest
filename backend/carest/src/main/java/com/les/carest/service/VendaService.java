@@ -20,13 +20,11 @@ public class VendaService {
 
     @Autowired private VendaRepository vendaRepository;
 
-
     @Autowired private ClienteRepository clienteRepository;
 
     @Autowired private ItemVendaRepository itemVendaRepository;
 
     @Autowired private ProdutoRepository produtoRepository;
-
 
 
     @Transactional
