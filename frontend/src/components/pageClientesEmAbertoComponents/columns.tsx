@@ -13,7 +13,7 @@ export const columns: ColumnDef<Cliente>[] = [
     accessorKey: "saldo",
     header: "Valor da Dívida",
     cell: ({ row }) => {
-          const formated = formatarParaMoeda(`${row.getValue('saldo')}`)
+          const formated = formatarParaMoeda(`${row.getValue('saldo')}`, true)
           return <div className='text-right'>{formated}</div>
         },
   }

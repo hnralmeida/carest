@@ -222,7 +222,7 @@ public class RelatorioController {
         return ResponseEntity.ok(resultados);
     }
 
-    @GetMapping(value = "/pdf/clienteDiario", produces = MediaType.APPLICATION_PDF_VALUE)
+    @GetMapping(value = "/pdf/consumoDiario", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> getClienteDiarioPdf(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataInicio,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataFim) {
@@ -230,7 +230,7 @@ public class RelatorioController {
         // Gera o gráfico como imagem
         BufferedImage imagemGerada = PlotUtils.generateConsumoDiarioChart(
                 relatorioService.getConsumoDiarioParaGrafico(dataInicio, dataFim),
-                "Relatório Cliente Diário");
+                "Relatório Consumo Diário");
 
         // Converte BufferedImage em byte[]
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -251,17 +251,29 @@ public class RelatorioController {
                 .body(pdf);
     }
 
-    @GetMapping(value = "/clienteDiario", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<BufferedImage> getClienteDiario(
+    @GetMapping(value = "/consumoDiario", produces = MediaType.IMAGE_PNG_VALUE)
+    public ResponseEntity<byte[]> getClienteDiario(
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataInicio,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataFim) {
 
-        // Gera o gráfico como imagem
-        BufferedImage imagemGerada = PlotUtils.generateConsumoDiarioChart(
-                relatorioService.getConsumoDiarioParaGrafico(dataInicio, dataFim),
-                "Relatório Cliente Diário");
-        return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_PNG)
-                .body(imagemGerada);
+        try {
+            // Gera o gráfico como imagem
+            BufferedImage imagemGerada = PlotUtils.generateConsumoDiarioChart(
+                    relatorioService.getConsumoDiarioParaGrafico(dataInicio, dataFim),
+                    "Relatório Consumo Diário");
+
+            // Converte a imagem em um array de bytes
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(imagemGerada, "png", baos);
+            byte[] imagemBytes = baos.toByteArray();
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_PNG)
+                    .body(imagemBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
     }
+
 }

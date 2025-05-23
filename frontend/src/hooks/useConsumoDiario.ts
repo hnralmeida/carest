@@ -14,14 +14,18 @@ export const useConsumoDiarioHook = () => {
             return Promise.reject("Data de início e fim são obrigatórias");
         }
         try {
-            const response = await axiosClient.get(`/relatorios/clienteDiario?dataInicio=${dataInicio}&dataFim=${dataFim}`);
-            const blob = await response.data.blob();
+            const response = await axiosClient.get(`/relatorios/consumoDiario?dataInicio=${dataInicio}&dataFim=${dataFim}`,
+                { responseType: 'blob' }
+            );
+            const blob = await response.data;
+            console.log("Blob URL:", URL.createObjectURL(blob));
             if (blob) {
                 setConsumoDiario(URL.createObjectURL(blob));
             }
             setLoading(false);
         } catch (error) {
             setLoading(false);
+            console.log(error);
             return Promise.reject("Erro ao buscar dados do Consumo Diário");
         }
     };
@@ -30,7 +34,7 @@ export const useConsumoDiarioHook = () => {
         setLoading(true);
 
         try {
-            const response = await axiosClient.get(`/relatorios/pdf/clienteDiario?dataInicio=${dataInicio}&dataFim=${dataFim}`, {
+            const response = await axiosClient.get(`/relatorios/pdf/consumoDiario?dataInicio=${dataInicio}&dataFim=${dataFim}`, {
                 responseType: 'blob', // importante para receber os dados como blob
             });
 

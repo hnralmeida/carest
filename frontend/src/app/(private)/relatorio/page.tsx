@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useConsumoDiarioHook } from "@/hooks/useConsumoDiario";
-import View from "@/components/pageConsumoDiarioComponents/view";
-import { FileDown, Printer } from "lucide-react";
+import { columns } from "../../../components/pageRelatorioProdutoComponents/columns";
+import { useRelatorioProdutoHook } from "@/hooks/useRelatorioProduto";
+import { DataTable } from "@/components/pageRelatorioProdutoComponents/DataTable";
+import { Printer } from "lucide-react";
 import { toast, Toaster } from "sonner";
 
 function Page() {
-  const { consumoDiario, listarConsumoDiario, relatoriosConsumoDiario, loading } = useConsumoDiarioHook();
+  const { loading, relatorioProduto, listarRelatorioProduto, relatoriosRelatorioProduto } = useRelatorioProdutoHook();
 
   const [dataInicio, setDataInicio] = useState<string | null>(null);
   const [dataFim, setDataFim] = useState<string | null>(null);
@@ -20,7 +21,7 @@ function Page() {
     setDataInicio(dataInicioFormatada.toISOString().split('T')[0]);
     setDataFim(dataFimFormatada.toISOString().split('T')[0]);
 
-    listarConsumoDiario(dataInicioFormatada.toISOString().split('T')[0], dataFimFormatada.toISOString().split('T')[0]).catch((res: any) => {
+    listarRelatorioProduto(dataInicioFormatada.toISOString().split('T')[0], dataFimFormatada.toISOString().split('T')[0]).catch((res: any) => {
       toast.error(res);
     });
   }, []);
@@ -30,7 +31,7 @@ function Page() {
       toast.error("Data de início e fim são obrigatórias");
       return;
     }
-    relatoriosConsumoDiario(dataInicio, dataFim).then(() => {
+    relatoriosRelatorioProduto(dataInicio, dataFim).then(() => {
       toast.success("Relatório gerado com sucesso!");
     }).catch((res: any) => {
       toast.error(res);
@@ -42,7 +43,7 @@ function Page() {
     <div className="container rounded-md border mx-auto my-16 py-4 px-4 content-bg">
       <Toaster richColors position="top-center" />
       <div className="flex justify-between items-center w-full mb-4">
-        <h1 className="text-2xl font-bold">Consumo Diário</h1>
+        <h1 className="text-2xl font-bold">Relatório de Produto</h1>
         <button
           className="button-print"
           onClick={() => handlePrint()}
@@ -52,13 +53,11 @@ function Page() {
           Exportar
         </button>
       </div>
-      {consumoDiario ?
-        <div className="flex justify-center items-center w-full mb-4">
-          <img src={consumoDiario} alt="Consumo Diário" className="max-w-full h-auto object-contain" />
-        </div>
-        :
+      {relatorioProduto ? (
+        <DataTable columns={columns} data={relatorioProduto} />
+      ) : (
         <p>Sem Resultados.</p>
-      }
+      )}
     </div>
   );
 }

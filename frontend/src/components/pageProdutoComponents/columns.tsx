@@ -21,7 +21,7 @@ export const columns: ColumnDef<Produto>[] = [
     accessorKey: "custo",
     header: "Custo",
     cell: ({ row }) => {
-      const formated = formatarParaMoeda(`${row.getValue('custo')}`)
+      const formated = formatarParaMoeda(`${row.getValue('custo')}`, true)
       return <div className='text-right'>{formated}</div>
     },
   },

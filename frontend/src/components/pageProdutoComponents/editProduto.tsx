@@ -35,8 +35,8 @@ export default function EditProduto({ id, nome, valor, codigo, custo }: EditProd
 
   useEffect(() => {
     setFormNome(nome);
-    setFormValor(formatarParaMoeda(valor.toFixed(2)));
-    setFormCusto(formatarParaMoeda(custo.toFixed(2)));
+    setFormValor(formatarParaMoeda(valor.toString(), true));
+    setFormCusto(formatarParaMoeda(custo.toString(), true));
     setFormCodigo(codigo);
   }, [nome, valor, codigo, custo]);
 
@@ -162,7 +162,6 @@ export default function EditProduto({ id, nome, valor, codigo, custo }: EditProd
           </Button>
         </form>
       </DialogContent>
-      <Toaster richColors position="bottom-center" closeButton />
     </Dialog>
   );
 }

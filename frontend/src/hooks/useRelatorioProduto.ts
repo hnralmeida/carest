@@ -1,31 +1,31 @@
 import { useState } from "react";
 import { axiosClient } from "@/services/axiosClient";
-import { Cliente } from "@/models/cliente";
+import { RelatorioProduto } from "@/models/relatorioProduto";
 
 
-export const useClientesDiarioHook = () => {
-    const [clientesDiario, setClientesDiario] = useState<Cliente[] | null>(null);
+export const useRelatorioProdutoHook = () => {
+    const [relatorioProduto, setRelatorioProduto] = useState<RelatorioProduto[] | null>(null);
     const [loading, setLoading] = useState(false);
 
-    const listarClientesDiario = async () => {
+    const listarRelatorioProduto = async (dataInicio: string, dataFim: string) => {
         setLoading(true);
         try {
-            const response = await axiosClient.get(`/relatorios/diario`);
+            const response = await axiosClient.get(`/relatorios/produtosSerial?dataInicio=${dataInicio}&dataFim=${dataFim}`);
             if (response.data) {
-                setClientesDiario(response.data);
+                setRelatorioProduto(response.data);
             }
             setLoading(false);
         } catch (error) {
             setLoading(false);
-            return Promise.reject("Erro ao buscar clientes");
+            return Promise.reject("Erro ao buscar consumo de Produto");
         }
     };
 
-    const relatoriosClientesDiario = async () => {
+    const relatoriosRelatorioProduto = async (dataInicio: string, dataFim: string) => {
         setLoading(true);
 
         try {
-            const response = await axiosClient.get(`/relatorios/pdf/diario`, {
+            const response = await axiosClient.get(`/relatorios/pdf/produtosSerial?dataInicio=${dataInicio}&dataFim=${dataFim}`, {
                 responseType: 'blob', // importante para receber os dados como blob
             });
 
@@ -36,7 +36,7 @@ export const useClientesDiarioHook = () => {
             // Cria um link e aciona o clique automaticamente
             const link = document.createElement('a');
             link.href = url;
-            link.download = 'relatorio-clientes.pdf'; // nome do arquivo
+            link.download = 'relatorio-consumo-produtos.pdf'; // nome do arquivo
             link.click();
 
             // Libera o objeto do URL após uso
@@ -52,8 +52,8 @@ export const useClientesDiarioHook = () => {
 
     return {
         loading,
-        clientesDiario,
-        listarClientesDiario,
-        relatoriosClientesDiario,
+        relatorioProduto,
+        listarRelatorioProduto,
+        relatoriosRelatorioProduto,
     };
 };
