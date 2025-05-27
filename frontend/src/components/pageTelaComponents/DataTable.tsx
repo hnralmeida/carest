@@ -24,16 +24,18 @@ import { axiosClient } from "@/services/axiosClient";
 import EditTela from "./editTela";
 import { toast, Toaster } from "sonner";
 import { useSession } from "next-auth/react";
+import { Tela } from "@/models/tela";
+import FooterPagination from "../footerPagination";
 
-interface DataTableProps<Tela, TValue> {
+interface DataTableProps<TValue> {
   columns: ColumnDef<Tela, TValue>[];
   data: Tela[];
 }
 
-export function DataTable<Tela, TValue>({
+export function DataTable<TValue>({
   columns,
   data,
-}: DataTableProps<Tela, TValue>) {
+}: DataTableProps<TValue>) {
 
   const table = useReactTable({
     data,
@@ -130,23 +132,7 @@ export function DataTable<Tela, TValue>({
             </TableRow>
           )}
         </TableBody>
-        <TableFooter>
-          {Array.from({ length: table.getPageCount() }, (_, i) => (
-            <tr key={i}>
-              <td>
-                <button
-                  className={`px-3 py-1 border rounded cursor-pointer btn-hover-scale hover:bg-[var(--secondary-color)] hover:text-[var(--white-color)] ${table.getState().pagination.pageIndex === i
-                      ? "bg-[var(--primary-color)] text-[var(--white-color)]"
-                      : ""
-                    }`}
-                  onClick={() => table.setPageIndex(i)}
-                >
-                  {i + 1}
-                </button>
-              </td>
-            </tr>
-          ))}
-        </TableFooter>
+        <FooterPagination table={table} />
       </Table>
     </div>
   );

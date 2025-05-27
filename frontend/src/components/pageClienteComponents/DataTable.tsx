@@ -23,16 +23,18 @@ import { Button } from "@/components/ui/button";
 import EditCliente from "./editCliente";
 import { axiosClient } from "@/services/axiosClient";
 import { toast, Toaster } from "sonner";
+import FooterPagination from "../footerPagination";
+import { Cliente } from "@/models/cliente";
 
-interface DataTableProps<Cliente, TValue> {
+interface DataTableProps<TValue> {
   columns: ColumnDef<Cliente, TValue>[];
   data: Cliente[];
 }
 
-export function DataTable<Cliente, TValue>({
+export function DataTable<TValue>({
   columns,
   data,
-}: DataTableProps<Cliente, TValue>) {
+}: DataTableProps<TValue>) {
   const table = useReactTable({
     data,
     columns,
@@ -127,23 +129,9 @@ export function DataTable<Cliente, TValue>({
             </TableRow>
           )}
         </TableBody>
-        <TableFooter>
-          {Array.from({ length: table.getPageCount() }, (_, i) => (
-            <tr key={i}>
-              <td>
-                <button
-                  className={`px-3 py-1 border rounded cursor-pointer btn-hover-scale hover:bg-[var(--secondary-color)] hover:text-[var(--white-color)] ${table.getState().pagination.pageIndex === i
-                      ? "bg-[var(--primary-color)] text-[var(--white-color)]"
-                      : ""
-                    }`}
-                  onClick={() => table.setPageIndex(i)}
-                >
-                  {i + 1}
-                </button>
-              </td>
-            </tr>
-          ))}
-        </TableFooter>
+        <FooterPagination
+          table={table}
+        />
 
       </Table>
       <Toaster richColors position="top-center" />

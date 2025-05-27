@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { axiosClient } from "@/services/axiosClient";
+import { toast } from "sonner";
 
 export default function AddFornecedor() {
   const [open, setOpen] = useState(false);
@@ -25,16 +26,16 @@ export default function AddFornecedor() {
       const response = await axiosClient.post("/fornecedor", { nome });
 
       if (response.status === 201) {
-        alert("Fornecedor adicionado com sucesso!");
+        toast.success("Fornecedor adicionado com sucesso!");
         setOpen(false); // Fecha o modal após sucesso
         setNome(""); // Limpa o campo do formulário
         window.location.reload(); // Recarrega a página para exibir o novo fornecedor
       } else {
-        alert("Erro ao adicionar fornecedor.");
+        toast.error("Erro ao adicionar fornecedor.");
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
-      alert("Falha ao conectar com o servidor.");
+      toast.error("Falha ao conectar com o servidor.");
     }
   };
 

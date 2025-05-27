@@ -100,81 +100,13 @@ public class UsuarioService extends _GenericService<Usuario, UsuarioRepository> 
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado");
         }
 
-        Tela tela;
-        try {
-            tela = telaService.buscarPorNome(nomeTela);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tela não encontrada com o nome fornecido");
-        }
+        Tela tela = new Tela();
+        tela.setNome(nomeTela);
+        tela.setRota(rotaTela);
+        telaService.criar(tela);
 
-        if (tela.getNome() == null || tela.getRota() == null || !tela.getNome().equals(nomeTela)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Nome da tela ou rota inválida");
-        }
-
-        Optional<Permissao> permissaoOptional = permissaoService.buscarPorUsuarioETela(usuario, tela);
-
-        if (permissaoOptional.isPresent()) {
-            Permissao permissao = permissaoOptional.get();
-            permissao.setRead(true);
-            permissaoService.atualizar(permissao.getId(), permissao); // ou salvar direto, se for o mesmo método
-        } else {
-            Permissao novaPermissao = new Permissao(usuario, tela, false, true, false, false);
-            permissaoService.criar(novaPermissao);
-        }
-    }
-
-    public void permitirTela(Permissao permissao, UUID usuarioId) {
-        Usuario usuario;
-        try {
-            usuario = this.buscarPorId(usuarioId);
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Usuário não encontrado");
-        }
-
-        try {
-            Permissao permissaoExistente = permissaoService.buscarPorId(permissao.getId());
-
-            permissaoExistente.setCreate(permissao.isCreate());
-            permissaoExistente.setRead(permissao.isRead());
-            permissaoExistente.setUpdate(permissao.isUpdate());
-            permissaoExistente.setDelete(permissao.isDelete());
-
-            permissaoService.atualizar(permissaoExistente.getId(), permissaoExistente);
-
-        } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Permissão não encontrado");
-        }
-
-
-    }
-
-    public Usuario atualizarPermissoes(UUID id, List<Permissao> permissoes) {
-        Usuario usuarioExistente = this.buscarPorId(id);
-
-        // Atualizar permissões
-        if (permissoes != null && !permissoes.isEmpty()) {
-            for (Permissao permissaoAtualizada : permissoes) {
-                Optional<Permissao> permissaoExistenteOpt = permissaoService
-                        .buscarPorUsuarioETela(usuarioExistente, permissaoAtualizada.getTela());
-
-                if (permissaoExistenteOpt.isPresent()) {
-                    Permissao permissaoExistente = permissaoExistenteOpt.get();
-
-                    permissaoExistente.setCreate(permissaoAtualizada.isCreate());
-                    permissaoExistente.setRead(permissaoAtualizada.isRead());
-                    permissaoExistente.setUpdate(permissaoAtualizada.isUpdate());
-                    permissaoExistente.setDelete(permissaoAtualizada.isDelete());
-
-                    permissaoService.atualizar(permissaoExistente.getId(), permissaoExistente);
-                } else {
-                    // Se não existir, cria nova permissão
-                    permissaoAtualizada.setUsuario(usuarioExistente);
-                    permissaoService.criar(permissaoAtualizada);
-                }
-            }
-        }
-
-        return super.atualizar(id, usuarioExistente);
+        Permissao novaPermissao = new Permissao(usuario, tela, false, true, false, false);
+        permissaoService.criar(novaPermissao);
     }
 
 }

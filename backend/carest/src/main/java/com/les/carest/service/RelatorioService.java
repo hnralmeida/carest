@@ -1,30 +1,40 @@
 package com.les.carest.service;
 
 import com.les.carest.model.Cliente;
-import com.les.carest.relatoriosDTO.AniversarianteDTO;
-import com.les.carest.relatoriosDTO.ClienteDiarioDTO;
-import com.les.carest.relatoriosDTO.ProdutoRelatorioDTO;
-import com.les.carest.relatoriosDTO.TicketMedioDTO;
-import com.les.carest.relatoriosDTO.UltimaVendaDTO;
+import com.les.carest.model.Saidas;
+import com.les.carest.model.Venda;
+import com.les.carest.relatoriosDTO.*;
 import com.les.carest.repository.RelatorioRepository;
+import com.les.carest.repository.SaidasRepository;
+import com.les.carest.repository.VendaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
 public class RelatorioService {
 
     private final RelatorioRepository relatorioRepository;
+    private final SaidasRepository saidasRepository;
+    private VendaRepository vendaRepository;
+
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-    public RelatorioService(RelatorioRepository relatorioRepository) {
+    public RelatorioService(RelatorioRepository relatorioRepository,
+                            SaidasRepository saidasRepository,
+                            VendaRepository vendaRepository)
+    {
+        this.saidasRepository = saidasRepository;
         this.relatorioRepository = relatorioRepository;
+        this.vendaRepository = vendaRepository;
     }
 
     public List<TicketMedioDTO> getTicketMedioMultiplosClientes(Date dataInicio, Date dataFim) {
@@ -156,4 +166,44 @@ public class RelatorioService {
     private String formatarData(Date data) {
         return data != null ? dateFormat.format(data) : "N/A";
     }
+
+    public List<DesempenhoDTO> gerarRelatorioDRE(Date dataInicio, Date dataFim) {
+        ZoneId zoneId = ZoneId.systemDefault();
+
+        // Função utilitária para zerar a hora do Date (para agrupar por dia)
+        Function<Date, Date> normalizarData = date ->
+                Date.from(date.toInstant().atZone(zoneId).toLocalDate()
+                        .atStartOfDay(zoneId).toInstant());
+
+        Map<Date, Double> saidasPorDia = saidasRepository
+                .findByDataPagamentoBetween(dataInicio, dataFim)
+                .stream()
+                .collect(Collectors.groupingBy(
+                        s -> normalizarData.apply(s.getDataPagamento()),
+                        Collectors.summingDouble(Saidas::getValor)
+                ));
+
+        Map<Date, List<Venda>> vendasPorDia = vendaRepository
+                .findByDataVendaBetween(dataInicio, dataFim)
+                .stream()
+                .collect(Collectors.groupingBy(
+                        v -> normalizarData.apply(v.getDataVenda())
+                ));
+
+        Set<Date> dias = new HashSet<>();
+        dias.addAll(saidasPorDia.keySet());
+        dias.addAll(vendasPorDia.keySet());
+
+        return dias.stream()
+                .sorted()
+                .map(data -> {
+                    double saidas = saidasPorDia.getOrDefault(data, 0.0);
+                    List<Venda> vendas = vendasPorDia.getOrDefault(data, List.of());
+                    double entradas = vendas.stream().mapToDouble(Venda::getValorTotal).sum();
+                    long clientes = vendas.stream().map(v -> v.getCliente().getId()).distinct().count();
+                    return new DesempenhoDTO(data, entradas, saidas, clientes);
+                })
+                .toList();
+    }
+
 }

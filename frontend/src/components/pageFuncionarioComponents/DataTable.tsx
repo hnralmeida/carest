@@ -24,16 +24,17 @@ import { axiosClient } from "@/services/axiosClient";
 import EditFuncionario from "./editFuncionario";
 import EditPermissoes from "./editPermissoes";
 import { toast, Toaster } from "sonner";
+import { Usuario } from "@/models/usuario";
 
-interface DataTableProps<Funcionario, TValue> {
-  columns: ColumnDef<Funcionario, TValue>[];
-  data: Funcionario[];
+interface DataTableProps<TValue> {
+  columns: ColumnDef<Usuario, TValue>[];
+  data: Usuario[];
 }
 
-export function DataTable<Funcionario, TValue>({
+export function DataTable<TValue>({
   columns,
   data,
-}: DataTableProps<Funcionario, TValue>) {
+}: DataTableProps<TValue>) {
   const table = useReactTable({
     data,
     columns,

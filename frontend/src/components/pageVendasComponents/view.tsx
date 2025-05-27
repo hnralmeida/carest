@@ -51,6 +51,7 @@ const VendasView = () => {
                     else
                         await buscarCliente(codigoLido)
                 } catch (e: any) {
+                    console.log("Error\n", e);
                     if (e.response.status == 404 && cliente?.id) {
                         toast.error("Produto não encontrado")
                     } else if (e.response.status == 404) {

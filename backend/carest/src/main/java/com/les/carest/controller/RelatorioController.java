@@ -3,11 +3,7 @@ package com.les.carest.controller;
 import com.les.carest.model.Cliente;
 import com.les.carest.pdfGenerator.GenericPDF;
 import com.les.carest.pdfGenerator.PlotUtils;
-import com.les.carest.relatoriosDTO.AniversarianteDTO;
-import com.les.carest.relatoriosDTO.ClienteDiarioDTO;
-import com.les.carest.relatoriosDTO.ProdutoRelatorioDTO;
-import com.les.carest.relatoriosDTO.TicketMedioDTO;
-import com.les.carest.relatoriosDTO.UltimaVendaDTO;
+import com.les.carest.relatoriosDTO.*;
 import com.les.carest.service.RelatorioService;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -28,6 +24,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -274,6 +271,21 @@ public class RelatorioController {
             e.printStackTrace();
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    @GetMapping("/pdf/dre-diario")
+    public ResponseEntity<byte[]> getDREPorDiaPdf(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataInicio,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataFim) {
+        List<DesempenhoDTO> resultados = relatorioService.gerarRelatorioDRE(dataInicio, dataFim);
+        return ResponseEntity.ok(GenericPDF.gerarRelatorioBytes(resultados, "Produtos Serial Vendidos"));
+    }
+
+    @GetMapping("/dre-diario")
+    public ResponseEntity<List<DesempenhoDTO>> getDREPorDia(
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataInicio,
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataFim) {
+        return ResponseEntity.ok(relatorioService.gerarRelatorioDRE(dataInicio, dataFim));
     }
 
 }

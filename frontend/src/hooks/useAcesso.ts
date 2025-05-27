@@ -10,7 +10,7 @@ export const useAcessoHook = () => {
         const acesso = response.data;
 
         if (response.status > 205) {
-            return Promise.reject("Cliente não encontrado");
+            return Promise.reject(response);
         } else {
             setCliente(acesso.cliente);
             return acesso;
@@ -18,7 +18,7 @@ export const useAcessoHook = () => {
     }
 
     const saidaCliente = async (codigo: string) => {
-        const response = await axiosClient.put(`/acesso/saida?codigoCliente=${codigo}`);
+        const response = await axiosClient.post(`/acesso/saida?codigo=${codigo}`);
         const saida = response.data;
 
         if (response.status > 205) {

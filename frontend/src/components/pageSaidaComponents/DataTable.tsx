@@ -18,17 +18,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { Text, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { toast, Toaster } from "sonner";
-import EditProduto from "./editProduto";
-import { useProdutoHook } from "@/hooks/useProdutos";
-import { Produto } from "@/models/produto";
+import EditSaida from "./editSaida";
+import { axiosClient } from "@/services/axiosClient";
+import { Saidas } from "../../models/saidas";
 import FooterPagination from "../footerPagination";
 
 interface DataTableProps<TValue> {
-  columns: ColumnDef<Produto, TValue>[];
-  data: Produto[];
+  columns: ColumnDef<Saidas, TValue>[];
+  data: Saidas[];
 }
 
 export function DataTable<TValue>({
@@ -42,27 +41,26 @@ export function DataTable<TValue>({
     getPaginationRowModel: getPaginationRowModel(),
   });
 
-  const { deletarProduto } = useProdutoHook();
-
-  async function onDelete(id: string) {
+  function onDelete(id: string) {
     const confirmDelete = window.confirm(
-      "Tem certeza que deseja excluir este produto?"
+      "Tem certeza que deseja excluir este Saida?"
     );
 
     if (confirmDelete) {
       try {
-
-        const response = await deletarProduto(id);
-
-        if (response) {
-          window.location.reload(); // Atualiza a lista após excluir
-          toast.success("Produto excluido com sucesso!");
-        } else {
-          toast.error("Falha ao excluir o Produto.");
-        }
+        axiosClient
+          .delete(`/Saida/${id}`)
+          .then(() => {
+            alert("Saida excluído com sucesso!");
+            window.location.reload(); // Atualiza a lista após excluir
+          })
+          .catch((error) => {
+            console.error("Erro ao excluir:", error);
+            alert("Falha ao excluir o Saida.");
+          });
       } catch (error) {
         console.error("Erro na requisição:", error);
-        toast.error("Erro ao conectar com o servidor.");
+        alert("Erro ao conectar com o servidor.");
       }
     }
   }
@@ -106,13 +104,10 @@ export function DataTable<TValue>({
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
-                <TableCell className="flex w-48 gap-2">
-                  <EditProduto
+                <TableCell className="flex w-32 gap-2">
+                  <EditSaida
                     id={row.original.id}
-                    nome={row.original.nome}
-                    valor={row.original.valor}
-                    custo={row.original.custo}
-                    codigo={row.original.codigo}
+                    item={row.original}
                   />
                   <Button
                     className="button-table"
@@ -133,9 +128,10 @@ export function DataTable<TValue>({
             </TableRow>
           )}
         </TableBody>
-        <FooterPagination table={table} />
+        <FooterPagination
+          table={table}
+        />
       </Table>
-      <Toaster richColors position="bottom-center" closeButton />
     </div>
   );
 }

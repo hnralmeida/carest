@@ -33,32 +33,11 @@ public class UsuarioController extends _GenericController<Usuario> {
         return ResponseEntity.ok(permissoes);
     }
 
-    @PostMapping("/criarPermissoes/{id}")
-    public ResponseEntity<String> fazerPermissoes(@PathVariable UUID id) {
-        usuarioService.fazerPermissoes(id);
-
-        return ResponseEntity.ok("Permissões criadas");
-    }
-
     @PostMapping("/permitir")
     public ResponseEntity<String> permitir(@RequestBody PermitirDTO permitirDTO) {
         usuarioService.permitir(permitirDTO.getUserId(), permitirDTO.getNomeTela(), permitirDTO.getRotaTela());
 
         return ResponseEntity.ok("Permissões criadas");
-    }
-
-    @PostMapping("/permitir/{id}")
-    public ResponseEntity<String> permitirPorId(@PathVariable UUID id, @RequestBody Permissao permissao) {
-        usuarioService.permitirTela(permissao, id);
-
-        return ResponseEntity.ok("Permissão atualizada");
-    }
-
-    @PostMapping("/atualizarPermissoes/{id}")
-    public ResponseEntity<String>  atualizarPermissoes(@PathVariable UUID id, @RequestBody List<Permissao> permissao) {
-        usuarioService.atualizarPermissoes(id, permissao);
-
-        return ResponseEntity.ok("Permissão atualizada");
     }
 
     @GetMapping("/email/{email}")

@@ -17,55 +17,24 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-import { Text, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { toast, Toaster } from "sonner";
-import EditProduto from "./editProduto";
-import { useProdutoHook } from "@/hooks/useProdutos";
-import { Produto } from "@/models/produto";
 import FooterPagination from "../footerPagination";
+import { DRE } from "@/models/dre";
 
 interface DataTableProps<TValue> {
-  columns: ColumnDef<Produto, TValue>[];
-  data: Produto[];
+  columns: ColumnDef<DRE, TValue>[];
+  data: DRE[];
 }
 
-export function DataTable<TValue>({
+export function DataTable<DRE>({
   columns,
   data,
-}: DataTableProps<TValue>) {
+}: DataTableProps<DRE>) {
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
-
-  const { deletarProduto } = useProdutoHook();
-
-  async function onDelete(id: string) {
-    const confirmDelete = window.confirm(
-      "Tem certeza que deseja excluir este produto?"
-    );
-
-    if (confirmDelete) {
-      try {
-
-        const response = await deletarProduto(id);
-
-        if (response) {
-          window.location.reload(); // Atualiza a lista após excluir
-          toast.success("Produto excluido com sucesso!");
-        } else {
-          toast.error("Falha ao excluir o Produto.");
-        }
-      } catch (error) {
-        console.error("Erro na requisição:", error);
-        toast.error("Erro ao conectar com o servidor.");
-      }
-    }
-  }
 
   return (
     <div className="rounded-md border overflow-x-auto">
@@ -86,7 +55,6 @@ export function DataTable<TValue>({
                     )}
                 </TableHead>
               ))}
-              <TableHead className="w-[96px]" />
             </TableRow>
           ))}
         </TableHeader>
@@ -106,23 +74,6 @@ export function DataTable<TValue>({
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </TableCell>
                 ))}
-                <TableCell className="flex w-48 gap-2">
-                  <EditProduto
-                    id={row.original.id}
-                    nome={row.original.nome}
-                    valor={row.original.valor}
-                    custo={row.original.custo}
-                    codigo={row.original.codigo}
-                  />
-                  <Button
-                    className="button-table"
-                    variant="outline"
-                    size="icon"
-                    onClick={() => onDelete(row.original.id)}
-                  >
-                    <Trash2 size={24} />
-                  </Button>
-                </TableCell>
               </TableRow>
             ))
           ) : (
@@ -135,7 +86,6 @@ export function DataTable<TValue>({
         </TableBody>
         <FooterPagination table={table} />
       </Table>
-      <Toaster richColors position="bottom-center" closeButton />
     </div>
   );
 }

@@ -11,7 +11,8 @@ const AcessoView = () => {
     const { buscarAcesso, cliente, saidaCliente } = useAcessoHook();
 
     const [codigoLido, setCodigoLido] = React.useState("");
-    const [ perform, setPerform] = React.useState("ENTRADA");
+    const [saida, setSaida] = React.useState("");
+    const [perform, setPerform] = React.useState("ENTRADA");
 
     const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
@@ -24,9 +25,11 @@ const AcessoView = () => {
                     console.log(codigoLido)
                     //retira tudo que não for numeros de codigoLido
                     const codigoLidoLimpo = codigoLido.replace(/\D/g, "");
+                    setSaida(codigoLidoLimpo);
                     await buscarAcesso(codigoLidoLimpo)
                     setPerform("ENTRADA")
                 } catch (e: any) {
+                    console.log(e)
                     if (e.response.status == 404) {
                         toast.error("Cliente não encontrado")
                     }
@@ -37,8 +40,24 @@ const AcessoView = () => {
                         toast.error("Código já utilizado")
                     }
                     else if (e.response.status == 400) {
-                        await saidaCliente(codigoLido)
-                        setPerform("SAÍDA")
+                        const codigoLidoLimpo = codigoLido.replace(/\D/g, "");
+                        try {
+                            await saidaCliente(codigoLidoLimpo)
+                            setPerform("SAÍDA")
+                        } catch (e: any) {
+                            console.log(e)
+                            if (e.response.status == 404) {
+                                toast.error("Cliente não encontrado")
+                            }
+                            else if (e.response.status == 500) {
+                                toast.error("Erro interno do servidor")
+                            }
+                            else if (e.response.status == 401) {
+                                toast.error("Código já utilizado")
+                            } else {
+                                toast.error(e.response.data)
+                            }
+                        }
                     }
                     else {
                         toast.error(e.response.data)

@@ -16,45 +16,50 @@ export const useVendasHook = () => {
     const [cliente, setCliente] = React.useState({} as Cliente);
 
     async function buscarProduto(codigo: string): Promise<void> {
-        const response = await axiosClient.get(`/produtos/serial/codigo/${codigo}`);
-        const produto = response.data;
+        try {
+            const response = await axiosClient.get(`/produtos/serial/codigo/${codigo}`);
+            const produto = response.data;
 
-        if (response.status > 205) {
-            return Promise.reject("Produto não encontrado");
-        }
-
-        setProdutos(prev => {
-            const index = prev.findIndex(item => item.produto.codigo === produto.codigo);
-
-            if (index !== -1) {
-                // Produto já existe, atualiza a quantidade
-                const updated = [...prev];
-                updated[index] = {
-                    ...updated[index],
-                    quantidade: updated[index].quantidade + 1
-                };
-                return updated;
-            } else {
-                // Produto novo, adiciona ao carrinho
-                return [
-                    ...prev,
-                    {
-                        produto,
-                        quantidade: 1,
-                        valor: produto.valor
-                    }
-                ];
+            if (response.status > 205) {
+                return Promise.reject("Produto não encontrado");
             }
-        });
+
+            setProdutos(prev => {
+                const index = prev.findIndex(item => item.produto.codigo === produto.codigo);
+
+                if (index !== -1) {
+                    // Produto já existe, atualiza a quantidade
+                    const updated = [...prev];
+                    updated[index] = {
+                        ...updated[index],
+                        quantidade: updated[index].quantidade + 1
+                    };
+                    return updated;
+                } else {
+                    // Produto novo, adiciona ao carrinho
+                    return [
+                        ...prev,
+                        {
+                            produto,
+                            quantidade: 1,
+                            valor: produto.valor
+                        }
+                    ];
+                }
+            });
+        } catch (error) {
+            // Aqui, lançamos o erro original para poder tratá-lo no nível superior
+            return Promise.reject(error);
+        }
     }
 
     async function buscarCliente(codigo: string) {
-        const response = await axiosClient.get(`/clientes/codigo/${codigo}`);
-        const cliente = response.data;
-        if (response.status > 205) {
-            return Promise.reject("Cliente não encontrado");
-        } else {
-            setCliente(cliente);
+        try {
+            const response = await axiosClient.get(`/clientes/codigo/${codigo}`);
+            setCliente(response.data);
+        } catch (error) {
+            // Aqui, lançamos o erro original para poder tratá-lo no nível superior
+            return Promise.reject(error);
         }
     }
 
@@ -72,7 +77,7 @@ export const useVendasHook = () => {
             }))
         }
         console.log(body);
-        
+
         const response = await axiosClient.post("/vendas", body);
         if (response.status > 205) {
             return Promise.reject("Erro ao registrar venda");

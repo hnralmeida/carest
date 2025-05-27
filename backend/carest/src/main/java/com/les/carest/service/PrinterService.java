@@ -28,6 +28,8 @@ public class PrinterService {
                 + "Cliente: " + cliente.getNome() + "\n"
                 + "Codigo: " + cliente.getCodigo() + "\n"
                 + "Saldo: R$ " + String.format("%.2f", cliente.getSaldo()) + "\n"
+                + "----------------------------\n\n\n\n\n"
+                + "----------------------------\n\n\n\n\n"
                 + "----------------------------\n\n\n\n\n";
 
         InputStream stream = new ByteArrayInputStream(texto.getBytes(StandardCharsets.UTF_8));
