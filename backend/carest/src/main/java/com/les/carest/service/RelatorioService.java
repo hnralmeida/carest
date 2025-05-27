@@ -1,18 +1,16 @@
 package com.les.carest.service;
 
+import com.les.carest.DTO.relatorios.*;
 import com.les.carest.model.Cliente;
 import com.les.carest.model.Saidas;
 import com.les.carest.model.Venda;
-import com.les.carest.relatoriosDTO.*;
 import com.les.carest.repository.RelatorioRepository;
 import com.les.carest.repository.SaidasRepository;
 import com.les.carest.repository.VendaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;

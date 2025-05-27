@@ -1,6 +1,5 @@
-package com.les.carest.terminal;
+package com.les.carest.util.terminal;
 import com.les.carest.repository.ClienteRepository;
-import com.les.carest.repository.ProdutoRepository;
 import com.les.carest.service.PrinterService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;

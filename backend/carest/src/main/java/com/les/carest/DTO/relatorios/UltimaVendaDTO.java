@@ -1,4 +1,4 @@
-package com.les.carest.relatoriosDTO;
+package com.les.carest.DTO.relatorios;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;

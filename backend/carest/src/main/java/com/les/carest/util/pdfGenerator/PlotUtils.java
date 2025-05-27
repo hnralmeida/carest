@@ -1,6 +1,6 @@
-package com.les.carest.pdfGenerator;
+package com.les.carest.util.pdfGenerator;
 
-import com.les.carest.pdfGenerator.Plot.PlotOptions;
+import com.les.carest.util.pdfGenerator.Plot.PlotOptions;
 
 import java.awt.image.BufferedImage;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.les.carest.pdfGenerator;
+package com.les.carest.util.pdfGenerator;
 
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.PdfPCell;

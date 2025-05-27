@@ -1,12 +1,10 @@
 package com.les.carest.controller;
 
+import com.les.carest.DTO.relatorios.*;
 import com.les.carest.model.Cliente;
-import com.les.carest.pdfGenerator.GenericPDF;
-import com.les.carest.pdfGenerator.PlotUtils;
-import com.les.carest.relatoriosDTO.*;
+import com.les.carest.util.pdfGenerator.GenericPDF;
+import com.les.carest.util.pdfGenerator.PlotUtils;
 import com.les.carest.service.RelatorioService;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -14,17 +12,13 @@ import org.springframework.validation.annotation.Validated;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;

@@ -1,4 +1,4 @@
-package com.les.carest.terminal;
+package com.les.carest.util.terminal;
 
 import com.les.carest.model.Cliente;
 import com.les.carest.repository.ClienteRepository;
