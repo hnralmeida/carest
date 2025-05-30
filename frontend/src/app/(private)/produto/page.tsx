@@ -5,7 +5,7 @@ import { columns } from "../../../components/pageProdutoComponents/columns";
 import AddProduto from "@/components/pageProdutoComponents/addProduto";
 import { DataTable } from "@/components/pageProdutoComponents/DataTable";
 import { useProdutoHook } from "@/hooks/useProdutos";
-import ButtonEditBalanca from "@/components/editBalanca";
+import ButtonEditBalanca from "@/components/pageProdutoComponents/editBalanca";
 import { toast, Toaster } from "sonner";
 
 function Page() {

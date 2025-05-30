@@ -89,7 +89,7 @@ export const useProdutoHook = () => {
 
         const data = {
             "valor": valor,
-            "data": ISODateToDate(new Date)
+            "data": new Date().toISOString() 
         }
 
         try {

@@ -16,12 +16,21 @@ const VendasView = () => {
     const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
     React.useEffect(() => {
-        const fetch = async () => {
+        const fetchState = async () => {
             await new Promise(resolve => setTimeout(resolve, 1000));
             if (codigoLido.trim() == "123456") {
                 resetarVenda();
                 setCodigoLido("");
                 return;
+            }
+
+            console.log("Código lido:", codigoLido.trim());
+
+            // Código da balanca vai ser 10004800
+            if (codigoLido.trim() == "10004800") {
+                const res = await fetch('/api/peso');
+                const data = await res.json();
+                console.log(data);
             }
 
             if (codigoLido.trim() == "9000") {
@@ -32,11 +41,11 @@ const VendasView = () => {
                         toast.error("Cliente não encontrado")
                     } else if (e.response.status == 409) {
                         toast.error("Cliente não possui saldo suficiente")
-                        produtos.pop();     
+                        produtos.pop();
                     } else if (e.response.status == 500) {
                         toast.error("Erro interno do servidor")
                     } else {
-                        toast.error(e.response.status) 
+                        toast.error(e.response.status)
                     }
                 });
 
@@ -84,9 +93,9 @@ const VendasView = () => {
             if (!ignoredKeys.includes(e.key)) {
                 setCodigoLido((prev) => prev + e.key);
             }
-            
+
             if (e.key === "Enter") {
-                fetch();
+                fetchState();
             }
 
             // Limpa o código caso o usuário pare de digitar por mais de 1s

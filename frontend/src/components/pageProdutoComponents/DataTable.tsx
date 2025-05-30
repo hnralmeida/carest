@@ -18,9 +18,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { Text, Trash2 } from "lucide-react";
+import { BarChart, Barcode, Printer, Text, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { toast, Toaster } from "sonner";
+import { toast } from "sonner";
 import EditProduto from "./editProduto";
 import { useProdutoHook } from "@/hooks/useProdutos";
 import { Produto } from "@/models/produto";
@@ -67,6 +67,23 @@ export function DataTable<TValue>({
     }
   }
 
+  async function onPrint(produto: Produto) {
+    try {
+      toast(
+        `${produto.nome}`,
+        {
+          description: `${produto.codigo}`,
+          action: {
+            label: "Imprimir",
+            onClick: () => fetch(`/api/impressora?code=${produto.codigo}`),
+          },
+        }
+      )
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Erro ao imprimir");
+    }
+  }
+
   return (
     <div className="rounded-md border overflow-x-auto">
       <Table>
@@ -107,6 +124,14 @@ export function DataTable<TValue>({
                   </TableCell>
                 ))}
                 <TableCell className="flex w-48 gap-2">
+                  <Button
+                    className="button-table"
+                    variant="outline"
+                    size="icon"
+                    onClick={() => onPrint(row.original)}
+                  >
+                    <Barcode size={24} />
+                  </Button>
                   <EditProduto
                     id={row.original.id}
                     nome={row.original.nome}
@@ -135,7 +160,6 @@ export function DataTable<TValue>({
         </TableBody>
         <FooterPagination table={table} />
       </Table>
-      <Toaster richColors position="bottom-center" closeButton />
     </div>
   );
 }
