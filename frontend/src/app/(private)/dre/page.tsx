@@ -5,12 +5,13 @@ import { columns } from "../../../components/pageDREComponents/columns";
 import { DataTable } from "@/components/pageDREComponents/DataTable";
 import { useDreHook } from "@/hooks/useDre";
 import { toast, Toaster } from "sonner";
-import { Printer } from "lucide-react";
+import { Printer, Search } from "lucide-react";
+import { ButtonVariant } from "@/components/button-variant";
 
 function Page() {
   const { dre, listarDre, relatoriosDRE, loading } = useDreHook();
-  const [dataInicio, setDataInicio] = useState<string | null>(null);
-  const [dataFim, setDataFim] = useState<string | null>(null);
+  const [dataInicio, setDataInicio] = useState<string>('');
+  const [dataFim, setDataFim] = useState<string>('');
 
   useEffect(() => {
     const dataAtual = new Date();
@@ -37,6 +38,19 @@ function Page() {
     });
   };
 
+  const handleDataInicio = (data: string) => {
+    setDataInicio(data)
+  };
+
+  const handleDataFim = (data: string) => {
+    setDataFim(data)
+  }
+
+  const pressSearch = async () => {
+    listarDre(new Date(dataInicio).toString(), new Date(dataFim).toString()).catch((res: any) => {
+      toast.error(res);
+    });
+  }
 
   return (
     <div className="container rounded-md border mx-auto my-16 py-4 px-4 content-bg">
@@ -51,6 +65,32 @@ function Page() {
           <Printer className="size-4 mr-2" />
           Exportar
         </button>
+      </div>
+      <div className="flex flex-start gap-8 items-end w-full mb-4">
+        <div>
+          <p>Início</p>
+          <input
+            type="date"
+            className="input-search"
+            onChange={(e) => handleDataInicio(e.target.value)}
+            value={dataInicio}
+          />
+        </div>
+        <div>
+          <p>Fim</p>
+          <input
+            type="date"
+            className="input-search"
+            onChange={(e) => handleDataFim(e.target.value)}
+            value={dataFim}
+          />
+        </div>
+        <ButtonVariant
+          handlePress={pressSearch}
+          loading={loading}
+          text="Buscar"
+          Img={Search}
+        />
       </div>
       {dre ? (
         <DataTable columns={columns} data={dre} />

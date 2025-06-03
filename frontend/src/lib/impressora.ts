@@ -28,7 +28,7 @@ export class Impressora {
 
         if (i % etiquetasPorLinha === 0) {
           if (i !== 0) etiquetas += '\n^XZ';
-          etiquetas += '\n^XA\n^BY2';
+          etiquetas += '\n^XA\n^BY1';
         }
 
         etiquetas += `\n^FO${posX},${posY}^BCN,100,Y,N,N^FD${codigo}^FS`;

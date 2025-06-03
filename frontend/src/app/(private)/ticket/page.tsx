@@ -83,7 +83,7 @@ function Page() {
           text="Buscar"
           Img={Search}
         />
-      </div>
+      </div> 
       {ticketMedio ? (
         <DataTable columns={columns} data={ticketMedio} />
       ) : (
