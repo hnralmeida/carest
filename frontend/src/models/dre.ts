@@ -3,5 +3,5 @@ export interface DRE {
     entrada: number;
     saida: number;
     clientes: number;
-
+    saldoAnterior: number;
 }

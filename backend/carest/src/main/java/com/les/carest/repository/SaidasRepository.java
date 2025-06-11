@@ -11,5 +11,7 @@ import java.util.Date;
 @Repository
 public interface SaidasRepository extends JpaRepository<Saidas, UUID> {
     List<Saidas> findByDataPagamentoBetween(Date inicio, Date fim);
+
+    List<Saidas> findByDataPagamentoBefore(Date data);
 }
 

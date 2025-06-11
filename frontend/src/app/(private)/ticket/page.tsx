@@ -12,7 +12,7 @@ function Page() {
   const { loading, ticketMedio, listarTicketMedio, relatoriosTicketMedio, ticketPorData } = useTicketMedioHook();
   const [dataInicioForm, setDataInicioForm] = React.useState<string>('');
   const [dataFimForm, setDataFimForm] = React.useState<string>('');
-
+ 
   useEffect(() => {
     listarTicketMedio().catch((res: any) => {
       toast.error(res);

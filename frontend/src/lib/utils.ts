@@ -27,7 +27,7 @@ export function ISODateToDate(d: Date): string {
 
 export const formatarParaMoeda = (valor: string, formatado?: boolean) => {
   // Remove qualquer caractere que não seja número
-  const numero = valor.replace(/[^0-9.]/g, "");
+  const numero = valor.replace(/[^0-9.-]/g, "");
 
   // Converte para número com 2 casas decimais
   const valorNumerico = formatado ? (Number(numero)).toFixed(2) : (Number(numero) / 100).toFixed(2);

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
@@ -168,11 +169,24 @@ public class RelatorioService {
     public List<DesempenhoDTO> gerarRelatorioDRE(Date dataInicio, Date dataFim) {
         ZoneId zoneId = ZoneId.systemDefault();
 
-        // Função utilitária para zerar a hora do Date (para agrupar por dia)
         Function<Date, Date> normalizarData = date ->
                 Date.from(date.toInstant().atZone(zoneId).toLocalDate()
                         .atStartOfDay(zoneId).toInstant());
 
+        // Saldo anterior ao período
+        double totalEntradasAntes = vendaRepository.findByDataVendaBefore(dataInicio)
+                .stream()
+                .mapToDouble(Venda::getValorTotal)
+                .sum();
+
+        double totalSaidasAntes = saidasRepository.findByDataPagamentoBefore(dataInicio)
+                .stream()
+                .mapToDouble(Saidas::getValor)
+                .sum();
+
+        final double[] saldoAcumulado = {totalEntradasAntes - totalSaidasAntes};
+
+        // Dados por dia
         Map<Date, Double> saidasPorDia = saidasRepository
                 .findByDataPagamentoBetween(dataInicio, dataFim)
                 .stream()
@@ -188,20 +202,35 @@ public class RelatorioService {
                         v -> normalizarData.apply(v.getDataVenda())
                 ));
 
-        Set<Date> dias = new HashSet<>();
-        dias.addAll(saidasPorDia.keySet());
-        dias.addAll(vendasPorDia.keySet());
+        List<Date> dias = new ArrayList<>();
+        LocalDate start = dataInicio.toInstant().atZone(zoneId).toLocalDate();
+        LocalDate end = dataFim.toInstant().atZone(zoneId).toLocalDate();
+
+        for (LocalDate date = start; !date.isAfter(end); date = date.plusDays(1)) {
+            dias.add(Date.from(date.atStartOfDay(zoneId).toInstant()));
+        }
+
 
         return dias.stream()
                 .sorted()
                 .map(data -> {
+                    double entradas = vendasPorDia.getOrDefault(data, List.of())
+                            .stream().mapToDouble(Venda::getValorTotal).sum();
+
                     double saidas = saidasPorDia.getOrDefault(data, 0.0);
-                    List<Venda> vendas = vendasPorDia.getOrDefault(data, List.of());
-                    double entradas = vendas.stream().mapToDouble(Venda::getValorTotal).sum();
-                    long clientes = vendas.stream().map(v -> v.getCliente().getId()).distinct().count();
-                    return new DesempenhoDTO(data, entradas, saidas, clientes);
+
+                    long clientes = vendasPorDia.getOrDefault(data, List.of())
+                            .stream().map(v -> v.getCliente().getId()).distinct().count();
+
+                    double saldoAnterior = saldoAcumulado[0]; // saldo do dia anterior
+
+                    // Atualiza saldo acumulado para o próximo dia
+                    saldoAcumulado[0] += (entradas - saidas);
+
+                    return new DesempenhoDTO(data, entradas, saidas, clientes, saldoAnterior);
                 })
                 .toList();
     }
+
 
 }

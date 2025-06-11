@@ -21,7 +21,21 @@ export const useClientesDiarioHook = () => {
         }
     };
 
-    const relatoriosClientesDiario = async () => {
+    const listarClientesDiarioPorDia = async (data:String) => {
+        setLoading(true);
+        try {
+            const response = await axiosClient.get(`/relatorios/diario`);
+            if (response.data) {
+                setClientesDiario(response.data);
+            }
+            setLoading(false);
+        } catch (error) {
+            setLoading(false);
+            return Promise.reject("Erro ao buscar clientes");
+        }
+    };
+
+    const relatoriosClientesDiario = async (data: String) => {
         setLoading(true);
 
         try {
@@ -49,11 +63,11 @@ export const useClientesDiarioHook = () => {
         }
     };
 
-
     return {
         loading,
         clientesDiario,
         listarClientesDiario,
         relatoriosClientesDiario,
+        listarClientesDiarioPorDia
     };
 };

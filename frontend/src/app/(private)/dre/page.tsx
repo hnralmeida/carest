@@ -7,6 +7,7 @@ import { useDreHook } from "@/hooks/useDre";
 import { toast, Toaster } from "sonner";
 import { Printer, Search } from "lucide-react";
 import { ButtonVariant } from "@/components/button-variant";
+import { formatarParaMoeda } from "@/lib/utils";
 
 function Page() {
   const { dre, listarDre, relatoriosDRE, loading } = useDreHook();
@@ -18,10 +19,14 @@ function Page() {
     const dataInicioFormatada = new Date(dataAtual.getFullYear(), dataAtual.getMonth(), 1);
     const dataFimFormatada = new Date(dataAtual.getFullYear(), dataAtual.getMonth() + 1, dataAtual.getDay());
 
-    setDataInicio(dataInicioFormatada.toISOString().split('T')[0]);
-    setDataFim(dataFimFormatada.toISOString().split('T')[0]);
+    // Formatar datas para YYYY-MM-DD
+    const inicio = dataInicioFormatada.toISOString().split('T')[0];
+    const fim = dataFimFormatada.toISOString().split('T')[0];
 
-    listarDre(dataInicioFormatada.toISOString().split('T')[0], dataFimFormatada.toISOString().split('T')[0]).catch((res: any) => {
+    setDataInicio(inicio);
+    setDataFim(fim);
+
+    listarDre(inicio, fim).catch((res: any) => {
       toast.error(res);
     });
   }, []);
@@ -47,7 +52,13 @@ function Page() {
   }
 
   const pressSearch = async () => {
-    listarDre(new Date(dataInicio).toString(), new Date(dataFim).toString()).catch((res: any) => {
+    if (!dataInicio || !dataFim) {
+      toast.error("Data de início e fim são obrigatórias");
+      return;
+    }
+    listarDre(dataInicio, dataFim).then(() => {
+      toast.success("Relatório gerado com sucesso!");
+    }).catch((res: any) => {
       toast.error(res);
     });
   }
@@ -91,6 +102,13 @@ function Page() {
           text="Buscar"
           Img={Search}
         />
+        <div className="flex justify-end w-full">
+          {dre && dre.length > 0 ? (
+            <p className="text-right text-xl w-auto input-search pr-4 pl-4">
+              Saldo Anterior: {formatarParaMoeda(`${dre[0].saldoAnterior}`, true)}
+            </p>
+          ) : null}
+        </div>
       </div>
       {dre ? (
         <DataTable columns={columns} data={dre} />

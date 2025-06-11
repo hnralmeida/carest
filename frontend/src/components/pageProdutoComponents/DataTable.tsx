@@ -69,16 +69,24 @@ export function DataTable<TValue>({
 
   async function onPrint(produto: Produto) {
     try {
-      toast(
-        `${produto.nome}`,
-        {
-          description: `${produto.codigo}`,
-          action: {
-            label: "Imprimir",
-            onClick: () => fetch(`/api/impressora?code=${produto.codigo}`),
+      toast(`${produto.nome}`, {
+        description: `${produto.codigo}`,
+        action: {
+          label: "Imprimir",
+          onClick: async () => {
+            const quantidadeStr = prompt("Informe a quantidade a imprimir:");
+            const quantidade = parseInt(quantidadeStr || "0", 10);
+
+            if (isNaN(quantidade) || quantidade <= 0) {
+              toast.error("Quantidade inválida.");
+              return;
+            }
+
+            await fetch(`/api/impressora?code=${produto.codigo}&quantidade=${quantidade}`);
+            toast.success("Impressão enviada.");
           },
-        }
-      )
+        },
+      });
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Erro ao imprimir");
     }

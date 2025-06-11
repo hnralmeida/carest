@@ -18,4 +18,6 @@ public interface VendaRepository extends JpaRepository<Venda, UUID> {
     void diminuirSaldo(@Param("clienteId") UUID clienteId, @Param("desconto") double desconto);
 
     List<Venda> findByDataVendaBetween(Date inicio, Date fim);
+
+    List<Venda> findByDataVendaBefore(Date data);
 }

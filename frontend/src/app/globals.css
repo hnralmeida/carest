@@ -137,6 +137,7 @@
   border: 1px solid var(--neutral-color);
   border-radius: 8px;
   padding: 4 8px;
+  background-color: #fff;
 }
 
 @layer utilities {

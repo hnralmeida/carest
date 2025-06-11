@@ -10,7 +10,6 @@ export const useDreHook = () => {
     const listarDre = async (dataInicio: string, dataFim: string) => {
         setLoading(true);
         try {
-            const hoje = new Date();
             const response = await axiosClient.get(`/relatorios/dre-diario?dataInicio=${dataInicio}&dataFim=${dataFim}`);
             if (response.data) {
                 setDre(response.data);
@@ -19,7 +18,7 @@ export const useDreHook = () => {
         } catch (error) {
             setLoading(false);
             console.error('Error fetching administrators:', error);
-            return Promise.reject("Clientes não encontrados");
+            return Promise.reject("Erro ao enviar a requisição");
         }
     };
 

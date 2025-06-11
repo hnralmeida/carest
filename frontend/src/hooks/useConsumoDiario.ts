@@ -7,7 +7,7 @@ export const useConsumoDiarioHook = () => {
 
     const [loading, setLoading] = useState(false);
 
-    const listarConsumoDiario = async (dataInicio: string, dataFim: string) => {
+    const listarConsumoDiario = async (dataInicio: String, dataFim: String) => {
         setLoading(true);
         if (!dataInicio || !dataFim) {
             setLoading(false);

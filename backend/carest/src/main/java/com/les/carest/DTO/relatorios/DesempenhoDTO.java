@@ -7,15 +7,25 @@ public class DesempenhoDTO {
     private double entrada;
     private double saida;
     private long clientes;
+    private double saldoAnterior;
 
-    public DesempenhoDTO(Date data, double entrada, double saida, long clientes) {
+    public DesempenhoDTO(Date data, double entrada, double saida, long clientes, double saldoAnterior) {
         this.data = data;
         this.entrada = entrada;
         this.saida = saida;
         this.clientes = clientes;
+        this.saldoAnterior = saldoAnterior;
     }
 
     // Getters e Setters
+
+    public double getSaldoAnterior() {
+        return saldoAnterior;
+    }
+
+    public void setSaldoAnterior(double saldoAnterior) {
+        this.saldoAnterior = saldoAnterior;
+    }
 
     public Date getData() {
         return data;
