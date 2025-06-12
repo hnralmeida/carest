@@ -52,28 +52,12 @@
         </dependency>
 
         <!-- Spring Boot DevTools (opcional, para desenvolvimento) -->
-        <!-- Spring Boot Starter Security -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-
-        <!-- Spring Boot DevTools (opcional, para desenvolvimento) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <scope>runtime</scope>
             <optional>true</optional>
         </dependency>
-
-        <!-- PostgreSQL Driver -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
-        <!-- Lombok -->
 
         <!-- PostgreSQL Driver -->
         <dependency>
@@ -97,13 +81,6 @@
         </dependency>
 
         <!-- Spring Boot Starter Test -->
-
-        <!-- SpringDoc OpenAPI (Documentação da API) -->
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.0.2</version>
-        </dependency>
 
         <!-- Spring Boot Starter Test -->
         <dependency>
@@ -149,21 +126,6 @@
             <version>1.5.3</version>
         </dependency>
 
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-            <version>3.2.0</version> <!-- Use the latest version or match your Spring Boot version -->
-        </dependency>
-
-        <!-- Spring REST Docs (opcional, para documentação de APIs) -->
-        <dependency>
-            <groupId>org.springframework.restdocs</groupId>
-            <artifactId>spring-restdocs-mockmvc</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-
         <!-- Dependências para testes -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -204,17 +166,6 @@
         <!-- JJWT (JSON Web Token) -->
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-api</artifactId>
-            <version>0.11.5</version>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-impl</artifactId>
-            <version>0.11.5</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
             <version>0.11.5</version>
             <scope>runtime</scope>
@@ -224,7 +175,6 @@
 
     <build>
         <plugins>
-            <!-- Maven Compiler Plugin -->
             <!-- Maven Compiler Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -238,28 +188,6 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-
-            <!-- Asciidoctor Plugin (opcional, para documentação) -->
-            <plugin>
-                <groupId>org.asciidoctor</groupId>
-                <artifactId>asciidoctor-maven-plugin</artifactId>
-                <version>2.2.1</version>
-                <executions>
-                    <execution>
-                        <id>generate-docs</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>process-asciidoc</goal>
-                        </goals>
-                        <configuration>
-                            <backend>html</backend>
-                            <doctype>book</doctype>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-
             <!-- Spring Boot Maven Plugin -->
 
             <!-- Asciidoctor Plugin (opcional, para documentação) -->

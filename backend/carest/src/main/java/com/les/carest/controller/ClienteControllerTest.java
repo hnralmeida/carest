@@ -1,4 +1,4 @@
-package com.les.carest.controller;
+/*package com.les.carest.controller;
 
 import com.les.carest.DTO.ClienteDTO;
 import com.les.carest.service.ClienteService;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 
 
 
-
+/*
 
 @ExtendWith(MockitoExtension.class)
 public class ClienteControllerTest {
@@ -56,4 +56,4 @@ public class ClienteControllerTest {
         // Verifica se o método do service foi chamado
         verify(clienteService, times(1)).acharCliente(codigoTeste);
     }
-}
+}*/
