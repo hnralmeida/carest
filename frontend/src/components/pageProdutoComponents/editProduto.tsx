@@ -151,7 +151,16 @@ export default function EditProduto({ id, nome, valor, codigo, custo }: EditProd
             <Input
               id="codigo"
               value={formCodigo}
-              onChange={(e) => setFormCodigo(e.target.value)}
+              onChange={(e) => {
+                const apenasLetrasENumeros = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
+                setFormCodigo(apenasLetrasENumeros);
+              }}
+              onKeyDown={(e) => {
+                if ((e.key).toLocaleLowerCase() == 'enter') {
+                  e.preventDefault(); // impede que o enter dispare comportamento padrão
+                  // você pode adicionar uma ação aqui se quiser, tipo submeter ou processar
+                }
+              }}
               placeholder="Insira um codigo"
               required
             />

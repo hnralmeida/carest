@@ -45,7 +45,7 @@ export default function ButtonEditBalanca({ preco }: EditBalancaProps) {
     async function onPrint() {
         try {
             // Código da balanca vai ser 10004800
-            fetch(`/api/impressora?code=10004800`)
+            fetch(`/api/impressora?code=10004800&quantidade=3`)
         } catch (error) {
             toast.error(error instanceof Error ? error.message : "Erro ao imprimir");
         }

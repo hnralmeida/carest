@@ -61,24 +61,32 @@ export const useFuncionarioHook = () => {
     const criarFuncionario = async (Funcionario: Usuario): Promise<Usuario | null> => {
         try {
             const response = await axiosClient.post('/usuario', Funcionario);
+            const data = {
+                "userId": response.data.id,
+                "nomeTela": "Telas",
+                "rotaTela": "/tela"
+            }
+
             if (response.data) {
-                axiosClient.post("/usuario/criarPermissoes/" + response.data.id);
+                axiosClient.post("/usuario/permitir", data).catch((error) => {
+                    return Promise.reject('Error associating user with screen: ' + error)
+                });
                 setFuncionario(response.data);
                 return response.data;
             }
         } catch (error) {
-            console.error('Error creating usuario:', error);
+            return Promise.reject('Error creating usuario: ' + error);
         }
         return null;
     };
 
-    return { 
-        funcionarios, 
-        funcionario, 
-        listarFuncionarios, 
-        selecionarFuncionario, 
-        editarFuncionario, 
-        deletarFuncionario, 
-        criarFuncionario 
+    return {
+        funcionarios,
+        funcionario,
+        listarFuncionarios,
+        selecionarFuncionario,
+        editarFuncionario,
+        deletarFuncionario,
+        criarFuncionario
     };
 };

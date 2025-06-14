@@ -7,7 +7,7 @@ export const useClientesDiarioHook = () => {
     const [clientesDiario, setClientesDiario] = useState<Cliente[] | null>(null);
     const [loading, setLoading] = useState(false);
 
-    const listarClientesDiario = async () => {
+    const listarClientesDiario = async (data:String) => {
         setLoading(true);
         try {
             const response = await axiosClient.get(`/relatorios/diario`);

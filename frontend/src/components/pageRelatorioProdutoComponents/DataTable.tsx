@@ -17,12 +17,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Cliente } from "@/models/cliente";
 import FooterPagination from "../footerPagination";
+import { RelatorioProduto } from "@/models/relatorioProduto";
 
 interface DataTableProps<TValue> {
-  columns: ColumnDef<Cliente, TValue>[];
-  data: Cliente[];
+  columns: ColumnDef<RelatorioProduto, TValue>[];
+  data: RelatorioProduto[];
 }
 
 export function DataTable<TValue>({

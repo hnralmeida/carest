@@ -1,6 +1,6 @@
 *** Settings ***
 Resource    ../resources/main.robot
-Test Setup    Dado que eu acesse o Conecta
+Test Setup    Dado que eu acesse o Carest
 Test Teardown    Fechar navegador
 
 *** Test Cases ***

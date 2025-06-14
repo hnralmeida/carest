@@ -20,4 +20,14 @@ public interface VendaRepository extends JpaRepository<Venda, UUID> {
     List<Venda> findByDataVendaBetween(Date inicio, Date fim);
 
     List<Venda> findByDataVendaBefore(Date data);
+
+    @Query("""
+        SELECT v FROM Venda v
+        WHERE v.cliente.codigo = :codigoCliente
+        AND v.dataVenda <= CURRENT_TIMESTAMP
+        ORDER BY v.dataVenda DESC
+        LIMIT 1
+    """)
+    Venda findUltimaVendaPorCliente(@Param("codigoCliente") String codigoCliente);
+
 }

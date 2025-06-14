@@ -15,6 +15,15 @@ Resource    shared/setup_teardown.robot
 Resource    keywords/home.robot
 Resource    variables/variables_home.robot
 
+Resource    keywords/cliente.robot
+Resource    variables/variables_cliente.robot
+
+Resource    keywords/login.robot
+Resource    variables/variables_login.robot
+
+Resource    keywords/vendas.robot
+Resource    variables/variables_vendas.robot
+
 
 ### ENVIRONMENT ###
 Variables   ../env_vars.py

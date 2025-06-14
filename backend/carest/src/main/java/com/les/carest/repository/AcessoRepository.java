@@ -11,8 +11,6 @@ import java.util.UUID;
 @Repository
 public interface AcessoRepository extends JpaRepository<Acesso, UUID> {
 
-    // Remove as queries relacionadas a Cliente (devem estar em ClienteRepository)
-
     // Consulta para encontrar o último acesso ativo de um cliente
     @Query("SELECT a FROM Acesso a WHERE a.cliente.codigo = :codigoCliente AND a.saida IS NULL ORDER BY a.entrada DESC")
     Acesso findUltimoAcessoAtivo(@Param("codigoCliente") String codigoCliente);

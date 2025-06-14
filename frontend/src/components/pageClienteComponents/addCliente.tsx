@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { PlusCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -37,7 +37,6 @@ export default function AddCliente() {
 
   const onFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault(); // Evita que o formulário recarregue a página
-
     const nascimentoDate = new Date(`${nascimento}T12:00:00`)
 
     const data = {
@@ -59,13 +58,28 @@ export default function AddCliente() {
       toast.success("Cliente adicionado com sucesso!");
       setOpen(false); // Fecha o modal após sucesso
       setNome(""); // Limpa o campo do formulário
-      window.location.reload(); // Recarrega a página para exibir o novo cliente
+      // window.location.reload(); // Recarrega a página para exibir o novo cliente
 
     } catch (error: any) {
       console.error("Erro na requisição:", error);
       toast.error(typeof error === "string" ? error : "Erro desconhecido");
     }
   };
+  
+  React.useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+
+      // Impede Ctrl+J de abrir a aba de downloads
+      if (e.ctrlKey && e.key.toLowerCase() === "j") {
+        e.preventDefault();
+        return; // se quiser ignorar completamente essa combinação
+      }
+    };
+    window.addEventListener("keydown", handleKeyPress);
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, []);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -118,7 +132,17 @@ export default function AddCliente() {
             <Input
               id="codigo"
               value={codigo}
-              onChange={(e) => setCodigo(e.target.value)}
+              onChange={(e) => {
+                const apenasLetrasENumeros = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
+                setCodigo(apenasLetrasENumeros)
+                alert(e.target.value)
+              }}
+              onKeyDown={(e) => {
+                if ((e.key).toLocaleLowerCase() == 'enter') {
+                  e.preventDefault(); // impede que o enter dispare comportamento padrão
+                  // você pode adicionar uma ação aqui se quiser, tipo submeter ou processar
+                }
+              }}
               placeholder="Digite o codigo do cliente"
               required
             />

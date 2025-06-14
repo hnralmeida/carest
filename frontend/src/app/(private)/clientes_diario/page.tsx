@@ -10,10 +10,19 @@ import { ButtonVariant } from "@/components/button-variant";
 
 function Page() {
   const { loading, clientesDiario, listarClientesDiario, relatoriosClientesDiario, listarClientesDiarioPorDia } = useClientesDiarioHook();
-  const [dataSelecionada, setDataSelecionada] = React.useState<string>();
+  const [dataSelecionada, setDataSelecionada] = React.useState<string>('');
 
   useEffect(() => {
-    listarClientesDiario().catch((res: any) => {
+
+    const dataAtual = new Date();
+    const dataAtualFormatada = new Date(dataAtual.getFullYear(), dataAtual.getMonth(), 1);
+
+    // Formatar datas para YYYY-MM-DD
+    const atual = dataAtualFormatada.toISOString().split('T')[0];
+
+    setDataSelecionada(atual);
+
+    listarClientesDiario(atual).catch((res: any) => {
       toast.error(res);
     });
   }, []);
@@ -63,7 +72,7 @@ function Page() {
       </div>
       <div className="flex flex-start gap-8 items-end w-full mb-4">
         <div>
-          <p>Início</p>
+          <p>Data</p>
           <input
             type="date"
             className="input-search"

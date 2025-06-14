@@ -50,7 +50,7 @@ public class VendaService {
             item.setVenda(venda);
             item.setProduto(produto);
             item.setQuantidade(itemDTO.getQuantidade());
-            item.setPrecoUnitario(produto.getValor());  // Usa o preço atual do produto
+            item.setPrecoUnitario(itemDTO.getPreco_unitario());  // Usa o preço atual do produto
 
             valorTotal += item.getPrecoUnitario() * item.getQuantidade();
             itemVendaRepository.save(item);

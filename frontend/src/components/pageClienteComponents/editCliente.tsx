@@ -173,6 +173,12 @@ export default function EditCliente({ id, item }: EditClienteProps) {
                   codigo: e.target.value,
                 }))
               }
+              onKeyDown={(e) => {
+                if ((e.key).toLocaleLowerCase() == 'enter') {
+                  e.preventDefault(); // impede que o enter dispare comportamento padrão
+                  // você pode adicionar uma ação aqui se quiser, tipo submeter ou processar
+                }
+              }}
               placeholder="Digite o código do cliente"
               required
             />

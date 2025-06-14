@@ -6,12 +6,15 @@ import { ItemVenda } from "./item";
 import { useVendasHook } from "@/hooks/useVendas";
 import { formatarParaMoeda } from "@/lib/utils";
 import { toast, Toaster } from "sonner";
+import InserirPeso from "./pesoInserir";
 
 const VendasView = () => {
 
-    const { buscarCliente, buscarProduto, resetarVenda, registrarVenda, cliente, produtos } = useVendasHook();
+    const { buscarCliente, buscarProduto, resetarVenda, registrarVenda, cliente, produtos, inserirBalanca } = useVendasHook();
 
     const [codigoLido, setCodigoLido] = React.useState("");
+
+    const [open, setOpen] = React.useState(false);
 
     const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
@@ -28,9 +31,14 @@ const VendasView = () => {
 
             // Código da balanca vai ser 10004800
             if (codigoLido.trim() == "10004800") {
-                const res = await fetch('/api/peso');
-                const data = await res.json();
-                console.log(data);
+                // const res = await fetch('/api/peso');
+                // const data = await res.json();
+                // console.log(data);
+                setOpen(true);
+
+                setCodigoLido("");
+
+                return
             }
 
             if (codigoLido.trim() == "9000") {
@@ -117,6 +125,29 @@ const VendasView = () => {
         };
     }, [codigoLido]);
 
+    function confirmarBalanca(peso: string) {
+        if (!peso || peso.trim() === "") {
+            toast.error("Peso não pode ser vazio");
+            return;
+        }
+        console.log("Inserindo balança com peso: ", peso);
+        inserirBalanca(peso).catch((e: any) => {
+            if (e.response.status == 404) {
+                toast.error("Balança não encontrada");
+            }
+            else if (e.response.status == 500) {
+                toast.error("Erro interno do servidor");
+            }
+            else if (e.response.status == 400) {
+                toast.error("Código inválido");
+            }
+            else if (e.response.status == 401) {
+                toast.error("Código já utilizado");
+            }
+        }
+        );
+    }
+
     function ClienteView() {
         return (
             <div className="flex flex-col justify-center items-start w-full h-[128px] gap-[8px] mb-4 px-[64px]">
@@ -149,6 +180,16 @@ const VendasView = () => {
                 <h1 className="text-2xl font-bold">Cliente</h1>
                 {cliente?.id ? <ClienteView /> : <PulseView />}
             </div>
+            <InserirPeso
+                open={open}
+                feedback={(peso: string) => {
+                    confirmarBalanca(peso)
+                }}
+                onClose={() => {
+                    setCodigoLido("");
+                    setOpen(false);
+                }}
+            />;
 
             <div className="rounded-md overflow-x-auto">
                 <h1 className="text-2xl font-bold">Produtos</h1>

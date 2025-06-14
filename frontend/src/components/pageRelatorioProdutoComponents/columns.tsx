@@ -6,22 +6,22 @@ import { ColumnDef } from "@tanstack/react-table";
 
 export const columns: ColumnDef<RelatorioProduto>[] = [
   {
-    accessorKey: "nomeProduto",
+    accessorKey: "nome",
     header: "Nome",
   },
   {
-    accessorKey: "codigoProduto",
+    accessorKey: "codigo",
     header: "Código",
   },
   {
-    accessorKey: "quantidadeVendida",
+    accessorKey: "quantidade",
     header: "Quantidade",
   },
   {
-    accessorKey: "valorUnitario",
+    accessorKey: "valor",
     header: "Valor Bruto Total",
     cell: ({ row }) => {
-      const formated = formatarParaMoeda(`${Number(row.getValue('valorUnitario')) * Number(row.getValue('quantidadeVendida'))}`, true)
+      const formated = formatarParaMoeda(`${Number(row.getValue('valor')) * Number(row.getValue('quantidade'))}`, true)
       return <div className='text-right'>{formated}</div>
     },
   }

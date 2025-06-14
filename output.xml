@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.2.2 (Python 3.13.2 on win32)" generated="2025-06-13T18:29:58.428633" rpa="false" schemaversion="5">
+<suite id="s1" name="RF03 Login" source="c:\Users\henri\Projetos\carest\tests\suites\RF03_Login.robot">
+<test id="s1-t1" name="Realizar Login Com Falha" line="10">
+<kw name="Open Browser" owner="SeleniumLibrary">
+<msg time="2025-06-13T18:30:03.743646" level="INFO">Opening browser 'chrome' to base url 'http://localhost:3000'.</msg>
+<arg>${URL}</arg>
+<arg>${BROWSER}</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<status status="PASS" start="2025-06-13T18:30:03.665569" elapsed="3.431283"/>
+</kw>
+<kw name="Go To" owner="SeleniumLibrary">
+<msg time="2025-06-13T18:30:07.098277" level="INFO">Opening url 'http://localhost:3000/login'</msg>
+<arg>${LOGIN_URL}</arg>
+<doc>Navigates the current browser window to the provided ``url``.</doc>
+<status status="PASS" start="2025-06-13T18:30:07.097792" elapsed="1.486988"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>${EMAIL_INPUT}</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2025-06-13T18:30:08.588378" elapsed="0.411706"/>
+</kw>
+<kw name="Input Text" owner="SeleniumLibrary">
+<msg time="2025-06-13T18:30:09.003795" level="INFO">Typing text 'fuyu@email.com' into text field '//input[@type="email"]'.</msg>
+<arg>${EMAIL_INPUT}</arg>
+<arg>${EMAIL}</arg>
+<doc>Types the given ``text`` into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2025-06-13T18:30:09.003185" elapsed="0.286731"/>
+</kw>
+<kw name="Input Password" owner="SeleniumLibrary">
+<msg time="2025-06-13T18:30:09.294286" level="INFO">Typing password into text field '//input[@type="password"]'.</msg>
+<msg time="2025-06-13T18:30:09.352328" level="INFO">Temporally setting log level to: NONE</msg>
+<arg>${SENHA_INPUT}</arg>
+<arg>${SENHA_ERRADA}</arg>
+<doc>Types the given password into the text field identified by ``locator``.</doc>
+<status status="PASS" start="2025-06-13T18:30:09.293195" elapsed="0.125580"/>
+</kw>
+<kw name="Click Button" owner="SeleniumLibrary">
+<msg time="2025-06-13T18:30:09.423069" level="INFO">Clicking button '//button[contains(., "Entrar")]'.</msg>
+<arg>${BTN_LOGIN}</arg>
+<doc>Clicks the button identified by ``locator``.</doc>
+<status status="PASS" start="2025-06-13T18:30:09.421680" elapsed="0.197613"/>
+</kw>
+<kw name="Wait Until Element Is Visible" owner="SeleniumLibrary">
+<arg>${EMAIL_INPUT}</arg>
+<arg>timeout=5s</arg>
+<doc>Waits until the element ``locator`` is visible.</doc>
+<status status="PASS" start="2025-06-13T18:30:09.627441" elapsed="0.048948"/>
+</kw>
+<kw name="Fechar navegador" owner="setup_teardown" type="TEARDOWN">
+<kw name="Close Browser" owner="SeleniumLibrary">
+<doc>Closes the current browser.</doc>
+<status status="PASS" start="2025-06-13T18:30:09.681286" elapsed="2.826881"/>
+</kw>
+<status status="PASS" start="2025-06-13T18:30:09.680544" elapsed="2.827988"/>
+</kw>
+<status status="PASS" start="2025-06-13T18:30:03.660156" elapsed="8.848860"/>
+</test>
+<status status="PASS" start="2025-06-13T18:29:58.433341" elapsed="14.078900"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="RF03 Login" id="s1" pass="1" fail="0" skip="0">RF03 Login</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

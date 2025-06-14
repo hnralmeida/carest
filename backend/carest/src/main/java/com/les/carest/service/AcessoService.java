@@ -2,8 +2,10 @@ package com.les.carest.service;
 
 import com.les.carest.model.Acesso;
 import com.les.carest.model.Cliente;
+import com.les.carest.model.Venda;
 import com.les.carest.repository.AcessoRepository;
 import com.les.carest.repository.ClienteRepository;
+import com.les.carest.repository.VendaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -18,13 +20,16 @@ public class AcessoService extends _GenericService<Acesso, AcessoRepository> {
 
     private final AcessoRepository acessoRepository;
     private final ClienteRepository clienteRepository;
+    private final VendaRepository vendaRepository;
+
     private final PrinterService printerService;
 
-    public AcessoService(AcessoRepository acessoRepository, ClienteRepository clienteRepository, PrinterService printerService) {
+    public AcessoService(AcessoRepository acessoRepository, ClienteRepository clienteRepository, PrinterService printerService, VendaRepository vendaRepository) {
         super(acessoRepository);
         this.acessoRepository = acessoRepository;
         this.clienteRepository = clienteRepository;
         this.printerService = printerService;
+        this.vendaRepository = vendaRepository;
     }
 
     @Transactional(readOnly = true)
@@ -45,8 +50,6 @@ public class AcessoService extends _GenericService<Acesso, AcessoRepository> {
     @Transactional
     public void atualizarEstadoUsoCliente(UUID clienteId, boolean emUso) {
         clienteRepository.updateEstadoUso(clienteId, emUso);
-
-
     }
 
 
@@ -94,9 +97,9 @@ public class AcessoService extends _GenericService<Acesso, AcessoRepository> {
         if (acesso == null) {
             throw new RuntimeException("Nenhum acesso ativo encontrado para este cliente");
         }
-        Cliente cliente = clienteRepository.findByCodigoCliente(codigoCliente);
+        Venda venda = vendaRepository.findUltimaVendaPorCliente(codigoCliente);
 
-        printerService.imprimirComprovanteSaldo(cliente);
+        printerService.imprimirSaida(venda);
         acesso.setSaida(new Date());
         atualizarEstadoUsoCliente(acesso.getCliente().getId(), false);
         return atualizarAcesso(acesso);

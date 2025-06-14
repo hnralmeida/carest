@@ -4,14 +4,15 @@ import React, { useEffect, useState } from "react";
 import { columns } from "../../../components/pageRelatorioProdutoComponents/columns";
 import { useRelatorioProdutoHook } from "@/hooks/useRelatorioProduto";
 import { DataTable } from "@/components/pageRelatorioProdutoComponents/DataTable";
-import { Printer } from "lucide-react";
+import { Printer, Search } from "lucide-react";
 import { toast, Toaster } from "sonner";
+import { ButtonVariant } from "@/components/button-variant";
 
 function Page() {
   const { loading, relatorioProduto, listarRelatorioProduto, relatoriosRelatorioProduto } = useRelatorioProdutoHook();
 
-  const [dataInicio, setDataInicio] = useState<string | null>(null);
-  const [dataFim, setDataFim] = useState<string | null>(null);
+  const [dataInicio, setDataInicio] = useState<string>('');
+  const [dataFim, setDataFim] = useState<string>('');
 
   useEffect(() => {
     const dataAtual = new Date();
@@ -38,6 +39,25 @@ function Page() {
     });
   };
 
+  const handleDataInicio = (data: string) => {
+    setDataInicio(data)
+  };
+
+  const handleDataFim = (data: string) => {
+    setDataFim(data)
+  }
+
+  const pressSearch = async () => {
+    if (!dataInicio || !dataFim) {
+      toast.error("Data de início e fim são obrigatórias");
+      return;
+    }
+    listarRelatorioProduto(dataInicio, dataFim).then(() => {
+      toast.success("Relatório gerado com sucesso!");
+    }).catch((res: any) => {
+      toast.error(res);
+    });
+  }
 
   return (
     <div className="container rounded-md border mx-auto my-16 py-4 px-4 content-bg">
@@ -52,6 +72,33 @@ function Page() {
           <Printer className="size-4 mr-2" />
           Exportar
         </button>
+      </div>
+      <div className="flex flex-start gap-8 items-end w-full mb-4">
+        <div>
+          <p>Início</p>
+          <input
+            type="date"
+            className="input-search"
+            onChange={(e) => handleDataInicio(e.target.value)}
+            value={dataInicio}
+          />
+        </div>
+        <div>
+          <p>Fim</p>
+          <input
+            type="date"
+            className="input-search"
+            onChange={(e) => handleDataFim(e.target.value)}
+            value={dataFim}
+          />
+        </div>
+        <ButtonVariant
+          handlePress={pressSearch}
+          loading={loading}
+          text="Buscar"
+          Img={Search}
+        />
+
       </div>
       {relatorioProduto ? (
         <DataTable columns={columns} data={relatorioProduto} />

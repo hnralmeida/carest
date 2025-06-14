@@ -10,17 +10,13 @@ import { ButtonVariant } from "@/components/button-variant";
 function Page() {
   const { consumoDiario, listarConsumoDiario, relatoriosConsumoDiario, loading } = useConsumoDiarioHook();
 
-  const [dataInicio, setDataInicio] = useState<string>();
-  const [dataFim, setDataFim] = useState<string>();
+  const [dataInicio, setDataInicio] = useState<string>('');
+  const [dataFim, setDataFim] = useState<string>('');
 
   useEffect(() => {
     const dataAtual = new Date();
-
-    // Primeiro dia do mês atual
     const dataInicioFormatada = new Date(dataAtual.getFullYear(), dataAtual.getMonth(), 1);
-
-    // Último dia do mês atual
-    const dataFimFormatada = new Date(dataAtual.getFullYear(), dataAtual.getMonth() + 1, 0);
+    const dataFimFormatada = new Date(dataAtual.getFullYear(), dataAtual.getMonth() + 1, dataAtual.getDay());
 
     // Formatar datas para YYYY-MM-DD
     const inicio = dataInicioFormatada.toISOString().split('T')[0];
