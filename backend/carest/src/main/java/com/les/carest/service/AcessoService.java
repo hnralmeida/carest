@@ -68,6 +68,12 @@ public class AcessoService extends _GenericService<Acesso, AcessoRepository> {
             throw new RuntimeException("Cliente bloqueado");
         }
 
+        double valorTotal = cliente.getSaldo() + cliente.getLimite();
+
+        if (valorTotal < 0) {
+            throw new RuntimeException("Cliente sem saldo");
+        }
+
         atualizarEstadoUsoCliente(cliente.getId(), true);
 
         Acesso acesso = new Acesso();

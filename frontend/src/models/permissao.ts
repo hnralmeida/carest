@@ -1,4 +1,5 @@
 import { Tela } from "./tela";
+import { Usuario } from "./usuario";
 
 export interface Permissao {
     id: string;
@@ -7,4 +8,5 @@ export interface Permissao {
     read: boolean;
     update: boolean;
     delete: boolean;
+    authority: string;
   }

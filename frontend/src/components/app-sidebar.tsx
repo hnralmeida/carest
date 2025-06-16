@@ -86,7 +86,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const router = useRouter();
 
   React.useEffect(() => {
-    console.log("session ", session?.user);
+
     if (session) {
 
       let filteredData = { ...fullData };

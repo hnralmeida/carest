@@ -57,16 +57,19 @@ export const useTelaHook = () => {
         }
     };
 
-    const criarTela = async (userId: String, Tela: Tela): Promise<void> => {
+    const criarTela = async (userId: String, Tela: Tela): Promise<Tela> => {
 
         const body = {
             userId,
             nomeTela: Tela.nome,
             rotaTela: Tela.rota
-        }
-        await axiosClient.post('/usuario/permitir', body).catch((error: any) => {
+        };
+        try {
+            const response = await axiosClient.post('/usuario/permitir', body);
+            return response.data;
+        } catch (error: any) {
             return Promise.reject(error);
-        })
+        }
     };
 
     return {

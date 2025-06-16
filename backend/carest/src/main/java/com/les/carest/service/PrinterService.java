@@ -30,7 +30,8 @@ public class PrinterService {
                 + "Cliente: " + cliente.getNome() + "\n"
                 + "Codigo: " + cliente.getCodigo() + "\n"
                 + "Saldo: R$ " + String.format("%.2f", cliente.getSaldo()) + "\n"
-                + "----------------------------\n\n\n\n\n";
+                + "----------------------------\n"
+                + "\n\n\n\n\n\n\n\n\n\n"; // espaço extra para puxar o papel
 
         InputStream stream = new ByteArrayInputStream(texto.getBytes(StandardCharsets.UTF_8));
         DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
@@ -84,6 +85,8 @@ public class PrinterService {
 
         sb.append("----------------------------\n");
         sb.append("Total: R$ ").append(String.format("%.2f", venda.getValorTotal())).append("\n");
+        sb.append("\n\n\n");
+        sb.append("----------------------------\n");
         sb.append("\n\n\n");
 
         InputStream stream = new ByteArrayInputStream(sb.toString().getBytes(StandardCharsets.UTF_8));

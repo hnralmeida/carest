@@ -12,29 +12,36 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { usePermissaoHook } from "@/hooks/usePermissoes";
-import { UsuarioMock } from "@/models/usuario";
 import { Permissao } from "@/models/permissao";
 import { toast } from "sonner";
+import { useTelaHook } from "@/hooks/useTela";
+import { Tela } from "@/models/tela";
+import { useSession } from "next-auth/react";
+import { Usuario } from "@/models/usuario";
+import { useFuncionarioHook } from "@/hooks/useFuncionario";
 
 interface EditPermissoesProps {
   id: string;
-
 }
 
 export default function EditPermissoes({ id }: EditPermissoesProps) {
   const [open, setOpen] = useState(false);
   const [localPermissoes, setLocalPermissoes] = useState<Permissao[]>([]);
+  const [PermissoesADM, setPermissoesADM] = useState<Permissao[]>([]);
+
+  const { data: session } = useSession()
 
   const [loading, setLoading] = useState(false);
 
-  const { permissoes, selecionarpermissao, editarpermissao } =
+  const { permissoes, selecionarpermissao, editarpermissao, buscarFuncionario } =
     usePermissaoHook();
 
   useEffect(() => {
     async function fetchPermissoes() {
-      await id!="carregando..." && selecionarpermissao(id);
+      await id != "carregando..." && selecionarpermissao(id);
       setLocalPermissoes(permissoes || []);
     }
+    setPermissoesADM(session?.user?.permissoes || []);
 
     fetchPermissoes();
   }, [open, id]);
@@ -43,15 +50,24 @@ export default function EditPermissoes({ id }: EditPermissoesProps) {
   const onFormSubmit = async () => {
     setLoading(true); // Inicia o carregamento
 
+    const user = await buscarFuncionario(id).catch((error: any) => {
+      setLoading(false); // Finaliza o carregamento
+      console.error("Erro ao buscar usuário:", error);
+      toast.error(error.message || error.response.data.message || error.response.data || "Falha ao conectar com o servidor");
+      return null;
+    });
+
     if (localPermissoes) {
       const updatedPermissoes = localPermissoes.map((permissao, index) => ({
         ...permissao,
         id: localPermissoes[index].id,
-        usuario: UsuarioMock,
+        tela: localPermissoes[index].tela,
         create: localPermissoes[index].create,
         read: localPermissoes[index].read,
         update: localPermissoes[index].update,
         delete: localPermissoes[index].delete,
+        authority: localPermissoes[index].authority,
+        usuario: user as Usuario, // Preenche o user  com o ID do usuário atual
       }));
 
       try {
@@ -70,12 +86,99 @@ export default function EditPermissoes({ id }: EditPermissoesProps) {
   };
 
   const handleCheckboxChange = (index: number, field: "create" | "read" | "update" | "delete") => {
+    console.log("Permissões antes da atualização: ", localPermissoes);
+
     setLocalPermissoes((prev) =>
       prev.map((perm, i) =>
         i === index ? { ...perm, [field]: !perm[field] } : perm
       )
     );
   };
+
+  const { criarTela } = useTelaHook();
+
+  const [novaTela, setNovaTela] = useState<Tela>({} as Tela);
+
+  const NovaTela = () => {
+    return (
+      < div className="border p-4 rounded mb-4" >
+        <h4 className="font-semibold mb-2">Adicionar Tela</h4>
+        <div className="flex gap-4 items-center">
+          <select
+            className="border p-2 rounded flex-1"
+            value={novaTela?.id || ""}
+            onChange={(e) => {
+              const permissaoSelecionada = PermissoesADM?.find(p => p.tela?.id === e.target.value);
+              if (permissaoSelecionada) {
+                setNovaTela(permissaoSelecionada.tela);
+              }
+            }}
+          >
+            <option value="">Selecione uma tela</option>
+            {PermissoesADM
+              ?.filter(telaDisponivel => !localPermissoes.some(p => p.tela?.id === telaDisponivel.id))
+              .map((item) => (
+                <option key={item.id} value={item.tela.id}>
+                  {item.tela.nome}
+                </option>
+              ))}
+          </select>
+
+          <Button
+            type="button"
+            onClick={() => {
+              if (!novaTela?.id) {
+                toast.error("Selecione uma tela.");
+                return;
+              }
+
+              // Impede duplicidade
+              if (localPermissoes.some(p => p.tela?.id === novaTela.id)) {
+                toast.warning("Essa tela já foi adicionada.");
+                return;
+              }
+
+              const data: Tela = {
+                id: "",
+                nome: novaTela.nome,
+                rota: novaTela.rota
+              };
+
+              criarTela(id, data).then(() => {
+                setLocalPermissoes((prev) => [
+                  ...prev,
+                  {
+                    id: "",
+                    usuario: {} as Usuario, // Preenche o usuário com o ID do usuário atual
+                    tela: novaTela,
+                    create: false,
+                    read: true,
+                    update: false,
+                    delete: false,
+                    authority: "",
+                  },
+                ]);
+              }).catch((error: any) => {
+                setLoading(false); // Inicia o carregamento
+
+                if (error.response.status === 404) {
+                  toast.error(error.response.data.message);
+                  return
+                } else {
+                  toast.error("Erro ao criar tela");
+                  return
+                }
+              });
+
+              setNovaTela({} as Tela); // limpa seleção
+            }}
+          >
+            Adicionar
+          </Button>
+        </div>
+      </div >
+    )
+  }
 
   return (
     <>
@@ -95,6 +198,7 @@ export default function EditPermissoes({ id }: EditPermissoesProps) {
             <DialogTitle>Gerenciar Permissões</DialogTitle>
           </DialogHeader>
           <form onSubmit={onFormSubmit} className="flex flex-col gap-4">
+            <NovaTela />
             <div className="max-h-[400px] overflow-y-auto pr-2">
               {localPermissoes
                 ? localPermissoes.map((permissao, index) => (

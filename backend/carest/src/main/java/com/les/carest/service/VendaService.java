@@ -26,6 +26,22 @@ public class VendaService {
 
     @Autowired private ProdutoRepository produtoRepository;
 
+    public double valorVenda(VendaDTO vendaDTO){
+        double valorTotal = 0.0;
+        for (ItemVendaDTO itemDTO : vendaDTO.getItens()) {
+            Produto produto = produtoRepository.findById(itemDTO.getProdutoId())
+                    .orElseThrow(() -> new RuntimeException("Produto não encontrado"));
+
+            ItemVenda item = new ItemVenda();
+            item.setProduto(produto);
+            item.setQuantidade(itemDTO.getQuantidade());
+            item.setPrecoUnitario(itemDTO.getPreco_unitario());  // Usa o preço atual do produto
+
+            valorTotal += item.getPrecoUnitario() * item.getQuantidade();
+        }
+        return valorTotal;
+    }
+
 
     @Transactional
     public Venda criarVenda(VendaDTO vendaDTO) {
@@ -55,6 +71,11 @@ public class VendaService {
             valorTotal += item.getPrecoUnitario() * item.getQuantidade();
             itemVendaRepository.save(item);
         }
+
+        // 4. Atualiza Saldo do Cliente
+        double novoSaldo = cliente.getSaldo() - valorTotal;
+        cliente.setSaldo(novoSaldo);
+        clienteRepository.save(cliente);
 
         // 4. Atualiza valor total
         venda.setValorTotal(valorTotal);

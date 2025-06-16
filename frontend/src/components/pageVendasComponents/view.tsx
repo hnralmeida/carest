@@ -149,14 +149,24 @@ const VendasView = () => {
     }
 
     function ClienteView() {
+        const saldo = Number(cliente.saldo);
+        const limite = Number(cliente.limite);
+        const totalDisponivel = saldo + limite;
+        const isNegativo = totalDisponivel < 0;
+
         return (
             <div className="flex flex-col justify-center items-start w-full h-[128px] gap-[8px] mb-4 px-[64px]">
                 <p className="font-semibold">{String(cliente.nome)}</p>
-                <p className="font-semibold">Saldo: {formatarParaMoeda(String(cliente.saldo), true)}</p>
-                <p className="font-semibold">Limite: {formatarParaMoeda(String(cliente.limite), true)}</p>
+                <p className={`font-semibold ${isNegativo ? 'text-red-500' : ''}`}>
+                    Saldo: {formatarParaMoeda(String(saldo), true)}
+                </p>
+                <p className={`font-semibold ${isNegativo ? 'text-red-500' : ''}`}>
+                    Limite: {formatarParaMoeda(String(limite), true)}
+                </p>
             </div>
-        )
+        );
     }
+
 
     function PulseView() {
         return (

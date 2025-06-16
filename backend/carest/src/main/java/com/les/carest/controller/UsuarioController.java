@@ -46,4 +46,5 @@ public class UsuarioController extends _GenericController<Usuario> {
 
         return ResponseEntity.ok(user);
     }
+    
 }

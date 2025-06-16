@@ -22,21 +22,21 @@ public class VendaController {
 
     @Autowired
     private VendaService vendaService;
+
+    @Autowired
     private ClienteService clienteService;
 
     @PostMapping
     @Operation(summary = "Cria uma nova venda")  // Swagger
-    public ResponseEntity<Venda> criarVenda(@RequestBody VendaDTO vendaDTO) {
-        Venda venda = vendaService.criarVenda(vendaDTO);
-        Cliente cliente = venda.getCliente();
+    public ResponseEntity<Object> criarVenda(@RequestBody VendaDTO vendaDTO) {
+        Cliente cliente = clienteService.buscarPorId(vendaDTO.getClienteId());
+        double valorDisponivel = cliente.getSaldo() + cliente.getLimite();
+        double valorTotal = vendaService.valorVenda(vendaDTO);
 
-
-        if(venda.getValorTotal() > (cliente.getSaldo() + cliente.getLimite())){
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(venda);
-        }
-
-        else{
-            // vendaService.diminuirSaldo(venda.getCliente().getId(),venda.getValorTotal());
+        if(valorTotal > valorDisponivel){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(vendaDTO);
+        }else{
+            Venda venda = vendaService.criarVenda(vendaDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(venda);
         }
 

@@ -135,7 +135,6 @@ export default function AddCliente() {
               onChange={(e) => {
                 const apenasLetrasENumeros = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
                 setCodigo(apenasLetrasENumeros)
-                alert(e.target.value)
               }}
               onKeyDown={(e) => {
                 if ((e.key).toLocaleLowerCase() == 'enter') {

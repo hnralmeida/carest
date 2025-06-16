@@ -31,6 +31,7 @@ export const useClienteHook = () => {
         try {
             const response = await axiosClient.post("/clientes", data);
             if (response.status < 205) {
+                window.location.reload();
                 return Promise.resolve("Cliente adicionado com sucesso");
             } else {
                 return Promise.reject("Erro ao adicionar cliente");

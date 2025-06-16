@@ -13,6 +13,7 @@ const AcessoView = () => {
     const [codigoLido, setCodigoLido] = React.useState("");
     const [saida, setSaida] = React.useState("");
     const [perform, setPerform] = React.useState("ENTRADA");
+    const [validarSaldo, setValidarSaldo] = React.useState(false);
 
     const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
@@ -27,7 +28,20 @@ const AcessoView = () => {
                     const codigoLidoLimpo = codigoLido.replace(/\D/g, "");
                     setSaida(codigoLidoLimpo);
                     await buscarAcesso(codigoLidoLimpo)
-                    setPerform("ENTRADA")
+
+                    if (cliente?.saldo < 0) {
+                        let valor = Number(cliente.limite) + Number(cliente.saldo);
+                        if (Number(valor) < 0) {
+                            setValidarSaldo(false);
+                            setPerform("ACESSO NEGADO");
+                            toast.error("Saldo insuficiente para acesso");
+                        }
+                        setValidarSaldo(true);
+                    } else {
+                        setValidarSaldo(true);
+                        setPerform("ENTRADA")
+                    }
+
                 } catch (e: any) {
                     console.log(e)
                     if (e.response.status == 404) {
@@ -94,6 +108,18 @@ const AcessoView = () => {
     }, [codigoLido]);
 
     function ClienteView() {
+        
+        return (
+            <div className="flex flex-col justify-center items-start w-full h-[128px] gap-[8px] mb-4 px-[64px]">
+                <p className="font-semibold">{String(cliente.nome)}</p>
+                <p className="font-semibold">Saldo: {formatarParaMoeda(String(cliente.saldo), true)}</p>
+                <p className="font-semibold">Limite: {formatarParaMoeda(String(cliente.limite), true)}</p>
+                <p className="font-semibold">Codigo: {String(cliente.codigo)}</p>
+            </div>
+        )
+    }
+
+    function AcessoNegadoView() {
         return (
             <div className="flex flex-col justify-center items-start w-full h-[128px] gap-[8px] mb-4 px-[64px]">
                 <p className="font-semibold">{String(cliente.nome)}</p>
@@ -112,13 +138,12 @@ const AcessoView = () => {
         )
     }
 
-
     return (
         <>
             <div className="rounded-md overflow-x-auto h-[256px]">
                 {!cliente?.id && <h1 className="text-2xl">Aproxime o cartão da leitora</h1>}
-                {cliente?.id && <h1 className="text-2xl">{perform}</h1>}
-                {cliente?.id ? <ClienteView /> : <PulseView />}
+                {cliente?.id && <h1 className={`text-2xl ${perform==='ACESSO NEGADO' ? 'text-red-500' : ''}`}>{perform}</h1>}
+                {cliente?.id ? (validarSaldo ? <ClienteView /> : <AcessoNegadoView />) : <PulseView />}
             </div>
 
             <Toaster richColors position="top-center" />

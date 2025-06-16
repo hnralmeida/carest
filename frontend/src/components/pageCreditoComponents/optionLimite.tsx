@@ -13,18 +13,23 @@ import { Input } from "../ui/input";
 import { Toaster } from "sonner";
 import { Cliente } from "@/models/cliente";
 import { useCreditoHook } from "@/hooks/useCredito";
+import { formatarParaMoeda, moedaParaNumero } from "@/lib/utils";
 
 interface OptionButtonLimiteProps {
     cliente: Cliente;
 }
 
-const OptionButtonLimite = ({cliente}: OptionButtonLimiteProps) => {
+const OptionButtonLimite = ({ cliente }: OptionButtonLimiteProps) => {
 
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
-    const [valor, setValor] = useState(0);
+    const [valor, setValor] = useState("");
 
-     const { alterarLimite } = useCreditoHook(); // Importando o hook de crédito
+    const { alterarLimite } = useCreditoHook(); // Importando o hook de crédito
+
+    React.useEffect(() => {
+        setValor(formatarParaMoeda(valor.toString(), true));
+    }, []);
 
     const formatarParaBRL = (valor: number) => {
         return new Intl.NumberFormat("pt-BR", {
@@ -33,14 +38,19 @@ const OptionButtonLimite = ({cliente}: OptionButtonLimiteProps) => {
         }).format(valor);
     };
 
+    const handleChangeValor = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const valorFormatado = formatarParaMoeda(e.target.value);
+        setValor(valorFormatado);
+    };
+
     async function onFormSubmit(event: React.FormEvent) {
         event.preventDefault(); // Adicionado para evitar reload
         setLoading(true);
 
-        await alterarLimite(valor, cliente); // Chama a função de alteração de limite com o valor formatado
+        await alterarLimite(Number(moedaParaNumero(valor).toFixed(2)), cliente); // Chama a função de alteração de limite com o valor formatado
 
         setTimeout(() => {
-            setValor(0); // Limpa o valor após o envio
+            setValor(""); // Limpa o valor após o envio
             setLoading(false);
             setOpen(false);
             window.location.reload(); // Recarrega a página após 2 segundos
@@ -53,7 +63,7 @@ const OptionButtonLimite = ({cliente}: OptionButtonLimiteProps) => {
                 <Button
                     className="button-alt items-center text-35px w-[180px]"
                     onClick={() => setOpen(true)}
-                    disabled={cliente.id==undefined}
+                    disabled={cliente.id == undefined}
                 >
                     Alterar limite
                 </Button>
@@ -67,14 +77,9 @@ const OptionButtonLimite = ({cliente}: OptionButtonLimiteProps) => {
                         <Label htmlFor="valor">Novo Limite</Label>
                         <Input
                             id="valor"
-                            value={formatarParaBRL(Number(valor))}
-                            onChange={(e) => {
-                                const entrada = e.target.value.replace(/\D/g, ""); // Remove tudo que não for número
-                                const numero = parseFloat(entrada) / 100; // Divide por 100 para simular centavos
-                                setValor(numero);
-                            }}
-                            placeholder="Digite o Valor"
-                            autoComplete="off"
+                            value={valor}
+                            onChange={handleChangeValor}
+                            placeholder="R$ 0,00"
                             required
                         />
                     </div>
