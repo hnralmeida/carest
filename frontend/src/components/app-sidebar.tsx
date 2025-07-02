@@ -27,10 +27,6 @@ interface SidebarType {
   navMain: {
     title: string;
     url: string;
-    items: {
-      title: string;
-      url: string;
-    }[];
   }[];
 }
 
@@ -38,42 +34,6 @@ interface SidebarType {
 const fullData = {
   versions: ["Carest"],
   navMain: [
-    {
-      title: "Principal",
-      url: "#",
-      items: [
-        {
-          title: "Acesso",
-          url: "/acesso",
-
-        },
-        {
-          title: "Vendas",
-          url: "/vendas ",
-
-        },
-        {
-          title: "Produtos",
-          url: "/produto",
-
-        },
-        {
-          title: "Clientes",
-          url: "/cliente",
-
-        },
-        {
-          title: "Crédito",
-          url: "/credito",
-
-        },
-      ],
-    },
-    {
-      title: "Controle",
-      url: "#",
-      items: [],
-    },
   ],
 };
 
@@ -89,28 +49,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
     if (session) {
 
-      let filteredData = { ...fullData };
+      const filteredItems = session?.user.permissoes
+        ?.filter((item: any) => item.read === true)
+        .map((item: any) => ({
+          title: item.tela.nome,
+          url: item.tela.rota,
+        }))
+        .sort((a, b) => a.title.localeCompare(b.title)) || [];
 
-      filteredData.navMain = filteredData.navMain.map((section, index) => {
-        if (index === 1) {
-          const nomesIgnorados = ["Acesso", "Vendas", "Produtos", "Clientes", "Crédito", "Dashboard"];
+      const updatedData = {
+        ...fullData,
+        navMain: filteredItems,
+      };
 
-          return {
-            ...section,
-            items: session?.user.permissoes
-              ?.filter((item: any) =>
-                item.read === true && !nomesIgnorados.includes(item.tela.nome)
-              )
-              .map((item: any) => ({
-                title: item.tela.nome,
-                url: item.tela.rota,
-              })) || [],
-          };
-        }
-        return section;
-      });
-
-      setData(filteredData);
+      setData(updatedData);
     }
   }, [session]);
 
@@ -148,27 +100,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarContent>
         {/* We create a SidebarGroup for each parent. */}
         {data && data.navMain.map((item) => (
-          <SidebarGroup key={item.title}>
-            <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {item.items && item.items.map((item) => (
-                  <SidebarMenuItem
-                    key={item.title}
-                    className={
-                      "hover:bg-gray-200"
-                    }
-                  >
-                    <SidebarMenuButton
-                      asChild
-                    >
-                      <a href={item.url}>{item.title}</a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
+          <SidebarMenu
+            key={item.title}
+          >
+            <SidebarMenuItem
+              className={
+                "hover:bg-gray-200"
+              }
+            >
+              <SidebarMenuButton
+                asChild
+              >
+                <a href={item.url}>{item.title}</a>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
         ))}
       </SidebarContent>
 

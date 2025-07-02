@@ -6,13 +6,13 @@ import com.les.carest.model.Venda;
 import com.les.carest.repository.AcessoRepository;
 import com.les.carest.repository.ClienteRepository;
 import com.les.carest.repository.VendaRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
+import org.springframework.data.domain.Pageable;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -44,7 +44,11 @@ public class AcessoService extends _GenericService<Acesso, AcessoRepository> {
 
     @Transactional(readOnly = true)
     public Acesso findUltimoAcessoAtivo(String codigoCliente) {
-        return acessoRepository.findUltimoAcessoAtivo(codigoCliente);
+        List<Acesso> acessos = acessoRepository.findUltimoAcessoAtivo(codigoCliente, (Pageable) PageRequest.of(0, 1));
+        if (acessos.isEmpty()) {
+            throw new RuntimeException("Nenhum acesso ativo encontrado para este cliente");
+        }
+        return acessos.get(0);
     }
 
     @Transactional
@@ -56,23 +60,6 @@ public class AcessoService extends _GenericService<Acesso, AcessoRepository> {
     @Transactional
     public Acesso registrarEntrada(String codigo) {
         Cliente cliente = findClienteByCodigo(codigo);
-
-        if(cliente==null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado");
-        }
-        if (cliente.isEm_uso()) {
-            throw new RuntimeException("Cliente já está em uso");
-        }
-
-        if (cliente.getBloqueado()) {
-            throw new RuntimeException("Cliente bloqueado");
-        }
-
-        double valorTotal = cliente.getSaldo() + cliente.getLimite();
-
-        if (valorTotal < 0) {
-            throw new RuntimeException("Cliente sem saldo");
-        }
 
         atualizarEstadoUsoCliente(cliente.getId(), true);
 
@@ -99,7 +86,12 @@ public class AcessoService extends _GenericService<Acesso, AcessoRepository> {
     @Transactional
     public Acesso registrarSaidaPorCodigoCliente(String codigoCliente) {
         // Busca o último acesso ativo do cliente
-        Acesso acesso = acessoRepository.findUltimoAcessoAtivo(codigoCliente);
+        List<Acesso> acessos = acessoRepository.findUltimoAcessoAtivo(codigoCliente, (Pageable) PageRequest.of(0, 1));
+        if (acessos.isEmpty()) {
+            throw new RuntimeException("Nenhum acesso ativo encontrado para este cliente");
+        }
+        Acesso acesso = acessos.get(0);
+
         if (acesso == null) {
             throw new RuntimeException("Nenhum acesso ativo encontrado para este cliente");
         }

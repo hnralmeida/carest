@@ -31,7 +31,8 @@ export const useAcessoHook = () => {
 
     return {
         cliente,
+        setCliente,
         buscarAcesso,
-        saidaCliente
+        saidaCliente,
     };
 };

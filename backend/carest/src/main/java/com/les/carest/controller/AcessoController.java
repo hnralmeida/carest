@@ -1,10 +1,12 @@
 package com.les.carest.controller;
 
 import com.les.carest.model.Acesso;
+import com.les.carest.model.Cliente;
 import com.les.carest.service.AcessoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/acesso")
@@ -20,6 +22,24 @@ public class AcessoController extends _GenericController<Acesso> {
     @PostMapping("/entrada")
     public ResponseEntity<?> registrarEntrada(@RequestParam String codigo) {
         try {
+            Cliente cliente = acessoService.findClienteByCodigo(codigo);
+
+            if(cliente==null){
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não encontrado");
+            }
+            if (cliente.isEm_uso()) {
+                return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(cliente);
+            }
+            if (cliente.getBloqueado()) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(cliente);
+            }
+
+            double valorTotal = cliente.getSaldo() + cliente.getLimite();
+
+            if (valorTotal <= 0) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(cliente);
+            }
+
             // Busca o cliente e verifica condições
             Acesso acesso = acessoService.registrarEntrada(codigo);
             return ResponseEntity.ok(acesso);

@@ -65,7 +65,7 @@ export const useVendasHook = () => {
                     updated[index] = {
                         ...itemExistente,
                         quantidade: itemExistente.quantidade + 1,
-                        valor: Number((produto.valor * (itemExistente.quantidade + 1)).toFixed(2)),
+                        valor: Number((produto.valor).toFixed(2)),
                     };
 
                     return updated;

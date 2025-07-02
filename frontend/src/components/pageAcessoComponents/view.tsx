@@ -8,7 +8,7 @@ import { useAcessoHook } from "@/hooks/useAcesso";
 
 const AcessoView = () => {
 
-    const { buscarAcesso, cliente, saidaCliente } = useAcessoHook();
+    const { buscarAcesso, cliente, setCliente, saidaCliente } = useAcessoHook();
 
     const [codigoLido, setCodigoLido] = React.useState("");
     const [saida, setSaida] = React.useState("");
@@ -23,41 +23,52 @@ const AcessoView = () => {
 
             if (codigoLido.length > 0) {
                 try {
-                    console.log(codigoLido)
                     //retira tudo que não for numeros de codigoLido
                     const codigoLidoLimpo = codigoLido.replace(/\D/g, "");
                     setSaida(codigoLidoLimpo);
-                    await buscarAcesso(codigoLidoLimpo)
+                    await buscarAcesso(codigoLidoLimpo);
 
-                    if (cliente?.saldo < 0) {
+                    if (cliente?.saldo <= 0) {
                         let valor = Number(cliente.limite) + Number(cliente.saldo);
-                        if (Number(valor) < 0) {
+                        if (Number(valor) <= 0) {
                             setValidarSaldo(false);
                             setPerform("ACESSO NEGADO");
                             toast.error("Saldo insuficiente para acesso");
+                        } else {
+                            setPerform("ENTRADA");
+                            setValidarSaldo(true);
                         }
                         setValidarSaldo(true);
-                    } else {
-                        setValidarSaldo(true);
+                    } else if (cliente?.saldo > 0) {
                         setPerform("ENTRADA")
+                        setValidarSaldo(true);
+                    } else {
+                        setPerform("ACESSO NEGADO");
+                        setValidarSaldo(false);
                     }
 
                 } catch (e: any) {
-                    console.log(e)
-                    if (e.response.status == 404) {
-                        toast.error("Cliente não encontrado")
+                    console.log(e);
+                    if (e.status == 404) {
+                        setPerform("Cliente não encontrado");
+                        toast.error("Cliente não encontrado");
+                        setCliente({} as any);
                     }
-                    else if (e.response.status == 500) {
-                        toast.error("Erro interno do servidor")
+                    if (e.status == 409) {
+                        setPerform("ACESSO NEGADO");
+                        toast.error("Cliente sem saldo");
+                        setCliente(e.response.data);
                     }
-                    else if (e.response.status == 401) {
-                        toast.error("Código já utilizado")
+                    else if (e.status == 500) {
+                        setPerform("Erro interno do servidor");
+                        toast.error("Erro interno do servidor");
+                        setCliente({} as any);
                     }
-                    else if (e.response.status == 400) {
+                    else if (e.status == 208) {
                         const codigoLidoLimpo = codigoLido.replace(/\D/g, "");
                         try {
-                            await saidaCliente(codigoLidoLimpo)
                             setPerform("SAÍDA")
+                            await saidaCliente(codigoLidoLimpo)
                         } catch (e: any) {
                             console.log(e)
                             if (e.response.status == 404) {
@@ -66,14 +77,15 @@ const AcessoView = () => {
                             else if (e.response.status == 500) {
                                 toast.error("Erro interno do servidor")
                             }
-                            else if (e.response.status == 401) {
-                                toast.error("Código já utilizado")
+                            else if (e.response.status == 403) {
+                                toast.error("Cliente Bloqueado")
                             } else {
                                 toast.error(e.response.data)
                             }
                         }
                     }
                     else {
+                        setPerform(e.response.data);
                         toast.error(e.response.data)
                     }
                 }
@@ -108,7 +120,7 @@ const AcessoView = () => {
     }, [codigoLido]);
 
     function ClienteView() {
-        
+
         return (
             <div className="flex flex-col justify-center items-start w-full h-[128px] gap-[8px] mb-4 px-[64px]">
                 <p className="font-semibold">{String(cliente.nome)}</p>
@@ -142,7 +154,7 @@ const AcessoView = () => {
         <>
             <div className="rounded-md overflow-x-auto h-[256px]">
                 {!cliente?.id && <h1 className="text-2xl">Aproxime o cartão da leitora</h1>}
-                {cliente?.id && <h1 className={`text-2xl ${perform==='ACESSO NEGADO' ? 'text-red-500' : ''}`}>{perform}</h1>}
+                {cliente?.id && <h1 className={`text-2xl ${perform === 'ACESSO NEGADO' ? 'text-red-500' : ''}`}>{perform}</h1>}
                 {cliente?.id ? (validarSaldo ? <ClienteView /> : <AcessoNegadoView />) : <PulseView />}
             </div>
 

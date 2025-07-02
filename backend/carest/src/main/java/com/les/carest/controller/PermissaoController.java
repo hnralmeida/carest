@@ -35,7 +35,7 @@ public class PermissaoController extends _GenericController<Permissao> {
             @RequestBody Permissao permissao,
             @RequestParam UUID userId
     ) {
-        // Permissao permissaoExistente = permissaoService.buscarPorId(id);
+        // ..Permissao permissaoExistente = permissaoService.buscarPorId(id);
 
         Permissao atualizada = permissaoService.atribuirPermissoes(userId,
                 permissao.getTela().getId(),
