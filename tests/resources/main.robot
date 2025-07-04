@@ -15,8 +15,8 @@ Resource    shared/setup_teardown.robot
 Resource    keywords/home.robot
 Resource    variables/variables_home.robot
 
-Resource    keywords/cliente.robot
-Resource    variables/variables_cliente.robot
+Resource    keywords/produto.robot
+Resource    variables/variables_produto.robot
 
 Resource    keywords/login.robot
 Resource    variables/variables_login.robot

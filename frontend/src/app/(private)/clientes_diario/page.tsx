@@ -9,13 +9,13 @@ import { toast, Toaster } from "sonner";
 import { ButtonVariant } from "@/components/button-variant";
 
 function Page() {
-  const { loading, clientesDiario, listarClientesDiario, relatoriosClientesDiario, listarClientesDiarioPorDia } = useClientesDiarioHook();
+  const { loading, clientesDiario, listarClientesDiario, relatoriosClientesDiario } = useClientesDiarioHook();
   const [dataSelecionada, setDataSelecionada] = React.useState<string>('');
 
   useEffect(() => {
 
     const dataAtual = new Date();
-    const dataAtualFormatada = new Date(dataAtual.getFullYear(), dataAtual.getMonth(), 1);
+    const dataAtualFormatada = new Date(dataAtual.getFullYear(), dataAtual.getMonth(), dataAtual.getDay()-1);
 
     // Formatar datas para YYYY-MM-DD
     const atual = dataAtualFormatada.toISOString().split('T')[0];
@@ -46,7 +46,7 @@ function Page() {
       return;
     }
 
-    listarClientesDiarioPorDia(dataSelecionada).catch((res: any) => {
+    listarClientesDiario(dataSelecionada).catch((res: any) => {
       toast.error(res);
     });
   }

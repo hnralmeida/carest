@@ -35,10 +35,10 @@ public interface RelatorioRepository extends JpaRepository<Venda, UUID> {
             @Param("dataFim") Date dataFim);
 
     // VENDAS POR DIA (PostgreSQL compatible)
-    @Query("SELECT c.nome, SUM(v.valorTotal), CAST(v.dataVenda AS date) " +
+    @Query("SELECT c.nome, SUM(v.valorTotal), TO_CHAR(v.dataVenda, 'HH24:MI') " +
             "FROM Venda v JOIN v.cliente c " +
             "WHERE CAST(v.dataVenda AS date) = CAST(:data AS date) " +
-            "GROUP BY c.nome, CAST(v.dataVenda AS date)")
+            "GROUP BY c.nome, v.dataVenda")
     List<Object[]> findVendasPorDia(@Param("data") Date data);
 
     // ÚLTIMA VENDA POR CLIENTE (PostgreSQL compatible)
@@ -50,8 +50,8 @@ public interface RelatorioRepository extends JpaRepository<Venda, UUID> {
     Object[] getUltimaVenda(@Param("idCliente") UUID idCliente);
 
     // CLIENTES ENDIVIDADOS (mantido)
-    @Query("SELECT c FROM Cliente c WHERE c.saldo < 0")
-    List<Cliente> findClientesEndividados();
+    @Query("SELECT c FROM Cliente c WHERE c.saldo < 0 AND c.dividaData <= :dataLimite")
+    List<Cliente> findClientesEndividados(@Param("dataLimite") Date dataLimite);
 
     // Consulta nativa otimizada para última venda por cliente
     @Query(value = """
@@ -92,15 +92,16 @@ public interface RelatorioRepository extends JpaRepository<Venda, UUID> {
             '1 day'::interval
         )::date as dia
     )
-    SELECT COALESCE(SUM(v.valor_total), 0.0)
+    SELECT EXTRACT(DAY FROM d.dia) AS dia_numero, COALESCE(SUM(v.valor_total), 0.0)
     FROM dias d
     LEFT JOIN venda v ON CAST(v.data_venda AS date) = d.dia
     GROUP BY d.dia
     ORDER BY d.dia
-    """)
-    List<Double> findConsumoDiario(
+""")
+    List<Object[]> findConsumoDiario(
             @Param("dataInicio") Date dataInicio,
             @Param("dataFim") Date dataFim);
+
 
     @Query("SELECT c FROM Cliente c WHERE EXTRACT(MONTH FROM c.nascimento) = :mes")
     List<Cliente> findAniversariantesDoMes(@Param("mes") int mes);

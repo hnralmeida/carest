@@ -17,8 +17,9 @@ import { Cliente } from "@/models/cliente";
 
 interface OptionButtonSaldoProps {
     cliente: Cliente;
+    setCliente: React.Dispatch<React.SetStateAction<Cliente>>;
 }
-const OptionButtonSaldo = ({cliente}: OptionButtonSaldoProps) => {
+const OptionButtonSaldo = ({cliente, setCliente}: OptionButtonSaldoProps) => {
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
     const [valor, setValor] = useState(0);
@@ -42,7 +43,10 @@ const OptionButtonSaldo = ({cliente}: OptionButtonSaldoProps) => {
             setValor(0); // Limpa o valor após o envio
             setLoading(false);
             setOpen(false);
-            window.location.reload(); // Recarrega a página após 2 segundos
+            setCliente((prevCliente) => ({
+                ...prevCliente,
+                saldo: prevCliente.saldo + valor, // Atualiza o saldo do cliente
+            }));
         }, 2000);
     }
 

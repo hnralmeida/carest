@@ -3,19 +3,31 @@ package com.les.carest.util.pdfGenerator;
 import com.les.carest.util.pdfGenerator.Plot.PlotOptions;
 
 import java.awt.image.BufferedImage;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class PlotUtils {
 
-    public static BufferedImage generateConsumoDiarioChart(List<Double> valores, String titulo) {
+    public static BufferedImage generateConsumoDiarioChart(List<Object[]> valores, String titulo) {
         // Converter lista de valores para arrays de X (dias) e Y (valores)
+
         double[] dias = new double[valores.size()];
         double[] totais = new double[valores.size()];
 
         for (int i = 0; i < valores.size(); i++) {
-            dias[i] = i + 1; // Dia 1, Dia 2, etc.
-            totais[i] = valores.get(i);
+            Object[] row = valores.get(i);
+
+            // Primeira coluna é BigDecimal representando o dia do mês
+            int diaDoMes = ((Number) row[0]).intValue();
+
+            // Segunda coluna é o consumo, pode vir como BigDecimal
+            double consumo = ((Number) row[1]).doubleValue();
+
+            dias[i] = diaDoMes;
+            totais[i] = consumo;
         }
+
 
         // Configurar opções do gráfico
         PlotOptions opts = Plot.plotOpts()

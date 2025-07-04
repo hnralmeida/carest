@@ -85,8 +85,8 @@ public class RelatorioService {
                 .collect(Collectors.toList());
     }
 
-    public List<ClienteDiarioDTO> getVendasDoDia() {
-        return relatorioRepository.findVendasPorDia(new Date())
+    public List<ClienteDiarioDTO> getVendasDoDia(Date data) {
+        return relatorioRepository.findVendasPorDia(data)
                 .stream()
                 .map(this::mapToClienteDiarioDTO)
                 .collect(Collectors.toList());
@@ -100,7 +100,11 @@ public class RelatorioService {
     }
 
     public List<Cliente> getClientesEndividados() {
-        return relatorioRepository.findClientesEndividados();
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.DAY_OF_MONTH, -30);
+        Date dataLimite = cal.getTime();
+
+        return relatorioRepository.findClientesEndividados(dataLimite);
     }
 
 
@@ -117,7 +121,7 @@ public class RelatorioService {
                 .collect(Collectors.toList());
     }
 
-    public List<Double> getConsumoDiarioParaGrafico(Date dataInicio, Date dataFim) {
+    public List<Object[]> getConsumoDiarioParaGrafico(Date dataInicio, Date dataFim) {
         // Validação básica
         if (dataInicio == null || dataFim == null) {
             throw new IllegalArgumentException("Datas não podem ser nulas");
@@ -126,7 +130,9 @@ public class RelatorioService {
             throw new IllegalArgumentException("Data final deve ser após data inicial");
         }
 
-        return relatorioRepository.findConsumoDiario(dataInicio, dataFim);
+        List<Object[]> resultados = relatorioRepository.findConsumoDiario(dataInicio, dataFim);
+
+        return resultados;
     }
 
 
@@ -144,7 +150,7 @@ public class RelatorioService {
         return new ClienteDiarioDTO(
                 (String) result[0],  // nome
                 (Double) result[1],  // valorTotal
-                formatarData((Date) result[2])  // data formatada
+                (String) result[2]  // data formatada
         );
     }
 

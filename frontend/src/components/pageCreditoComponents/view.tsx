@@ -103,8 +103,8 @@ const CreditoView = () => {
             <div className="rounded-md overflow-x-auto">
                 <h1 className="text-2xl">Gerenciar o Cartão</h1>
                 <div className="flex flex-row justify-around items-center w-full h-[128px] gap-[8px] mb-4 px-[64px]">
-                    <OptionButtonLimite cliente={cliente}/>
-                    <OptionButtonSaldo cliente={cliente}/>
+                    <OptionButtonLimite cliente={cliente} setCliente={setCliente}/>
+                    <OptionButtonSaldo cliente={cliente} setCliente={setCliente}/>
                     <OptionButtonBloquear cliente={cliente}/>
                 </div>
             </div>

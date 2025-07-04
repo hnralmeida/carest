@@ -17,9 +17,10 @@ import { formatarParaMoeda, moedaParaNumero } from "@/lib/utils";
 
 interface OptionButtonLimiteProps {
     cliente: Cliente;
+    setCliente: React.Dispatch<React.SetStateAction<Cliente>>;
 }
 
-const OptionButtonLimite = ({ cliente }: OptionButtonLimiteProps) => {
+const OptionButtonLimite = ({ cliente, setCliente }: OptionButtonLimiteProps) => {
 
     const [loading, setLoading] = useState(false);
     const [open, setOpen] = useState(false);
@@ -53,7 +54,11 @@ const OptionButtonLimite = ({ cliente }: OptionButtonLimiteProps) => {
             setValor(""); // Limpa o valor após o envio
             setLoading(false);
             setOpen(false);
-            window.location.reload(); // Recarrega a página após 2 segundos
+            setCliente(prev => ({
+                ...prev,
+                limite: Number(moedaParaNumero(valor).toFixed(2)), // Atualiza o limite do cliente
+            })
+            )
         }, 2000);
     }
 

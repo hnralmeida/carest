@@ -3,7 +3,7 @@ import { axiosClient } from "@/services/axiosClient";
 import { RelatorioProduto } from "@/models/relatorioProduto";
 
 
-export const useRelatorioProdutoHook = () => {
+export const    useRelatorioProdutoHook = () => {
     const [relatorioProduto, setRelatorioProduto] = useState<RelatorioProduto[] | null>(null);
     const [loading, setLoading] = useState(false);
 

@@ -7,11 +7,11 @@ export const useAniversariantesHook = () => {
     const [aniversariantes, setAniversariantes] = useState<Cliente[] | null>(null);
     const [loading, setLoading] = useState(true);
 
-    const listarAniversariantes = async () => {
+    const listarAniversariantes = async (month: Number) => {
         setLoading(true);
         try {
             const hoje = new Date();
-            const response = await axiosClient.get(`/relatorios/aniversariantes?mes=${hoje.getMonth()+1}`);
+            const response = await axiosClient.get(`/relatorios/aniversariantes?mes=${month}`);
             if (response.data) {
                 setAniversariantes(response.data);
             }

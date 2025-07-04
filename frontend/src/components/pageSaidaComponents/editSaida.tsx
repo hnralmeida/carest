@@ -14,7 +14,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { axiosClient } from "@/services/axiosClient";
 import { Saidas } from "@/models/saidas";
-import { dateToISO, ISODateToDate, moedaParaNumero } from "@/lib/utils";
+import { dateToISO, dateToReadable, ISODateToDate, moedaParaNumero } from "@/lib/utils";
+import { useSaidasHook } from "@/hooks/useSaidas";
+import { toast } from "sonner";
 
 interface EditSaidaProps {
   id: string;
@@ -24,57 +26,65 @@ interface EditSaidaProps {
 export default function EditSaida({ id, item }: EditSaidaProps) {
   const [open, setOpen] = useState(false);
   const [formSaidas, setFormSaidas] = useState<Saidas>({} as Saidas);
+  const [fornecedor, setFornecedor] = useState("");
+
+  const { fornecedores, editarSaidas, listarFornecedores } = useSaidasHook();
 
   useEffect(() => {
     setFormSaidas((prevData: any) => ({
       ...prevData,
       descricao: item.descricao,
-    }));
-
-    setFormSaidas((prevData: any) => ({
-      ...prevData,
       valor: item.valor,
+      fornecedor: item.fornecedor,
+      dataPagamento: dateToISO(new Date(item.dataPagamento)),
+      dataVencimento: dateToISO(new Date(item.dataVencimento)),
     }));
 
-    setFormSaidas((prevData) => ({
-      ...prevData,
-      dataPagamento: dateToISO(new Date(item.dataPagamento)),
-    }))
+    setFornecedor(item.fornecedor.id);
 
-    setFormSaidas((prevData) => ({
-      ...prevData,
-      dataVencimento: dateToISO(new Date(item.dataVencimento)),
-    }))
   }, [item]);
 
   const onFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault(); // Evita que o formulário recarregue a página
-    const dataVencimentoData = new Date(`${item.dataVencimento}T12:00:00`);
-    const dataPagamentoData = new Date(`${item.dataPagamento}T12:00:00`);
+    const dataVencimentoData = new Date(`${formSaidas.dataVencimento}T12:00:00`);
+    const dataPagamentoData = new Date(`${formSaidas.dataPagamento}T12:00:00`);
+
+    const fornecedorSelecionado = fornecedores?.find((f) => f.id === fornecedor);
 
     try {
       const data = {
         "id": id,
-        "descricao": item.descricao,
-        "valor": Number(moedaParaNumero(item.valor.toFixed(2))),
-        "dataVencimento": ISODateToDate(dataVencimentoData),
-        "dataPagamento": ISODateToDate(dataPagamentoData)
+        "descricao": formSaidas.descricao,
+        "valor": Number(moedaParaNumero(formSaidas.valor.toFixed(2))),
+        "fornecedor": fornecedorSelecionado,
+        "dataVencimento": dataVencimentoData,
+        "dataPagamento": dataPagamentoData,
       };
+
+      console.log("Dados enviados:", data);
 
       const response = await axiosClient.put("/saidas/" + id, data);
 
       if (response.status < 205) {
-        alert("Saida alterado com sucesso!");
+        toast.success("Saida alterado com sucesso!");
         setOpen(false); // Fecha o modal após sucesso
         window.location.reload(); // Recarrega a página para exibir o novo Saida
       } else {
-        alert("Erro ao alterar Saida. " + response.statusText.toString());
+        toast.error("Erro ao alterar Saida. " + response.statusText.toString());
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
-      alert("Falha ao conectar com o servidor. ");
+      toast.error("Falha ao conectar com o servidor. ");
     }
   };
+
+  useEffect(() => {
+    const fetch = async () => {
+      await listarFornecedores();
+    }
+
+    fetch();
+  }, []);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -123,6 +133,25 @@ export default function EditSaida({ id, item }: EditSaidaProps) {
               required
             />
           </div>
+
+          <div>
+            <Label htmlFor="fornecedor">Fornecedor</Label>
+            <select
+              id="fornecedor"
+              value={fornecedor}
+              onChange={(e) => setFornecedor(e.target.value)}
+              className="w-full rounded-md border px-3 py-2 text-sm shadow-sm"
+              required
+            >
+              <option value="">Selecione um fornecedor</option>
+              {fornecedores?.map((f) => (
+                <option key={f.id} value={f.id}>
+                  {f.nome}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div>
             <Label htmlFor="dataPagamento">Data de Pagamento</Label>
             <Input
@@ -143,6 +172,7 @@ export default function EditSaida({ id, item }: EditSaidaProps) {
               required
             />
           </div>
+
           <div>
             <Label htmlFor="dataVencimento">Data de Vencimento</Label>
             <Input

@@ -1,12 +1,30 @@
 package com.les.carest.DTO.relatorios;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.Date;
 
+@Schema(description = "DTO para relatório de desempenho de vendas em um período")
 public class DesempenhoDTO {
+
+    @Schema(description = "Data", example = "01/07/2025")
+    @PdfFormat(datePattern = "mm/dd/yyyy")
     private Date data;
+
+    @Schema(description = "Entrada")
+    @PdfFormat(numberPattern = "R$ #,##0.00")
     private double entrada;
+
+    @Schema(description = "Saída")
+    @PdfFormat(numberPattern = "R$ #,##0.00")
     private double saida;
+
+    @Schema(description = "Clientes")
     private long clientes;
+
+    @Schema(description = "Saldo Anterior")
+    @PdfFormat(numberPattern = "R$ #,##0.00")
     private double saldoAnterior;
 
     public DesempenhoDTO(Date data, double entrada, double saida, long clientes, double saldoAnterior) {
@@ -58,4 +76,6 @@ public class DesempenhoDTO {
     public void setClientes(long clientes) {
         this.clientes = clientes;
     }
+
+
 }

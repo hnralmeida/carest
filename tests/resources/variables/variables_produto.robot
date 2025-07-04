@@ -1,16 +1,15 @@
 *** Settings ***
-Resource    ../main.robot
+Resource    ../main.robot 
 
 *** Variables *** 
 &{cliente} 
-...    PAGE_TITULO=//h1[contains(., "Clientes")]
+...    PAGE_TITULO=//h1[contains(., "Produtos")]
 ...    BTN_ADICIONAR=//button[contains(., "Adicionar")]
 ...    MODAL=//div[contains(@role, "dialog")]
 ...    INPUT_NOME=//input[@id="name"]
-...    INPUT_TELEFONE=//input[@id="telefone"]
-...    INPUT_EMAIL=//input[@id="email"]
+...    INPUT_VALOR=//input[@id="valor"]
+...    INPUT_CUSTO=//input[@id="custo"]
 ...    INPUT_CODIGO=//input[@id="codigo"]
-...    INPUT_NASCIMENTO=//input[@id="nascimento"]
 ...    BTN_SALVAR=//button[contains(., "Salvar")]
 
 *** Variables ***

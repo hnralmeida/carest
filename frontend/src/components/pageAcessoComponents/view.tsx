@@ -28,11 +28,11 @@ const AcessoView = () => {
                     setSaida(codigoLidoLimpo);
                     await buscarAcesso(codigoLidoLimpo);
 
-                    if (cliente?.saldo <= 0) {
+                    if (cliente?.saldo <= 0 && cliente?.codigo==codigoLidoLimpo) {
                         let valor = Number(cliente.limite) + Number(cliente.saldo);
-                        if (Number(valor) <= 0) {
+                        if (valor <= 0) {
                             setValidarSaldo(false);
-                            setPerform("ACESSO NEGADO");
+                            setPerform("SALDO INSUFICIENTE");
                             toast.error("Saldo insuficiente para acesso");
                         } else {
                             setPerform("ENTRADA");
@@ -43,7 +43,7 @@ const AcessoView = () => {
                         setPerform("ENTRADA")
                         setValidarSaldo(true);
                     } else {
-                        setPerform("ACESSO NEGADO");
+                        setPerform("ENTRADA");
                         setValidarSaldo(false);
                     }
 
@@ -53,6 +53,11 @@ const AcessoView = () => {
                         setPerform("Cliente não encontrado");
                         toast.error("Cliente não encontrado");
                         setCliente({} as any);
+                    }
+                    if (e.status == 403) {
+                        setPerform("BLOQUEADO");
+                        toast.error("Cliente Bloqueado");
+                        setCliente(e.response.data);
                     }
                     if (e.status == 409) {
                         setPerform("ACESSO NEGADO");
@@ -83,10 +88,6 @@ const AcessoView = () => {
                                 toast.error(e.response.data)
                             }
                         }
-                    }
-                    else {
-                        setPerform(e.response.data);
-                        toast.error(e.response.data)
                     }
                 }
             }
@@ -154,7 +155,7 @@ const AcessoView = () => {
         <>
             <div className="rounded-md overflow-x-auto h-[256px]">
                 {!cliente?.id && <h1 className="text-2xl">Aproxime o cartão da leitora</h1>}
-                {cliente?.id && <h1 className={`text-2xl ${perform === 'ACESSO NEGADO' ? 'text-red-500' : ''}`}>{perform}</h1>}
+                {cliente?.id && <h1 className={`text-2xl ${perform === 'ACESSO NEGADO' || perform === 'BLOQUEADO' ? 'text-red-500' : ''}`}>{perform}</h1>}
                 {cliente?.id ? (validarSaldo ? <ClienteView /> : <AcessoNegadoView />) : <PulseView />}
             </div>
 

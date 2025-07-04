@@ -13,6 +13,7 @@ import { Input } from "../ui/input";
 import { useProdutoHook } from "@/hooks/useProdutos";
 import { toast } from "sonner";
 import { formatarParaMoeda, moedaParaNumero } from "@/lib/utils";
+import ButtonPrint from "./imprimir";
 import { Produto } from "@/models/produto";
 
 interface EditBalancaProps {
@@ -23,6 +24,14 @@ export default function ButtonEditBalanca({ preco }: EditBalancaProps) {
     const [open, setOpen] = useState(false);
     const [valor, setValor] = useState("");
     const { atualizarBalanca } = useProdutoHook();
+
+    const produto = {
+        id: "balanca",
+        nome: "Balança",
+        codigo: "BALANCA",
+        valor: preco,
+        custo: 0,
+    } as Produto;
 
     const onFormSubmit = async () => {
         try {
@@ -41,15 +50,6 @@ export default function ButtonEditBalanca({ preco }: EditBalancaProps) {
         const valorFormatado = formatarParaMoeda(e.target.value);
         setValor(valorFormatado);
     };
-
-    async function onPrint() {
-        try {
-            // Código da balanca vai ser 10004800
-            fetch(`/api/impressora?code=10004800&quantidade=3`)
-        } catch (error) {
-            toast.error(error instanceof Error ? error.message : "Erro ao imprimir");
-        }
-    }
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -80,14 +80,7 @@ export default function ButtonEditBalanca({ preco }: EditBalancaProps) {
                                 required
                             />
 
-                            <Button
-                                className="button-table"
-                                variant="outline"
-                                size="icon"
-                                onClick={() => onPrint()}
-                            >
-                                <Barcode size={24} />
-                            </Button>
+                            <ButtonPrint produto={produto}/>
                         </div>
                     </div>
 

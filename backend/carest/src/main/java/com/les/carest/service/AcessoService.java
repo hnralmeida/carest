@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.data.domain.Pageable;
+
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -56,6 +58,30 @@ public class AcessoService extends _GenericService<Acesso, AcessoRepository> {
         clienteRepository.updateEstadoUso(clienteId, emUso);
     }
 
+    @Transactional
+    public Boolean emDia(String codigo) {
+        Cliente cliente = findClienteByCodigo(codigo);
+
+        if(cliente.getSaldo()>0) return true;
+
+        Date divida = cliente.getDividaData();
+        Date hoje = new Date();
+
+        // Calcula data limite: hoje - 30 dias
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(hoje);
+        cal.add(Calendar.DAY_OF_YEAR, -30); // Subtrai 30 dias
+        Date limite = cal.getTime();
+
+        // Se a data da dívida for anterior à data limite, bloqueia
+        if (divida.before(limite)) {
+            cliente.setBloqueado(true);
+            clienteRepository.save(cliente);
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     @Transactional
     public Acesso registrarEntrada(String codigo) {

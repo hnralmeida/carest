@@ -2,7 +2,7 @@ package com.les.carest.DTO.relatorios;
 
 import java.util.Date;
 
-public class diarioDreDTO {
+public class DiarioDreDTO {
     private Date dia;
     private float valorEntrada;
     private float valorSaida;

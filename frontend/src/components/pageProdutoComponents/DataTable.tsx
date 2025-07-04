@@ -25,6 +25,7 @@ import EditProduto from "./editProduto";
 import { useProdutoHook } from "@/hooks/useProdutos";
 import { Produto } from "@/models/produto";
 import FooterPagination from "../footerPagination";
+import ButtonPrint from "./imprimir";
 
 interface DataTableProps<TValue> {
   columns: ColumnDef<Produto, TValue>[];
@@ -64,31 +65,6 @@ export function DataTable<TValue>({
         console.error("Erro na requisição:", error);
         toast.error("Erro ao conectar com o servidor.");
       }
-    }
-  }
-
-  async function onPrint(produto: Produto) {
-    try {
-      toast(`${produto.nome}`, {
-        description: `${produto.codigo}`,
-        action: {
-          label: "Imprimir",
-          onClick: async () => {
-            const quantidadeStr = prompt("Informe a quantidade a imprimir:");
-            const quantidade = parseInt(quantidadeStr || "0", 10);
-
-            if (isNaN(quantidade) || quantidade <= 0) {
-              toast.error("Quantidade inválida.");
-              return;
-            }
-
-            await fetch(`/api/impressora?code=${produto.codigo}&quantidade=${quantidade}`);
-            toast.success("Impressão enviada.");
-          },
-        },
-      });
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Erro ao imprimir");
     }
   }
 
@@ -132,14 +108,7 @@ export function DataTable<TValue>({
                   </TableCell>
                 ))}
                 <TableCell className="flex w-48 gap-2">
-                  <Button
-                    className="button-table"
-                    variant="outline"
-                    size="icon"
-                    onClick={() => onPrint(row.original)}
-                  >
-                    <Barcode size={24} />
-                  </Button>
+                  <ButtonPrint produto={row.original}/>
                   <EditProduto
                     id={row.original.id}
                     nome={row.original.nome}

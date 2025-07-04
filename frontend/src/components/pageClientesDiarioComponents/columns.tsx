@@ -10,14 +10,14 @@ export const columns: ColumnDef<Cliente>[] = [
     header: "Nome",
   },
   {
-    accessorKey: "horaVenda",
+    accessorKey: "horario",
     header: "Horário",
   },
   {
-    accessorKey: "valorTotal",
+    accessorKey: "valor",
     header: "Gasto",
     cell: ({ row }) => {
-      const formated = formatarParaMoeda(`${row.getValue('valorTotal')}`, true)
+      const formated = formatarParaMoeda(`${row.getValue('valor')}`, true)
       return <div className='text-right'>{formated}</div>
     },
   },

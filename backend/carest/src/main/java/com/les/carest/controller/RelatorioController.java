@@ -19,6 +19,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -111,7 +112,7 @@ public class RelatorioController {
     }
 
     @Operation(summary = "Vendas por data específica (JSON)")
-    @GetMapping(value = "/diario/{data}", produces = MediaType.APPLICATION_JSON_VALUE)
+        @GetMapping(value = "/diario/{data}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ClienteDiarioDTO>> getVendasDiariasJSON(
             @Parameter(description = "Data no formato yyyy-MM-dd", example = "2023-05-15")
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date data) {
@@ -123,15 +124,26 @@ public class RelatorioController {
     // Vendas do dia atual - PDF e JSON
     @Operation(summary = "Vendas do dia atual (PDF)")
     @GetMapping(value = "/pdf/diario", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> getVendasDoDiaAtualPDF() {
-        List<ClienteDiarioDTO> resultados = relatorioService.getVendasDoDia();
-        return ResponseEntity.ok(GenericPDF.gerarRelatorioBytes(resultados, "Vendas Hoje"));
+    public ResponseEntity<byte[]> getVendasDoDiaAtualPDF(
+            @Parameter(description = "Data (yyyy-MM-dd)", example = "2023-01-01", required = true)
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date data
+    ) {
+        List<ClienteDiarioDTO> resultados = relatorioService.getVendasDoDia(data);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        String title = "Vendas " + sdf.format(data);
+
+        return ResponseEntity.ok(GenericPDF.gerarRelatorioBytes(resultados, title));
     }
 
     @Operation(summary = "Vendas do dia atual (JSON)")
     @GetMapping(value = "/diario", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ClienteDiarioDTO>> getVendasDoDiaAtualJSON() {
-        List<ClienteDiarioDTO> resultados = relatorioService.getVendasDoDia();
+    public ResponseEntity<List<ClienteDiarioDTO>> getVendasDoDiaAtualJSON(
+            @Parameter(description = "Data (yyyy-MM-dd)", example = "2023-01-01", required = true)
+            @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date data
+    ) {
+        List<ClienteDiarioDTO> resultados = relatorioService.getVendasDoDia(data);
+
         return ResponseEntity.ok(resultados);
     }
 
@@ -172,14 +184,14 @@ public class RelatorioController {
     }
 
     // Clientes endividados - PDF e JSON
-    @Operation(summary = "Clientes endividados (PDF)")
+    @Operation(summary = "Clientes em Aberto (PDF)")
     @GetMapping(value = "/pdf/clientesEmAberto", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> getClientesEndividadosPDF() {
         List<Cliente> resultados = relatorioService.getClientesEndividados();
         return ResponseEntity.ok(GenericPDF.gerarRelatorioBytes(resultados, "Clientes Endividados"));
     }
 
-    @Operation(summary = "Clientes endividados (JSON)")
+    @Operation(summary = "Clientes em Aberto (JSON)")
     @GetMapping(value = "/clientesEmAberto", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Cliente>> getClientesEndividadosJSON() {
         List<Cliente> resultados = relatorioService.getClientesEndividados();
@@ -197,7 +209,7 @@ public class RelatorioController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataFim) {
 
         List<ProdutoRelatorioDTO> resultados = relatorioService.getRelatorioProdutos(dataInicio, dataFim);
-        return ResponseEntity.ok(GenericPDF.gerarRelatorioBytes(resultados, "Produtos Serial Vendidos"));
+        return ResponseEntity.ok(GenericPDF.gerarRelatorioBytes(resultados, "Produtos Vendidos"));
     }
 
     @Operation(summary = "Produtos Serial Vendidos por Período (JSON)")
@@ -248,10 +260,12 @@ public class RelatorioController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataFim) {
 
         try {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            String title = "Relatório Consumo Diário: " + sdf.format(dataInicio) + " até " + sdf.format(dataFim);
             // Gera o gráfico como imagem
             BufferedImage imagemGerada = PlotUtils.generateConsumoDiarioChart(
                     relatorioService.getConsumoDiarioParaGrafico(dataInicio, dataFim),
-                    "Relatório Consumo Diário");
+                    title);
 
             // Converte a imagem em um array de bytes
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -272,7 +286,7 @@ public class RelatorioController {
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataInicio,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataFim) {
         List<DesempenhoDTO> resultados = relatorioService.gerarRelatorioDRE(dataInicio, dataFim);
-        return ResponseEntity.ok(GenericPDF.gerarRelatorioBytes(resultados, "Produtos Serial Vendidos"));
+        return ResponseEntity.ok(GenericPDF.gerarRelatorioBytes(resultados, "Demonstração do Resultado do Exercício"));
     }
 
     @GetMapping("/dre-diario")

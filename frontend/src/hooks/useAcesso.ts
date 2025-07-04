@@ -6,14 +6,18 @@ export const useAcessoHook = () => {
     const [cliente, setCliente] = useState({} as Cliente);
 
     async function buscarAcesso(codigo: string) {
-        const response = await axiosClient.post(`/acesso/entrada?codigo=${codigo}`);
-        const acesso = response.data;
+        try {
+            const response = await axiosClient.post(`/acesso/entrada?codigo=${codigo}`);
+            const acesso = response.data;
 
-        if (response.status > 205) {
-            return Promise.reject(response);
-        } else {
-            setCliente(acesso.cliente);
-            return acesso;
+            if (response.status > 205) {
+                return Promise.reject(response);
+            } else {
+                setCliente(acesso.cliente);
+                return acesso;
+            }
+        } catch (error: any) {
+            return Promise.reject(error);
         }
     }
 

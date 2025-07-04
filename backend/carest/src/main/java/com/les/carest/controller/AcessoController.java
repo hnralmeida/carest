@@ -30,7 +30,7 @@ public class AcessoController extends _GenericController<Acesso> {
             if (cliente.isEm_uso()) {
                 return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(cliente);
             }
-            if (cliente.getBloqueado()) {
+            if (!acessoService.emDia(cliente.getCodigo())) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(cliente);
             }
 

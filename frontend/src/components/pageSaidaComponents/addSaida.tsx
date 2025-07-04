@@ -29,8 +29,8 @@ export default function AddSaida() {
 
   const onFormSubmit = async (event: React.FormEvent) => {
     event.preventDefault(); // Evita que o formulário recarregue a página
-    const dataVencimentoData = new Date(`${dataVencimento}T12:00:00`);
-    const dataPagamentoData = new Date(`${dataPagamento}T12:00:00`);
+    const dataVencimentoData = new Date(`${dataVencimento}T18:00:00`);
+    const dataPagamentoData = new Date(`${dataPagamento}T18:00:00`);
 
     try {
       if (!fornecedores) return toast.error("Nenhum fornecedor encontrado.");

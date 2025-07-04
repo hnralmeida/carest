@@ -104,7 +104,11 @@ export default function AddProduto() {
           Adicionar
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent
+        onInteractOutside={(e) => {
+          e.preventDefault(); // Impede o fechamento do modal ao clicar fora
+        }}
+      >
         <DialogHeader>
           <DialogTitle>Adicionar Produto</DialogTitle>
         </DialogHeader>

@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { axiosClient } from "@/services/axiosClient";
+import { toast } from "sonner";
 
 interface EditFornecedorProps {
   id: string;
@@ -39,16 +40,16 @@ export default function EditFornecedor({ id, nome }: EditFornecedorProps) {
       const response = await axiosClient.put("/fornecedor/" + id, data);
 
       if (response.status < 205) {
-        alert("Fornecedor alterado com sucesso!");
+        toast.success("Fornecedor alterado com sucesso!");
         setOpen(false); // Fecha o modal após sucesso
         setFormNome(""); // Limpa o campo do formulário
         window.location.reload(); // Recarrega a página para exibir o novo fornecedor
       } else {
-        alert("Erro ao alterar fornecedor. " + response.statusText.toString());
+        toast.error("Erro ao alterar fornecedor. " + response.statusText.toString());
       }
     } catch (error) {
       console.error("Erro na requisição:", error);
-      alert("Falha ao conectar com o servidor. ");
+      toast.error("Falha ao conectar com o servidor. ");
     }
   };
 

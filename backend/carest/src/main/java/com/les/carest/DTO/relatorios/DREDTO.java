@@ -1,25 +1,33 @@
 package com.les.carest.DTO.relatorios;
 
-public class dreDTO {
+import io.swagger.v3.oas.annotations.media.Schema;
 
+@Schema(description = "DTO para relatório de desempenho de vendas em um período")
+public class DREDTO {
+
+    @Schema(description = "Data", example = "01/07/2025")
+    @PdfFormat(datePattern = "dd/MM/yyyy")
     private String dia;
 
     @PdfFormat(numberPattern = "R$ #,##0.00")
     private Double receber;
+
     @PdfFormat(numberPattern = "R$ #,##0.00")
     private Double pagar;
+
     @PdfFormat(numberPattern = "R$ #,##0.00")
     private Double resultado;
+
     @PdfFormat(numberPattern = "R$ #,##0.00")
-    private Double saldo;
+    private Double saldoAnterior;
 
 
-    public dreDTO(String dia, Double receber, Double pagar, Double resultado, Double saldo) {
+    public DREDTO(String dia, Double receber, Double pagar, Double resultado, Double saldoAnterior) {
         this.dia = dia;
         this.receber = receber;
         this.pagar = pagar;
         this.resultado = resultado;
-        this.saldo = saldo;
+        this.saldoAnterior = saldoAnterior;
     }
 
     public String getDia() {
@@ -54,11 +62,11 @@ public class dreDTO {
         this.resultado = resultado;
     }
 
-    public Double getSaldo() {
-        return saldo;
+    public Double getSaldoAnterior() {
+        return saldoAnterior;
     }
 
-    public void setSaldo(Double saldo) {
-        this.saldo = saldo;
+    public void setSaldoAnterior(Double saldoAnterior) {
+        this.saldoAnterior = saldoAnterior;
     }
 }

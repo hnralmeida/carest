@@ -10,21 +10,7 @@ export const useClientesDiarioHook = () => {
     const listarClientesDiario = async (data:String) => {
         setLoading(true);
         try {
-            const response = await axiosClient.get(`/relatorios/diario`);
-            if (response.data) {
-                setClientesDiario(response.data);
-            }
-            setLoading(false);
-        } catch (error) {
-            setLoading(false);
-            return Promise.reject("Erro ao buscar clientes");
-        }
-    };
-
-    const listarClientesDiarioPorDia = async (data:String) => {
-        setLoading(true);
-        try {
-            const response = await axiosClient.get(`/relatorios/diario`);
+            const response = await axiosClient.get(`/relatorios/diario?data=${data}`);
             if (response.data) {
                 setClientesDiario(response.data);
             }
@@ -39,7 +25,7 @@ export const useClientesDiarioHook = () => {
         setLoading(true);
 
         try {
-            const response = await axiosClient.get(`/relatorios/pdf/diario`, {
+            const response = await axiosClient.get(`/relatorios/pdf/diario?data=${data}`, {
                 responseType: 'blob', // importante para receber os dados como blob
             });
 
@@ -67,7 +53,6 @@ export const useClientesDiarioHook = () => {
         loading,
         clientesDiario,
         listarClientesDiario,
-        relatoriosClientesDiario,
-        listarClientesDiarioPorDia
+        relatoriosClientesDiario
     };
 };

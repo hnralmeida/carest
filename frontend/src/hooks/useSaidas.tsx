@@ -11,6 +11,9 @@ export const useSaidasHook = () => {
     const listarSaidas = async () => {
         try {
             const response = await axiosClient.get('/saidas');
+            const orderedSaidas = response.data.sort((a: Saidas, b: Saidas) => {
+                return new Date(b.dataVencimento).getTime() - new Date(a.dataVencimento).getTime();
+            });
             setSaidas(response.data);
         } catch (error) {
             console.error('Error fetching administrators:', error);
