@@ -15,8 +15,12 @@ function Page() {
 
   useEffect(() => {
     const dataAtual = new Date();
-    const dataInicioFormatada = new Date(dataAtual.getFullYear(), dataAtual.getMonth(), 1);
-    const dataFimFormatada = new Date(dataAtual.getFullYear(), dataAtual.getMonth() + 1, dataAtual.getDay());
+    const dia = dataAtual.getDate();
+    const mes = dataAtual.getMonth();
+    const ano = dataAtual.getFullYear();
+
+    const dataInicioFormatada = new Date(ano, mes, 1);
+    const dataFimFormatada = new Date(ano, mes, dia);
 
     // Formatar datas para YYYY-MM-DD
     const inicio = dataInicioFormatada.toISOString().split('T')[0];

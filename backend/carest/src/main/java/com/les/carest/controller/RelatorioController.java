@@ -208,8 +208,11 @@ public class RelatorioController {
             @Parameter(description = "Data final (yyyy-MM-dd)", example = "2023-12-31", required = true)
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date dataFim) {
 
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        String title = "Relatório Consumo Diário: " + sdf.format(dataInicio) + " até " + sdf.format(dataFim);
+
         List<ProdutoRelatorioDTO> resultados = relatorioService.getRelatorioProdutos(dataInicio, dataFim);
-        return ResponseEntity.ok(GenericPDF.gerarRelatorioBytes(resultados, "Produtos Vendidos"));
+        return ResponseEntity.ok(GenericPDF.gerarRelatorioBytes(resultados, title));
     }
 
     @Operation(summary = "Produtos Serial Vendidos por Período (JSON)")

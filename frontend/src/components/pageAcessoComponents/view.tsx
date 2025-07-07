@@ -123,7 +123,7 @@ const AcessoView = () => {
     function ClienteView() {
 
         return (
-            <div className="flex flex-col justify-center items-start w-full h-[128px] gap-[8px] mb-4 px-[64px]">
+            <div className="flex flex-col justify-center items-start w-full h-[128px] gap-[8px] mb-4 px-[64px] text-2xl">
                 <p className="font-semibold">{String(cliente.nome)}</p>
                 <p className="font-semibold">Saldo: {formatarParaMoeda(String(cliente.saldo), true)}</p>
                 <p className="font-semibold">Limite: {formatarParaMoeda(String(cliente.limite), true)}</p>
@@ -134,7 +134,7 @@ const AcessoView = () => {
 
     function AcessoNegadoView() {
         return (
-            <div className="flex flex-col justify-center items-start w-full h-[128px] gap-[8px] mb-4 px-[64px]">
+            <div className="flex flex-col justify-center items-start w-full h-[128px] gap-[8px] mb-4 mt-[32px] px-[64px] text-2xl">
                 <p className="font-semibold">{String(cliente.nome)}</p>
                 <p className="font-semibold">Saldo: {formatarParaMoeda(String(cliente.saldo), true)}</p>
                 <p className="font-semibold">Limite: {formatarParaMoeda(String(cliente.limite), true)}</p>
@@ -153,9 +153,9 @@ const AcessoView = () => {
 
     return (
         <>
-            <div className="rounded-md overflow-x-auto h-[256px]">
+            <div className="rounded-md overflow-x-auto h-[256px]]">
                 {!cliente?.id && <h1 className="text-2xl">Aproxime o cartão da leitora</h1>}
-                {cliente?.id && <h1 className={`text-2xl ${perform === 'ACESSO NEGADO' || perform === 'BLOQUEADO' ? 'text-red-500' : ''}`}>{perform}</h1>}
+                {cliente?.id && <h1 className={`text-6xl ${perform === 'ACESSO NEGADO' || perform === 'BLOQUEADO' ? 'text-red-500' : ''}`}>{perform}</h1>}
                 {cliente?.id ? (validarSaldo ? <ClienteView /> : <AcessoNegadoView />) : <PulseView />}
             </div>
 
